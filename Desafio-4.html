@@ -1,0 +1,221 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comparativo de Planos de Curso</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      color: #1e293b;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 950px;
+      margin: auto;
+      padding: 30px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 25px rgba(15, 23, 42, 0.08);
+    }
+
+    .topo {
+      margin-bottom: 25px;
+    }
+
+    .topo h1 {
+      color: #1e3a8a;
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .topo p {
+      color: #64748b;
+      line-height: 1.6;
+    }
+
+    .tabela-wrapper {
+      overflow-x: auto;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: center;
+    }
+
+    caption {
+      padding: 18px;
+      text-align: left;
+      font-size: 18px;
+      font-weight: bold;
+      color: #334155;
+    }
+
+    thead {
+      background: #1e3a8a;
+      color: white;
+    }
+
+    th, td {
+      padding: 17px 14px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    thead th {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    tbody th[scope="row"] {
+      background: #eff6ff;
+      color: #1e40af;
+      font-weight: bold;
+      border-right: 1px solid #dbeafe;
+    }
+
+    tbody th[scope="row"]:not([rowspan]) {
+      background: #f8fafc;
+      color: #334155;
+      text-align: left;
+    }
+
+    tbody td {
+      color: #475569;
+    }
+
+    tbody tr:hover td {
+      background: #f8fafc;
+    }
+
+    .basico {
+      color: #64748b;
+    }
+
+    .completo {
+      color: #166534;
+      font-weight: bold;
+    }
+
+    .sim {
+      color: #15803d;
+      font-weight: bold;
+    }
+
+    .nao {
+      color: #94a3b8;
+    }
+
+    tbody tr:last-child th,
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 15px 8px;
+      }
+
+      .container {
+        padding: 18px 10px;
+      }
+
+      .topo h1 {
+        font-size: 23px;
+      }
+
+      th, td {
+        padding: 13px 10px;
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <header class="topo">
+      <h1>🎓 Comparativo de Planos de Curso</h1>
+      <p>
+        Compare os recursos disponíveis em cada plano
+        e escolha a opção ideal para sua jornada de aprendizagem.
+      </p>
+    </header>
+
+    <div class="tabela-wrapper">
+      <table>
+        <caption>Recursos incluídos em cada plano</caption>
+
+        <thead>
+          <tr>
+            <th scope="col">Categoria</th>
+            <th scope="col">Recurso</th>
+            <th scope="col">Plano Básico</th>
+            <th scope="col">Plano Completo</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <th scope="rowgroup" rowspan="3">Aulas</th>
+            <th scope="row">Aulas gravadas</th>
+            <td class="sim">✓ Sim</td>
+            <td class="sim">✓ Sim</td>
+          </tr>
+
+          <tr>
+            <th scope="row">Material didático</th>
+            <td class="sim">✓ Sim</td>
+            <td class="sim">✓ Sim</td>
+          </tr>
+
+          <tr>
+            <th scope="row">Aulas ao vivo</th>
+            <td class="nao">—</td>
+            <td class="sim">✓ Sim</td>
+          </tr>
+
+          <tr>
+            <th scope="rowgroup" rowspan="2">Projetos</th>
+            <th scope="row">Atividades práticas</th>
+            <td class="sim">✓ Sim</td>
+            <td class="sim">✓ Sim</td>
+          </tr>
+
+          <tr>
+            <th scope="row">Projetos exclusivos</th>
+            <td class="nao">—</td>
+            <td class="sim">✓ Sim</td>
+          </tr>
+
+          <tr>
+            <th scope="rowgroup" rowspan="2">Suporte</th>
+            <th scope="row">Fórum de dúvidas</th>
+            <td class="sim">✓ Sim</td>
+            <td class="sim">✓ Sim</td>
+          </tr>
+
+          <tr>
+            <th scope="row">Mentoria individual</th>
+            <td class="nao">—</td>
+            <td class="sim">✓ Sim</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</body>
+</html>

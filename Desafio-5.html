@@ -1,0 +1,211 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boletim Final — Front-End 2026</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      color: #1e293b;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 950px;
+      margin: auto;
+      padding: 30px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 25px rgba(15, 23, 42, 0.08);
+    }
+
+    header {
+      margin-bottom: 25px;
+    }
+
+    h1 {
+      color: #1e3a8a;
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      color: #64748b;
+      line-height: 1.6;
+    }
+
+    .tabela-wrapper {
+      overflow-x: auto;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: center;
+    }
+
+    caption {
+      padding: 18px;
+      text-align: left;
+      font-size: 18px;
+      font-weight: bold;
+      color: #334155;
+    }
+
+    thead {
+      background: #1e3a8a;
+      color: #fff;
+    }
+
+    th, td {
+      padding: 16px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    thead th {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    tbody th[scope="row"] {
+      text-align: left;
+      color: #1e40af;
+      background: #eff6ff;
+    }
+
+    tbody tr:nth-child(even) {
+      background: #f8fafc;
+    }
+
+    tbody tr:hover {
+      background: #eff6ff;
+    }
+
+    tfoot {
+      background: #dbeafe;
+      color: #1e3a8a;
+      font-weight: bold;
+    }
+
+    tfoot th {
+      text-align: left;
+    }
+
+    tfoot th, tfoot td {
+      border-bottom: none;
+      padding: 18px 16px;
+    }
+
+    .nota {
+      font-weight: bold;
+    }
+
+    .rodape {
+      margin-top: 20px;
+      color: #64748b;
+      font-size: 13px;
+      text-align: right;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 15px 8px;
+      }
+
+      .container {
+        padding: 18px 10px;
+      }
+
+      h1 {
+        font-size: 23px;
+      }
+
+      th, td {
+        padding: 12px 10px;
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <header>
+      <h1>🎓 Boletim Final &mdash; Front-End 2026</h1>
+      <p>
+        Desempenho acadêmico da turma nas quatro disciplinas
+        do curso de Front-End.
+      </p>
+    </header>
+
+    <div class="tabela-wrapper">
+      <table>
+        <caption>Notas dos alunos por disciplina</caption>
+
+        <thead>
+          <tr>
+            <th scope="col">Aluno</th>
+            <th scope="col">HTML</th>
+            <th scope="col">CSS</th>
+            <th scope="col">JavaScript</th>
+            <th scope="col">Média</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <th scope="row">Ana Silva</th>
+            <td class="nota">9,0</td>
+            <td class="nota">8,5</td>
+            <td class="nota">9,5</td>
+            <td class="nota">8,0</td>
+          </tr>
+
+          <tr>
+            <th scope="row">Pedro Santos</th>
+            <td class="nota">7,5</td>
+            <td class="nota">8,0</td>
+            <td class="nota">7,0</td>
+            <td class="nota">&mdash;</td>
+          </tr>
+
+          <tr>
+            <th scope="row">Maria Oliveira</th>
+            <td class="nota">10,0</td>
+            <td class="nota">9,0</td>
+            <td class="nota">8,5</td>
+            <td class="nota">9,5</td>
+          </tr>
+        </tbody>
+
+        <tfoot>
+          <tr>
+            <th scope="row">Média da turma</th>
+            <td>8,83</td>
+            <td>8,50</td>
+            <td>8,33</td>
+            <td>8,75</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <p class="rodape">
+      Resultado acadêmico &bull; Front-End 2026
+    </p>
+  </main>
+</body>
+</html>

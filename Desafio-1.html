@@ -1,0 +1,224 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boletim de Notas do Trimestre</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      color: #1e293b;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 30px;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+    }
+
+    .cabecalho {
+      margin-bottom: 25px;
+    }
+
+    .cabecalho h1 {
+      color: #1e3a8a;
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .cabecalho p {
+      color: #64748b;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .tabela-wrapper {
+      overflow-x: auto;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: center;
+    }
+
+    caption {
+      text-align: left;
+      padding: 20px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #334155;
+    }
+
+    thead {
+      background: #1e3a8a;
+      color: #ffffff;
+    }
+
+    thead th {
+      padding: 17px 14px;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    tbody th,
+    tbody td {
+      padding: 17px 14px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    tbody th[scope="row"] {
+      text-align: left;
+      color: #1e40af;
+      font-weight: 600;
+    }
+
+    tbody tr:nth-child(even) {
+      background: #f8fafc;
+    }
+
+    tbody tr {
+      transition: background 0.2s ease;
+    }
+
+    tbody tr:hover {
+      background: #eff6ff;
+    }
+
+    .nota {
+      display: inline-block;
+      min-width: 48px;
+      padding: 7px 10px;
+      border-radius: 8px;
+      background: #dbeafe;
+      color: #1e40af;
+      font-weight: bold;
+    }
+
+    tbody tr:last-child th,
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .rodape {
+      margin-top: 20px;
+      text-align: right;
+      color: #94a3b8;
+      font-size: 13px;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 15px 8px;
+      }
+
+      .container {
+        padding: 18px 10px;
+      }
+
+      .cabecalho h1 {
+        font-size: 23px;
+      }
+
+      thead th,
+      tbody th,
+      tbody td {
+        padding: 13px 10px;
+        font-size: 13px;
+      }
+
+      .nota {
+        min-width: 40px;
+        padding: 6px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+
+    <header class="cabecalho">
+      <h1>🎓 Boletim Trimestral</h1>
+      <p>
+        Confira o desempenho dos alunos nas disciplinas
+        de HTML, CSS e JavaScript.
+      </p>
+    </header>
+
+    <div class="tabela-wrapper">
+      <table>
+        <caption>Boletim de Notas do Trimestre</caption>
+
+        <thead>
+          <tr>
+            <th scope="col">Aluno</th>
+            <th scope="col">HTML</th>
+            <th scope="col">CSS</th>
+            <th scope="col">JavaScript</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <th scope="row">Ana</th>
+            <td><span class="nota">8,5</span></td>
+            <td><span class="nota">9,0</span></td>
+            <td><span class="nota">7,5</span></td>
+          </tr>
+
+          <tr>
+            <th scope="row">Bruno</th>
+            <td><span class="nota">7,0</span></td>
+            <td><span class="nota">8,0</span></td>
+            <td><span class="nota">8,5</span></td>
+          </tr>
+
+          <tr>
+            <th scope="row">Carla</th>
+            <td><span class="nota">9,5</span></td>
+            <td><span class="nota">9,0</span></td>
+            <td><span class="nota">10,0</span></td>
+          </tr>
+
+          <tr>
+            <th scope="row">Diego</th>
+            <td><span class="nota">6,5</span></td>
+            <td><span class="nota">7,5</span></td>
+            <td><span class="nota">8,0</span></td>
+          </tr>
+
+          <tr>
+            <th scope="row">Eduarda</th>
+            <td><span class="nota">8,0</span></td>
+            <td><span class="nota">8,5</span></td>
+            <td><span class="nota">9,0</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="rodape">
+      Boletim escolar • Avaliação trimestral
+    </p>
+
+  </main>
+</body>
+</html>

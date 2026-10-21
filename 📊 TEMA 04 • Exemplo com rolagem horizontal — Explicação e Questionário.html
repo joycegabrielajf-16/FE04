@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<!-- saved from url=(0061)https://almeida-cma.github.io/fe04/t4_exemplo_rolagem_v2.html -->
+<html lang="pt-BR"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📊 TEMA 04 • Exemplo com rolagem horizontal — Explicação e Questionário</title>
+<style>
+  :root{
+    --bg-body:#06101c; --surface-dark:#0f1b2d; --surface-hover:#1b2a42;
+    --card-white:#ffffff; --primary:#0369a1; --primary-hover:#075985;
+    --primary-light:#38bdf8; --accent:#0d9488; --accent-light:#2dd4bf;
+    --text-dark:#0f172a; --text-muted:#64748b;
+    --border-light:#e2e8f0; --border-dark:#334155; --radius-main:20px;
+    --transicao:all .25s ease; --tok-bg:#0a1420; --tok-tag:#7dd3fc;
+    --tok-attr:#fbbf24; --tok-string:#86efac; --tok-punct:#cbd5e1; --tok-text:#ffffff;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    background:radial-gradient(circle at 10% 15%,#062a3a 0%,#06101c 65%);
+    color:var(--text-dark);min-height:100vh;padding:24px 14px 90px;line-height:1.6;}
+  .container{max-width:1150px;margin:0 auto;}
+
+  .header{background:linear-gradient(135deg,#0c4a6e 0%,#0369a1 50%,#0d9488 100%);
+    border-radius:var(--radius-main);padding:38px 24px;margin-bottom:24px;text-align:center;
+    color:#fff;box-shadow:0 12px 35px rgba(3,105,161,.4);}
+  .header h1{font-size:2.1rem;margin-bottom:8px;letter-spacing:-.5px;
+    display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;}
+  .header h1 span{color:#a7f3d0;}
+  .header p{opacity:.95;font-size:1.05rem;max-width:900px;margin:0 auto;}
+  .badge-group{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:18px;}
+  .badge{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);
+    padding:5px 14px;border-radius:30px;font-size:.75rem;font-weight:700;color:#fff;}
+
+  .tabs-nav{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:22px;}
+  .tab-btn{background:var(--surface-dark);color:#94a3b8;border:1px solid var(--border-dark);
+    padding:12px 18px;border-radius:30px;font-size:.88rem;font-weight:700;cursor:pointer;
+    white-space:nowrap;transition:var(--transicao);font-family:inherit;}
+  .tab-btn:hover{color:#fff;background:var(--surface-hover);}
+  .tab-btn.active{background:linear-gradient(135deg,#075985,#0d9488);color:#fff;
+    border-color:#2dd4bf;box-shadow:0 0 16px rgba(13,148,136,.45);}
+  .tab-content{display:none;animation:fadeIn .3s ease-out;}
+  .tab-content.active{display:block;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+  .card{background:var(--card-white);border-radius:var(--radius-main);padding:28px;
+    margin-bottom:24px;box-shadow:0 10px 30px rgba(0,0,0,.15);}
+  .card h2{color:#075985;margin-bottom:14px;border-left:5px solid var(--primary);
+    padding-left:12px;font-size:1.45rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .card h3{color:#0f172a;margin:22px 0 10px 0;font-size:1.15rem;border-bottom:2px dashed #cbd5e1;padding-bottom:6px;}
+  .card h4{color:#1e293b;margin:18px 0 8px 0;font-size:1rem;font-weight:700;}
+  .card p{color:#334155;margin-bottom:12px;font-size:.96rem;}
+  .card ul,.card ol{color:#334155;line-height:1.8;margin:8px 0 14px 25px;font-size:.95rem;}
+
+  .highlight-box{padding:16px 20px;border-radius:12px;margin:14px 0;font-size:.94rem;line-height:1.7;}
+  .highlight-box.blue{background:#e0f2fe;border-left:5px solid #0284c7;color:#0c4a6e;}
+  .highlight-box.teal{background:#ccfbf1;border-left:5px solid #0d9488;color:#115e59;}
+  .highlight-box.amber{background:#fef3c7;border-left:5px solid #d97706;color:#78350f;}
+  .highlight-box.rose{background:#ffe4e6;border-left:5px solid #e11d48;color:#881337;}
+  .highlight-box.green{background:#dcfce7;border-left:5px solid #16a34a;color:#14532d;}
+  .highlight-box code{background:rgba(255,255,255,.85);border:1px solid rgba(0,0,0,.15);
+    color:#0f172a;padding:2px 6px;border-radius:4px;font-weight:800;font-family:'Courier New',monospace;font-size:.88em;}
+
+  code{background:#f1f5f9;color:#0c4a6e;padding:2px 6px;border-radius:4px;
+    font-family:'Courier New',monospace;font-weight:700;font-size:.88em;border:1px solid var(--border-light);}
+
+  .code-wrapper{position:relative;margin:18px 0;border-radius:14px;overflow:hidden;
+    border:1px solid var(--border-dark);background:#0a1420;}
+  .code-header{display:flex;justify-content:space-between;align-items:center;
+    background:#0f1b2d;padding:10px 16px;border-bottom:1px solid var(--border-dark);flex-wrap:wrap;gap:8px;}
+  .code-title{color:#7dd3fc;font-size:.84rem;font-weight:700;font-family:monospace;}
+  .code-actions{display:flex;gap:6px;flex-wrap:wrap;}
+  .code-actions button{border:none;padding:6px 14px;border-radius:6px;cursor:pointer;
+    font-size:.78rem;font-weight:700;transition:var(--transicao);
+    display:inline-flex;align-items:center;gap:5px;font-family:inherit;}
+  .code-actions button:disabled{opacity:.6;cursor:progress;}
+  .copy-btn{background:#10b981;color:#042f2e;}
+  .copy-btn:hover:not(:disabled){background:#059669;color:#fff;}
+  .run-oc-btn{background:#0d9488;color:#fff;}
+  .run-oc-btn:hover:not(:disabled){background:#0f766e;transform:scale(1.02);}
+  .run-inline-btn{background:#0284c7;color:#fff;}
+  .run-inline-btn:hover:not(:disabled){background:#0369a1;transform:scale(1.02);}
+  .code-pane{padding:18px 20px;color:#e2e8f0;font-family:'Courier New',monospace;
+    font-size:.82rem;line-height:1.65;overflow-x:auto;white-space:pre;max-height:600px;}
+  .code-pane pre{margin:0;white-space:pre;}
+  .preview-inline{margin:14px 0;border:1px solid var(--border-dark);border-radius:12px;overflow:hidden;background:#0a1420;}
+  .preview-inline .preview-header{display:flex;justify-content:space-between;align-items:center;
+    padding:8px 12px;background:#0f1b2d;border-bottom:1px solid #1e293b;color:#cbd5e1;
+    font-size:.78rem;font-weight:700;font-family:monospace;gap:8px;flex-wrap:wrap;}
+  .preview-inline .preview-close{background:transparent;border:1px solid #334155;color:#f87171;
+    padding:3px 10px;border-radius:6px;cursor:pointer;font-size:.72rem;font-weight:700;font-family:inherit;}
+  .preview-inline iframe{width:100%;height:460px;border:none;background:#fff;display:block;}
+
+  .linha-explicacao{display:grid;grid-template-columns:52px 1fr;gap:12px;
+    padding:10px 0;border-bottom:1px solid #f1f5f9;align-items:flex-start;}
+  .linha-explicacao:hover{background:#f8fafc;}
+  .linha-num{background:#0a1420;color:#7dd3fc;font-family:'Courier New',monospace;
+    font-size:.78rem;font-weight:800;padding:4px 8px;border-radius:6px;
+    text-align:center;line-height:1.4;align-self:flex-start;}
+  .linha-conteudo{display:flex;flex-direction:column;gap:6px;}
+  .linha-codigo{background:#0a1420;color:#e2e8f0;padding:8px 12px;border-radius:6px;
+    font-family:'Courier New',monospace;font-size:.8rem;overflow-x:auto;white-space:pre;}
+  .linha-texto{color:#334155;font-size:.88rem;line-height:1.65;}
+  .linha-texto code{font-size:.86em;background:#f1f5f9;border:1px solid #cbd5e1;
+    padding:1px 5px;border-radius:4px;color:#0c4a6e;}
+  .explicacao-grupo{background:#f8fafc;border-left:4px solid #0369a1;
+    border-radius:8px;padding:6px 16px;margin:12px 0;}
+  .explicacao-grupo h4{color:#0c4a6e;font-size:1rem;margin:10px 0 6px;}
+
+  .quiz-header{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;
+    background:#0f1b2d;color:#fff;padding:14px 20px;border-radius:12px;margin-bottom:20px;}
+  .quiz-header .progresso-texto{font-size:.9rem;}
+  .barra-fundo{flex:1;min-width:140px;height:10px;background:#334155;border-radius:5px;overflow:hidden;}
+  .barra-preenchimento{height:100%;width:0%;background:linear-gradient(90deg,#38bdf8,#0d9488);transition:width .3s;}
+
+  .modo-tabs{display:inline-flex;border:2px solid var(--primary);border-radius:24px;overflow:hidden;margin-bottom:16px;}
+  .modo-tab{background:#fff;color:var(--primary);border:none;padding:8px 18px;font-size:.85rem;
+    font-weight:700;cursor:pointer;font-family:inherit;transition:var(--transicao);}
+  .modo-tab.active{background:var(--primary);color:#fff;}
+  .modo-tab:hover:not(.active){background:#e0f2fe;}
+
+  .question{background:#f8fafc;border-radius:12px;padding:18px 20px;margin-bottom:16px;
+    border-left:4px solid var(--primary);border-top:1px solid var(--border-light);
+    border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);}
+  .question-header{font-weight:700;color:#0f172a;margin-bottom:12px;display:flex;
+    align-items:flex-start;gap:10px;font-size:.96rem;line-height:1.5;}
+  .question-header code{font-size:.92em;background:#e0f2fe;border-color:#7dd3fc;color:#0c4a6e;padding:1px 6px;}
+  .question-number{background:var(--primary);color:#fff;width:26px;height:26px;border-radius:50%;
+    text-align:center;line-height:26px;font-size:12px;font-weight:bold;flex-shrink:0;margin-top:2px;}
+  .options{display:flex;flex-direction:column;gap:8px;}
+  .option{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fff;
+    border-radius:8px;border:2px solid var(--border-light);cursor:pointer;
+    transition:var(--transicao);font-size:.9rem;color:#334155;}
+  .option:hover:not(.disabled){border-color:var(--primary);background:#e0f2fe;transform:translateX(3px);}
+  .option.selecionada{border-color:#0284c7;background:#e0f2fe;}
+  .option code{background:#f1f5f9;border-color:#cbd5e1;font-size:.92em;}
+  .option input{accent-color:var(--primary);}
+
+  .results{background:#fff;border:2px solid #0d9488;border-radius:12px;padding:18px 22px;
+    margin-top:20px;display:none;}
+  .results.mostrar{display:block;}
+  .results h4{color:#115e59;margin-bottom:10px;}
+  .results .gabarito-item{padding:8px 0;border-bottom:1px solid #e2e8f0;font-size:.88rem;color:#334155;}
+  .results .gabarito-item strong{color:#0f766e;}
+
+  .btn-grupo{display:flex;gap:10px;justify-content:center;margin-top:22px;flex-wrap:wrap;}
+  .btn{background:linear-gradient(135deg,var(--primary),#0d9488);color:#fff;border:none;
+    padding:12px 26px;border-radius:30px;cursor:pointer;font-size:.95rem;font-weight:700;
+    transition:var(--transicao);font-family:inherit;}
+  .btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 6px 18px rgba(3,105,161,.35);}
+  .btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none;}
+  .btn-secondary{background:#64748b;}
+  .btn-secondary:hover:not(:disabled){box-shadow:0 6px 18px rgba(100,116,139,.35);}
+
+  .toast-notificacao{position:fixed;bottom:24px;right:24px;background:#0d9488;color:#fff;
+    padding:12px 20px;border-radius:10px;font-weight:bold;font-size:.85rem;
+    box-shadow:0 10px 25px rgba(0,0,0,.3);display:none;z-index:9999;
+    animation:slideUp .3s ease;max-width:340px;line-height:1.5;}
+  @keyframes slideUp{from{transform:translateY(20px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+  .btn-top{position:fixed;bottom:20px;right:20px;background:var(--primary);color:#fff;
+    border:none;padding:10px 18px;border-radius:50px;cursor:pointer;font-size:12px;
+    font-weight:700;box-shadow:0 4px 15px rgba(0,0,0,.25);z-index:100;}
+
+  @media (max-width:768px){
+    .header h1{font-size:1.6rem;}
+    .card{padding:18px 14px;}
+    .tab-btn{padding:10px 14px;font-size:.8rem;}
+    .linha-explicacao{grid-template-columns:1fr;gap:6px;}
+    .preview-inline iframe{height:360px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="container" id="inicio">
+  <header class="header">
+    <h1>📊 TEMA <span>04</span> • Exemplo com rolagem horizontal</h1>
+    <p>HTML semântico + 3 regras de CSS para tabela responsiva em celular — explicado linha a linha, com questionário</p>
+    <div class="badge-group">
+      <span class="badge">📖 Explicação linha a linha</span>
+      <span class="badge">💻 Código original executável</span>
+      <span class="badge">▶️ OneCompiler pronto</span>
+      <span class="badge">📝 12 questões</span>
+      <span class="badge v2">v2 • texto escapado</span>
+    </div>
+  </header>
+
+  <nav class="tabs-nav">
+    <button type="button" class="tab-btn" data-aba="aba-codigo">💻 1. Código</button>
+    <button type="button" class="tab-btn" data-aba="aba-explicacao">📖 2. Explicação linha a linha</button>
+    <button type="button" class="tab-btn active" data-aba="aba-quiz">📝 3. Questionário</button>
+  </nav>
+
+  <div id="aba-codigo" class="tab-content">
+    <section class="card">
+      <h2>💻 Código completo — o arquivo que você vai estudar</h2>
+      <p>Este é o arquivo único, pronto para abrir no navegador ou colar no OneCompiler. Nada de JavaScript, bibliotecas ou frameworks — apenas HTML semântico e três regras de CSS.</p>
+
+      <div class="highlight-box blue">
+        <strong>Por que este exemplo é suficiente?</strong>
+        <ul style="margin:8px 0 0 22px;color:#0c4a6e;">
+          <li><code>overflow-x: auto</code> permite rolar a tabela horizontalmente quando necessário.</li>
+          <li><code>min-width: 500px</code> evita que as seis colunas fiquem excessivamente comprimidas. Em telas menores, a rolagem aparece no contêiner.</li>
+          <li><code>border-collapse: collapse</code> junta as bordas das células.</li>
+          <li><code>border</code> e <code>padding</code> tornam a tabela mais fácil de ler.</li>
+        </ul>
+      </div>
+
+      <div class="code-wrapper">
+        <div class="code-header">
+          <span class="code-title">📄 notas-front-end-2026.html</span>
+          <div class="code-actions">
+            <button type="button" class="copy-btn" id="btnCopiarCodigo">📋 Copiar</button>
+            <button type="button" class="run-inline-btn" id="btnPreviewInline">🧪 Preview</button>
+            <button type="button" class="run-oc-btn" id="btnOneCompiler">▶️ OneCompiler</button>
+          </div>
+        </div>
+        <div class="code-pane"><pre id="codigoOriginal">&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-BR"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;Notas — Front-End 2026&lt;/title&gt;
+
+  &lt;style&gt;
+    .tabela-container {
+      overflow-x: auto;
+    }
+
+    table {
+      border-collapse: collapse;
+      min-width: 500px;
+    }
+
+    th, td {
+      border: 1px solid #999;
+      padding: 8px;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;div class="tabela-container"&gt;
+    &lt;table&gt;
+      &lt;caption&gt;Notas — Front-End 2026&lt;/caption&gt;
+
+      &lt;thead&gt;
+        &lt;tr&gt;
+          &lt;th scope="col"&gt;Aluno&lt;/th&gt;
+          &lt;th scope="col"&gt;HTML&lt;/th&gt;
+          &lt;th scope="col"&gt;CSS&lt;/th&gt;
+          &lt;th scope="col"&gt;JS&lt;/th&gt;
+          &lt;th scope="col"&gt;Projeto&lt;/th&gt;
+          &lt;th scope="col"&gt;Média&lt;/th&gt;
+        &lt;/tr&gt;
+      &lt;/thead&gt;
+
+      &lt;tbody&gt;
+        &lt;tr&gt;
+          &lt;th scope="row"&gt;Ana&lt;/th&gt;
+          &lt;td&gt;9,0&lt;/td&gt;
+          &lt;td&gt;8,5&lt;/td&gt;
+          &lt;td&gt;8,0&lt;/td&gt;
+          &lt;td&gt;9,5&lt;/td&gt;
+          &lt;td&gt;8,75&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;th scope="row"&gt;João&lt;/th&gt;
+          &lt;td&gt;7,5&lt;/td&gt;
+          &lt;td&gt;9,0&lt;/td&gt;
+          &lt;td&gt;8,5&lt;/td&gt;
+          &lt;td&gt;8,0&lt;/td&gt;
+          &lt;td&gt;8,25&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;th scope="row"&gt;Marina&lt;/th&gt;
+          &lt;td&gt;8,5&lt;/td&gt;
+          &lt;td&gt;9,5&lt;/td&gt;
+          &lt;td&gt;9,0&lt;/td&gt;
+          &lt;td&gt;9,5&lt;/td&gt;
+          &lt;td&gt;9,13&lt;/td&gt;
+        &lt;/tr&gt;
+      &lt;/tbody&gt;
+    &lt;/table&gt;
+  &lt;/div&gt;
+
+  &lt;p&gt;↔ Em telas pequenas, deslize horizontalmente para ver todas as colunas.&lt;/p&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</pre></div>
+      </div>
+      <div id="previewAnchor"></div>
+    </section>
+  </div>
+
+  <div id="aba-explicacao" class="tab-content">
+    <section class="card">
+      <h2>📖 Explicação linha a linha</h2>
+      <p>Cada linha do arquivo explicada em sequência. Grupos grandes (thead, tbody) estão organizados por seção para você conseguir voltar e consultar.</p>
+      <div class="explicacao-grupo" id="listaExplicacoes"><h4>Cabeçalho do documento</h4><div class="linha-explicacao"><div class="linha-num">L1</div><div class="linha-conteudo"><div class="linha-codigo">&lt;!DOCTYPE html&gt;</div><div class="linha-texto">Declara que o documento é HTML5. Deve ser a primeira linha do arquivo. Sem ele, o navegador pode entrar em modo quirks (compatibilidade com navegadores antigos) e aplicar estilos antigos.</div></div></div><div class="linha-explicacao"><div class="linha-num">L2</div><div class="linha-conteudo"><div class="linha-codigo">&lt;html lang="pt-BR"&gt;</div><div class="linha-texto">Elemento raiz do documento. O atributo <code>lang="pt-BR"</code> informa o idioma principal da página — leitores de tela usam essa informação para escolher a pronúncia e o dicionário corretos.</div></div></div><div class="linha-explicacao"><div class="linha-num">L3</div><div class="linha-conteudo"><div class="linha-codigo">&lt;head&gt;</div><div class="linha-texto">Início do bloco de metadados. Conteúdo daqui não aparece na página, mas instrui o navegador (charset, viewport, título, estilo).</div></div></div><div class="linha-explicacao"><div class="linha-num">L4</div><div class="linha-conteudo"><div class="linha-codigo">  &lt;meta charset="UTF-8"&gt;</div><div class="linha-texto">Define a codificação de caracteres. <code>UTF-8</code> aceita acentos, cedilha e símbolos como "↔". Sem isso, caracteres como "Média" e "João" aparecem corrompidos.</div></div></div><div class="linha-explicacao"><div class="linha-num">L5</div><div class="linha-conteudo"><div class="linha-codigo">  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</div><div class="linha-texto">Instrui o navegador móvel a usar a largura real do dispositivo como largura da viewport e a não aplicar zoom artificial. Sem esta meta, o celular finge ter ~980px de largura e a responsividade não funciona.</div></div></div><div class="linha-explicacao"><div class="linha-num">L6</div><div class="linha-conteudo"><div class="linha-codigo">  &lt;title&gt;Notas — Front-End 2026&lt;/title&gt;</div><div class="linha-texto">Título da página. Aparece na aba do navegador e nos resultados de busca. Deve descrever o conteúdo. O travessão "—" foi digitado como Unicode direto (não como <code>&amp;mdash;</code>), o que é válido em UTF-8.</div></div></div><h4>CSS — as três regras da rolagem horizontal</h4><div class="linha-explicacao"><div class="linha-num">L7</div><div class="linha-conteudo"><div class="linha-codigo">  &lt;style&gt;</div><div class="linha-texto">Abre um bloco de CSS embutido no HTML. Nesta aula usamos só CSS embutido. Em projetos maiores ele vira arquivo externo (.css).</div></div></div><div class="linha-explicacao"><div class="linha-num">L9</div><div class="linha-conteudo"><div class="linha-codigo">    .tabela-container {</div><div class="linha-texto">Seletor de classe. Aplica o bloco de regras em elementos que tenham <code>class="tabela-container"</code>. O ponto (.) no começo identifica uma classe CSS.</div></div></div><div class="linha-explicacao"><div class="linha-num">L10</div><div class="linha-conteudo"><div class="linha-codigo">      overflow-x: auto;</div><div class="linha-texto">Permite rolagem horizontal APENAS quando o conteúdo excede a largura do contêiner. Em telas largas não há rolagem; em telas estreitas, o navegador coloca uma barra. Este é o coração do exemplo.</div></div></div><div class="linha-explicacao"><div class="linha-num">L11</div><div class="linha-conteudo"><div class="linha-codigo">    }</div><div class="linha-texto">Fecha a regra da classe.</div></div></div><div class="linha-explicacao"><div class="linha-num">L13</div><div class="linha-conteudo"><div class="linha-codigo">    table {</div><div class="linha-texto">Seletor de tag. Aplica a regra a TODA tabela do documento. Como este exemplo tem apenas uma, tudo bem — em páginas com várias tabelas, seria melhor usar uma classe.</div></div></div><div class="linha-explicacao"><div class="linha-num">L14</div><div class="linha-conteudo"><div class="linha-codigo">      border-collapse: collapse;</div><div class="linha-texto">Junta as bordas das células em uma única linha. Sem ele, cada célula exibe sua borda separada, criando aquele visual "duplo" e mais espaçado.</div></div></div><div class="linha-explicacao"><div class="linha-num">L15</div><div class="linha-conteudo"><div class="linha-codigo">      min-width: 500px;</div><div class="linha-texto">Largura mínima de 500px. Impede que as seis colunas fiquem esmagadas ao ponto de não conseguir ler. Se a tela for menor que 500px, a tabela excede o contêiner e o <code>overflow-x: auto</code> entra em ação.</div></div></div><div class="linha-explicacao"><div class="linha-num">L16</div><div class="linha-conteudo"><div class="linha-codigo">    }</div><div class="linha-texto">Fecha a regra de table.</div></div></div><div class="linha-explicacao"><div class="linha-num">L18</div><div class="linha-conteudo"><div class="linha-codigo">    th, td {</div><div class="linha-texto">Agrupamento de seletores: aplica as regras abaixo a TODOS os <code>&lt;th&gt;</code> e TODOS os <code>&lt;td&gt;</code> do documento.</div></div></div><div class="linha-explicacao"><div class="linha-num">L19</div><div class="linha-conteudo"><div class="linha-codigo">      border: 1px solid #999;</div><div class="linha-texto">Borda de 1 pixel, estilo sólido, cor cinza (#999). O # na frente significa hexadecimal. Dá o contorno visível a cada célula.</div></div></div><div class="linha-explicacao"><div class="linha-num">L20</div><div class="linha-conteudo"><div class="linha-codigo">      padding: 8px;</div><div class="linha-texto">Espaço interno de 8px entre o conteúdo e a borda da célula. Sem isso, o texto ficaria colado nas bordas, difícil de ler.</div></div></div><div class="linha-explicacao"><div class="linha-num">L21</div><div class="linha-conteudo"><div class="linha-codigo">    }</div><div class="linha-texto">Fecha a regra de th/td.</div></div></div><h4>Corpo e contêiner da tabela</h4><div class="linha-explicacao"><div class="linha-num">L25</div><div class="linha-conteudo"><div class="linha-codigo">&lt;body&gt;</div><div class="linha-texto">Início do conteúdo visível da página.</div></div></div><div class="linha-explicacao"><div class="linha-num">L27</div><div class="linha-conteudo"><div class="linha-codigo">  &lt;div class="tabela-container"&gt;</div><div class="linha-texto">Div com classe <code>tabela-container</code>. É o invólucro responsável por permitir a rolagem horizontal. Fica FORA da tabela, envolvendo-a.</div></div></div><div class="linha-explicacao"><div class="linha-num">L28</div><div class="linha-conteudo"><div class="linha-codigo">    &lt;table&gt;</div><div class="linha-texto">Elemento raiz da tabela. Não usa CSS para alinhamento de página — serve para apresentar dados em linhas e colunas.</div></div></div><h4>caption, thead e o cabeçalho</h4><div class="linha-explicacao"><div class="linha-num">L29</div><div class="linha-conteudo"><div class="linha-codigo">      &lt;caption&gt;Notas — Front-End 2026&lt;/caption&gt;</div><div class="linha-texto">Primeiro elemento dentro de <code>&lt;table&gt;</code>. Identifica o assunto da tabela para o leitor (visual, buscador e leitor de tela). Sempre útil, especialmente quando o contexto não deixa o propósito óbvio.</div></div></div><div class="linha-explicacao"><div class="linha-num">L31</div><div class="linha-conteudo"><div class="linha-codigo">      &lt;thead&gt;</div><div class="linha-texto">Agrupa as linhas de cabeçalho. O navegador entende que o conteúdo é título das colunas.</div></div></div><div class="linha-explicacao"><div class="linha-num">L32</div><div class="linha-conteudo"><div class="linha-codigo">        &lt;tr&gt;</div><div class="linha-texto">Table Row. Cria uma linha da tabela. Aqui dentro vão os cabeçalhos.</div></div></div><div class="linha-explicacao"><div class="linha-num">L33</div><div class="linha-conteudo"><div class="linha-codigo">          &lt;th scope="col"&gt;Aluno&lt;/th&gt;</div><div class="linha-texto">Célula de cabeçalho. <code>scope="col"</code> declara que esta célula titula toda a coluna abaixo. Sem o scope, o navegador consegue deduzir em tabelas simples — mas declarar explicitamente é a boa prática.</div></div></div><div class="linha-explicacao"><div class="linha-num">L34</div><div class="linha-conteudo"><div class="linha-codigo">          &lt;th scope="col"&gt;HTML&lt;/th&gt;</div><div class="linha-texto">Cabeçalho da segunda coluna. Mesma regra: scope="col" associa a célula a todas as células daquela coluna.</div></div></div><div class="linha-explicacao"><div class="linha-num">L35</div><div class="linha-conteudo"><div class="linha-codigo">          &lt;th scope="col"&gt;CSS&lt;/th&gt;</div><div class="linha-texto">Cabeçalho da terceira coluna.</div></div></div><div class="linha-explicacao"><div class="linha-num">L36</div><div class="linha-conteudo"><div class="linha-codigo">          &lt;th scope="col"&gt;JS&lt;/th&gt;</div><div class="linha-texto">Cabeçalho da quarta coluna. "JS" é abreviação de JavaScript.</div></div></div><div class="linha-explicacao"><div class="linha-num">L37</div><div class="linha-conteudo"><div class="linha-codigo">          &lt;th scope="col"&gt;Projeto&lt;/th&gt;</div><div class="linha-texto">Cabeçalho da quinta coluna.</div></div></div><div class="linha-explicacao"><div class="linha-num">L38</div><div class="linha-conteudo"><div class="linha-codigo">          &lt;th scope="col"&gt;Média&lt;/th&gt;</div><div class="linha-texto">Cabeçalho da sexta e última coluna.</div></div></div><div class="linha-explicacao"><div class="linha-num">L39</div><div class="linha-conteudo"><div class="linha-codigo">        &lt;/tr&gt;</div><div class="linha-texto">Fecha a linha de cabeçalho.</div></div></div><div class="linha-explicacao"><div class="linha-num">L40</div><div class="linha-conteudo"><div class="linha-codigo">      &lt;/thead&gt;</div><div class="linha-texto">Fecha o grupo de cabeçalho.</div></div></div><h4>tbody — os dados</h4><div class="linha-explicacao"><div class="linha-num">L42</div><div class="linha-conteudo"><div class="linha-codigo">      &lt;tbody&gt;</div><div class="linha-texto">Agrupa as linhas de dados. Todo conteúdo de dados deve estar aqui, não solto entre thead e table.</div></div></div><div class="linha-explicacao"><div class="linha-num">L43</div><div class="linha-conteudo"><div class="linha-codigo">        &lt;tr&gt;</div><div class="linha-texto">Início da linha 1 (Ana).</div></div></div><div class="linha-explicacao"><div class="linha-num">L44</div><div class="linha-conteudo"><div class="linha-codigo">          &lt;th scope="row"&gt;Ana&lt;/th&gt;</div><div class="linha-texto">Célula de cabeçalho DE LINHA. O <code>scope="row"</code> declara que "Ana" titula os dados desta mesma linha. Este é o conceito-chave: <code>&lt;th&gt;</code> não é só cabeçalho do topo — pode titular linhas.</div></div></div><div class="linha-explicacao"><div class="linha-num">L45</div><div class="linha-conteudo"><div class="linha-codigo">          &lt;td&gt;9,0&lt;/td&gt;</div><div class="linha-texto">Célula de dado. Contém a nota em HTML. Vírgula decimal (padrão brasileiro).</div></div></div><div class="linha-explicacao"><div class="linha-num">L46</div><div class="linha-conteudo"><div class="linha-codigo">          &lt;td&gt;8,5&lt;/td&gt;</div><div class="linha-texto">Nota em CSS.</div></div></div><div class="linha-explicacao"><div class="linha-num">L47</div><div class="linha-conteudo"><div class="linha-codigo">          &lt;td&gt;8,0&lt;/td&gt;</div><div class="linha-texto">Nota em JS.</div></div></div><div class="linha-explicacao"><div class="linha-num">L48</div><div class="linha-conteudo"><div class="linha-codigo">          &lt;td&gt;9,5&lt;/td&gt;</div><div class="linha-texto">Nota do projeto.</div></div></div><div class="linha-explicacao"><div class="linha-num">L49</div><div class="linha-conteudo"><div class="linha-codigo">          &lt;td&gt;8,75&lt;/td&gt;</div><div class="linha-texto">Média calculada (9,0 + 8,5 + 8,0 + 9,5) / 4 = 8,75.</div></div></div><div class="linha-explicacao"><div class="linha-num">L50</div><div class="linha-conteudo"><div class="linha-codigo">        &lt;/tr&gt;</div><div class="linha-texto">Fecha a linha da Ana.</div></div></div><div class="linha-explicacao"><div class="linha-num">L51</div><div class="linha-conteudo"><div class="linha-codigo">        &lt;tr&gt;</div><div class="linha-texto">Início da linha 2 (João).</div></div></div><div class="linha-explicacao"><div class="linha-num">L52</div><div class="linha-conteudo"><div class="linha-codigo">          &lt;th scope="row"&gt;João&lt;/th&gt;</div><div class="linha-texto">Cabeçalho de linha para João. Mesmo raciocínio.</div></div></div><div class="linha-explicacao"><div class="linha-num">L53</div><div class="linha-conteudo"><div class="linha-codigo">          &lt;td&gt;7,5&lt;/td&gt;</div><div class="linha-texto">Nota em HTML.</div></div></div><div class="linha-explicacao"><div class="linha-num">L54</div><div class="linha-conteudo"><div class="linha-codigo">          &lt;td&gt;9,0&lt;/td&gt;</div><div class="linha-texto">Nota em CSS.</div></div></div><div class="linha-explicacao"><div class="linha-num">L55</div><div class="linha-conteudo"><div class="linha-codigo">          &lt;td&gt;8,5&lt;/td&gt;</div><div class="linha-texto">Nota em JS.</div></div></div><div class="linha-explicacao"><div class="linha-num">L56</div><div class="linha-conteudo"><div class="linha-codigo">          &lt;td&gt;8,0&lt;/td&gt;</div><div class="linha-texto">Nota do projeto.</div></div></div><div class="linha-explicacao"><div class="linha-num">L57</div><div class="linha-conteudo"><div class="linha-codigo">          &lt;td&gt;8,25&lt;/td&gt;</div><div class="linha-texto">Média de João: (7,5 + 9,0 + 8,5 + 8,0) / 4 = 8,25.</div></div></div><div class="linha-explicacao"><div class="linha-num">L58</div><div class="linha-conteudo"><div class="linha-codigo">        &lt;/tr&gt;</div><div class="linha-texto">Fecha a linha do João.</div></div></div><div class="linha-explicacao"><div class="linha-num">L59</div><div class="linha-conteudo"><div class="linha-codigo">        &lt;tr&gt;</div><div class="linha-texto">Início da linha 3 (Marina).</div></div></div><div class="linha-explicacao"><div class="linha-num">L60</div><div class="linha-conteudo"><div class="linha-codigo">          &lt;th scope="row"&gt;Marina&lt;/th&gt;</div><div class="linha-texto">Cabeçalho de linha para Marina.</div></div></div><div class="linha-explicacao"><div class="linha-num">L61</div><div class="linha-conteudo"><div class="linha-codigo">          &lt;td&gt;8,5&lt;/td&gt;</div><div class="linha-texto">Nota em HTML.</div></div></div><div class="linha-explicacao"><div class="linha-num">L62</div><div class="linha-conteudo"><div class="linha-codigo">          &lt;td&gt;9,5&lt;/td&gt;</div><div class="linha-texto">Nota em CSS.</div></div></div><div class="linha-explicacao"><div class="linha-num">L63</div><div class="linha-conteudo"><div class="linha-codigo">          &lt;td&gt;9,0&lt;/td&gt;</div><div class="linha-texto">Nota em JS.</div></div></div><div class="linha-explicacao"><div class="linha-num">L64</div><div class="linha-conteudo"><div class="linha-codigo">          &lt;td&gt;9,5&lt;/td&gt;</div><div class="linha-texto">Nota do projeto.</div></div></div><div class="linha-explicacao"><div class="linha-num">L65</div><div class="linha-conteudo"><div class="linha-codigo">          &lt;td&gt;9,13&lt;/td&gt;</div><div class="linha-texto">Média de Marina: (8,5 + 9,5 + 9,0 + 9,5) / 4 = 9,125, arredondado para 9,13.</div></div></div><div class="linha-explicacao"><div class="linha-num">L66</div><div class="linha-conteudo"><div class="linha-codigo">        &lt;/tr&gt;</div><div class="linha-texto">Fecha a linha da Marina.</div></div></div><div class="linha-explicacao"><div class="linha-num">L67</div><div class="linha-conteudo"><div class="linha-codigo">      &lt;/tbody&gt;</div><div class="linha-texto">Fecha o grupo de dados.</div></div></div><div class="linha-explicacao"><div class="linha-num">L68</div><div class="linha-conteudo"><div class="linha-codigo">    &lt;/table&gt;</div><div class="linha-texto">Fecha a tabela.</div></div></div><div class="linha-explicacao"><div class="linha-num">L69</div><div class="linha-conteudo"><div class="linha-codigo">  &lt;/div&gt;</div><div class="linha-texto">Fecha o invólucro <code>tabela-container</code>. É ele quem recebe o <code>overflow-x: auto</code>, e não a tabela — essa é a sacada do exemplo.</div></div></div><h4>Instrução visual e fechamento</h4><div class="linha-explicacao"><div class="linha-num">L71</div><div class="linha-conteudo"><div class="linha-codigo">  &lt;p&gt;↔ Em telas pequenas, deslize horizontalmente para ver todas as colunas.&lt;/p&gt;</div><div class="linha-texto">Aviso textual ao usuário. Sem esse texto, o usuário em celular pode não descobrir que pode rolar para o lado. É uma boa prática de usabilidade — a barra de rolagem sozinha não é óbvia.</div></div></div><div class="linha-explicacao"><div class="linha-num">L73</div><div class="linha-conteudo"><div class="linha-codigo">&lt;/body&gt;</div><div class="linha-texto">Fecha o conteúdo visível.</div></div></div><div class="linha-explicacao"><div class="linha-num">L74</div><div class="linha-conteudo"><div class="linha-codigo">&lt;/html&gt;</div><div class="linha-texto">Fecha o elemento raiz.</div></div></div></div>
+    </section>
+  </div>
+
+  <div id="aba-quiz" class="tab-content active">
+    <section class="card">
+      <h2>📝 Questionário — 12 questões sobre o código</h2>
+      <p>Responda com calma, consultando a aba de explicação sempre que precisar. Não há feedback imediato: ao finalizar, você vê todas as respostas corretas de uma vez.</p>
+
+      <div class="modo-tabs" role="tablist" aria-label="Modo do questionário">
+        <button type="button" class="modo-tab active" data-modo="estudo" role="tab" aria-selected="true">📚 Praticar (mostra gabarito ao finalizar)</button>
+        <button type="button" class="modo-tab" data-modo="prova" role="tab" aria-selected="false">📝 Prova (gabarito armazenado)</button>
+      </div>
+
+      <div class="quiz-header">
+        <span class="progresso-texto">Progresso: <strong id="txtProgresso">12 de 12</strong></span>
+        <div class="barra-fundo"><div class="barra-preenchimento" id="fillProgresso" style="width: 100%;"></div></div>
+      </div>
+
+      <div id="containerQuestoes"><div class="question" id="q1"><div class="question-header"><span class="question-number">1</span><div>Qual regra CSS é a principal responsável por permitir rolagem horizontal quando a tabela é maior que o contêiner?</div></div><div class="options"><div class="option" data-letra="a"><input type="radio" name="q1" value="a"><label><strong>a)</strong> min-width: 500px;</label></div><div class="option" data-letra="b"><input type="radio" name="q1" value="b"><label><strong>b)</strong> border-collapse: collapse;</label></div><div class="option selecionada" data-letra="c"><input type="radio" name="q1" value="c"><label><strong>c)</strong> overflow-x: auto;</label></div><div class="option" data-letra="d"><input type="radio" name="q1" value="d"><label><strong>d)</strong> padding: 8px;</label></div></div></div><div class="question" id="q2"><div class="question-header"><span class="question-number">2</span><div>Por que o elemento &lt;div class="tabela-container"&gt; está FORA da &lt;table&gt;?</div></div><div class="options"><div class="option" data-letra="a"><input type="radio" name="q2" value="a"><label><strong>a)</strong> Porque as regras de acessibilidade exigem essa hierarquia.</label></div><div class="option selecionada" data-letra="b"><input type="radio" name="q2" value="b"><label><strong>b)</strong> Porque o contêiner precisa envolver a tabela para receber a rolagem: o overflow fica no invólucro, não na tabela.</label></div><div class="option" data-letra="c"><input type="radio" name="q2" value="c"><label><strong>c)</strong> Porque a &lt;table&gt; não permite outros elementos dentro dela além de linhas e células.</label></div><div class="option" data-letra="d"><input type="radio" name="q2" value="d"><label><strong>d)</strong> Porque sem o div a tabela não funciona no navegador.</label></div></div></div><div class="question" id="q3"><div class="question-header"><span class="question-number">3</span><div>O que acontece com uma tabela de seis colunas em um celular de 375px de largura, com o código apresentado?</div></div><div class="options"><div class="option" data-letra="a"><input type="radio" name="q3" value="a"><label><strong>a)</strong> As colunas ficam empilhadas em cards automaticamente.</label></div><div class="option selecionada" data-letra="b"><input type="radio" name="q3" value="b"><label><strong>b)</strong> Aparece uma barra de rolagem horizontal dentro do contêiner, porque a tabela tem min-width: 500px e a tela só tem 375px.</label></div><div class="option" data-letra="c"><input type="radio" name="q3" value="c"><label><strong>c)</strong> A tabela encolhe as fontes para caber.</label></div><div class="option" data-letra="d"><input type="radio" name="q3" value="d"><label><strong>d)</strong> O navegador recusa renderizar a tabela.</label></div></div></div><div class="question" id="q4"><div class="question-header"><span class="question-number">4</span><div>O que o atributo scope="row" em &lt;th scope="row"&gt;Ana&lt;/th&gt; informa ao leitor de tela?</div></div><div class="options"><div class="option" data-letra="a"><input type="radio" name="q4" value="a"><label><strong>a)</strong> Que "Ana" é o cabeçalho da coluna onde ela está.</label></div><div class="option selecionada" data-letra="b"><input type="radio" name="q4" value="b"><label><strong>b)</strong> Que "Ana" é o cabeçalho que titula os dados da mesma linha.</label></div><div class="option" data-letra="c"><input type="radio" name="q4" value="c"><label><strong>c)</strong> Que "Ana" é uma célula de dado comum.</label></div><div class="option" data-letra="d"><input type="radio" name="q4" value="d"><label><strong>d)</strong> Que "Ana" pertence ao &lt;thead&gt;.</label></div></div></div><div class="question" id="q5"><div class="question-header"><span class="question-number">5</span><div>Qual é o papel do &lt;caption&gt;Notas — Front-End 2026&lt;/caption&gt;?</div></div><div class="options"><div class="option" data-letra="a"><input type="radio" name="q5" value="a"><label><strong>a)</strong> Criar um título para a página na aba do navegador.</label></div><div class="option" data-letra="b"><input type="radio" name="q5" value="b"><label><strong>b)</strong> Aplicar um estilo diferenciado ao topo da tabela.</label></div><div class="option selecionada" data-letra="c"><input type="radio" name="q5" value="c"><label><strong>c)</strong> Identificar o assunto da tabela — recurso de acessibilidade e clareza.</label></div><div class="option" data-letra="d"><input type="radio" name="q5" value="d"><label><strong>d)</strong> Substituir o &lt;thead&gt; quando a tabela é simples.</label></div></div></div><div class="question" id="q6"><div class="question-header"><span class="question-number">6</span><div>Por que o arquivo tem &lt;meta charset="UTF-8"&gt;?</div></div><div class="options"><div class="option selecionada" data-letra="a"><input type="radio" name="q6" value="a"><label><strong>a)</strong> Para corrigir a codificação dos acentos e cedilhas na renderização.</label></div><div class="option" data-letra="b"><input type="radio" name="q6" value="b"><label><strong>b)</strong> Para carregar a fonte Segoe UI automaticamente.</label></div><div class="option" data-letra="c"><input type="radio" name="q6" value="c"><label><strong>c)</strong> Para permitir que a tabela use CSS.</label></div><div class="option" data-letra="d"><input type="radio" name="q6" value="d"><label><strong>d)</strong> Para ativar o modo responsivo do navegador.</label></div></div></div><div class="question" id="q7"><div class="question-header"><span class="question-number">7</span><div>Onde fica a linha "min-width: 500px;" e em qual elemento ela é aplicada?</div></div><div class="options"><div class="option" data-letra="a"><input type="radio" name="q7" value="a"><label><strong>a)</strong> Dentro de .tabela-container, aplicada ao div.</label></div><div class="option selecionada" data-letra="b"><input type="radio" name="q7" value="b"><label><strong>b)</strong> Dentro do seletor table, aplicada à tabela.</label></div><div class="option" data-letra="c"><input type="radio" name="q7" value="c"><label><strong>c)</strong> Dentro do seletor th, td, aplicada às células.</label></div><div class="option" data-letra="d"><input type="radio" name="q7" value="d"><label><strong>d)</strong> Direto no HTML pelo atributo width="500".</label></div></div></div><div class="question" id="q8"><div class="question-header"><span class="question-number">8</span><div>Para que serve o trecho "border-collapse: collapse;"?</div></div><div class="options"><div class="option" data-letra="a"><input type="radio" name="q8" value="a"><label><strong>a)</strong> Remover as bordas internas de todas as células.</label></div><div class="option selecionada" data-letra="b"><input type="radio" name="q8" value="b"><label><strong>b)</strong> Juntar as bordas das células em uma única linha visual, evitando o efeito "borda dupla".</label></div><div class="option" data-letra="c"><input type="radio" name="q8" value="c"><label><strong>c)</strong> Ativar a rolagem horizontal.</label></div><div class="option" data-letra="d"><input type="radio" name="q8" value="d"><label><strong>d)</strong> Aplicar bordas apenas nas colunas de cabeçalho.</label></div></div></div><div class="question" id="q9"><div class="question-header"><span class="question-number">9</span><div>Qual é o problema de declarar "table { ... }" como seletor de tag em vez de usar uma classe?</div></div><div class="options"><div class="option" data-letra="a"><input type="radio" name="q9" value="a"><label><strong>a)</strong> Não estiliza o elemento table.</label></div><div class="option selecionada" data-letra="b"><input type="radio" name="q9" value="b"><label><strong>b)</strong> Aplica as regras a todas as tabelas da página, o que é indesejado em páginas com mais de uma tabela.</label></div><div class="option" data-letra="c"><input type="radio" name="q9" value="c"><label><strong>c)</strong> Impede a rolagem horizontal.</label></div><div class="option" data-letra="d"><input type="radio" name="q9" value="d"><label><strong>d)</strong> Não é compatível com border-collapse.</label></div></div></div><div class="question" id="q10"><div class="question-header"><span class="question-number">10</span><div>A tabela do exemplo exibe qual sequência de alunos na primeira coluna?</div></div><div class="options"><div class="option" data-letra="a"><input type="radio" name="q10" value="a"><label><strong>a)</strong> João, Ana, Marina</label></div><div class="option" data-letra="b"><input type="radio" name="q10" value="b"><label><strong>b)</strong> Marina, João, Ana</label></div><div class="option selecionada" data-letra="c"><input type="radio" name="q10" value="c"><label><strong>c)</strong> Ana, João, Marina</label></div><div class="option" data-letra="d"><input type="radio" name="q10" value="d"><label><strong>d)</strong> Ana, Marina, João</label></div></div></div><div class="question" id="q11"><div class="question-header"><span class="question-number">11</span><div>Na média da aluna Marina, o valor exibido é 9,13. Como esse valor foi obtido?</div></div><div class="options"><div class="option" data-letra="a"><input type="radio" name="q11" value="a"><label><strong>a)</strong> Foi digitado por escolha do professor.</label></div><div class="option selecionada" data-letra="b"><input type="radio" name="q11" value="b"><label><strong>b)</strong> É o resultado de (8,5 + 9,5 + 9,0 + 9,5) / 4 = 9,125, arredondado para 9,13.</label></div><div class="option" data-letra="c"><input type="radio" name="q11" value="c"><label><strong>c)</strong> É a soma das notas dividida por 3.</label></div><div class="option" data-letra="d"><input type="radio" name="q11" value="d"><label><strong>d)</strong> É a média dos três alunos.</label></div></div></div><div class="question" id="q12"><div class="question-header"><span class="question-number">12</span><div>Se o navegador exibisse a tabela SEM o trecho &lt;style&gt;...&lt;/style&gt;, o que aconteceria?</div></div><div class="options"><div class="option selecionada" data-letra="a"><input type="radio" name="q12" value="a"><label><strong>a)</strong> A estrutura da tabela permaneceria correta, mas a borda e o padding desapareceriam, e a rolagem horizontal automática do contêiner também.</label></div><div class="option" data-letra="b"><input type="radio" name="q12" value="b"><label><strong>b)</strong> A tabela exibiria erro grave e o navegador recusaria o conteúdo.</label></div><div class="option" data-letra="c"><input type="radio" name="q12" value="c"><label><strong>c)</strong> As células apareceriam em vermelho automaticamente.</label></div><div class="option" data-letra="d"><input type="radio" name="q12" value="d"><label><strong>d)</strong> Os dados seriam embaralhados.</label></div></div></div></div>
+
+      <div class="btn-grupo">
+        <button type="button" class="btn" id="btnFinalizar">✅ Finalizar</button>
+        <button type="button" class="btn btn-secondary" id="btnLimpar">🔄 Limpar</button>
+      </div>
+
+      <div class="results mostrar" id="resultados">
+        <h4>📊 Gabarito de referência</h4>
+        <div id="listaGabarito"><div class="gabarito-item"><div style="color:#15803d;font-weight:800;">✅ Q1 — Você marcou (c), gabarito (c)</div><div style="color:#64748b;font-size:.84rem;margin-top:4px;">overflow-x: auto permite rolagem horizontal CONDICIONAL — só aparece quando o conteúdo excede a largura do contêiner. Sem ela, a tabela estouraria o layout.</div></div><div class="gabarito-item"><div style="color:#15803d;font-weight:800;">✅ Q2 — Você marcou (b), gabarito (b)</div><div style="color:#64748b;font-size:.84rem;margin-top:4px;">Se o overflow-x: auto estivesse na &lt;table&gt;, o navegador rolaria a própria tabela, mas o comportamento do contêiner-pai não seria controlável. O padrão é envolver a tabela num invólucro que recebe o overflow.</div></div><div class="gabarito-item"><div style="color:#15803d;font-weight:800;">✅ Q3 — Você marcou (b), gabarito (b)</div><div style="color:#64748b;font-size:.84rem;margin-top:4px;">min-width: 500px força a tabela a ter pelo menos 500px. Como o celular tem 375px, o conteúdo excede, e o overflow-x: auto do contêiner faz aparecer a rolagem.</div></div><div class="gabarito-item"><div style="color:#15803d;font-weight:800;">✅ Q4 — Você marcou (b), gabarito (b)</div><div style="color:#64748b;font-size:.84rem;margin-top:4px;">scope="row" associa o &lt;th&gt; aos dados da linha. scope="col" associa aos dados da coluna. Este é o conceito do cabeçalho de linha.</div></div><div class="gabarito-item"><div style="color:#15803d;font-weight:800;">✅ Q5 — Você marcou (c), gabarito (c)</div><div style="color:#64748b;font-size:.84rem;margin-top:4px;">O &lt;caption&gt; identifica o assunto da tabela. Não substitui o &lt;thead&gt;, que agrupa os cabeçalhos das colunas. É recomendado em toda tabela.</div></div><div class="gabarito-item"><div style="color:#15803d;font-weight:800;">✅ Q6 — Você marcou (a), gabarito (a)</div><div style="color:#64748b;font-size:.84rem;margin-top:4px;">UTF-8 aceita acentos (á, ç, ã), símbolos (—, ↔) e caracteres especiais. Sem a meta charset, o navegador pode mostrar caracteres errados ou perder traços e cedilhas.</div></div><div class="gabarito-item"><div style="color:#15803d;font-weight:800;">✅ Q7 — Você marcou (b), gabarito (b)</div><div style="color:#64748b;font-size:.84rem;margin-top:4px;">O trecho está dentro do bloco "table { ... }", portanto se aplica ao elemento &lt;table&gt;. A min-width garante que a tabela não encolha demais.</div></div><div class="gabarito-item"><div style="color:#15803d;font-weight:800;">✅ Q8 — Você marcou (b), gabarito (b)</div><div style="color:#64748b;font-size:.84rem;margin-top:4px;">Sem border-collapse: collapse, cada célula mantém sua própria borda e o resultado visual é mais espaçado. Com collapse, as bordas adjacentes se fundem em uma linha.</div></div><div class="gabarito-item"><div style="color:#15803d;font-weight:800;">✅ Q9 — Você marcou (b), gabarito (b)</div><div style="color:#64748b;font-size:.84rem;margin-top:4px;">O seletor de tag table aplica a regra a TODAS as tabelas do documento. Em projetos com várias tabelas (e.g. uma tabela de contatos e uma de notas), você pode querer estilos diferentes — nesse caso, classes são mais apropriadas.</div></div><div class="gabarito-item"><div style="color:#15803d;font-weight:800;">✅ Q10 — Você marcou (c), gabarito (c)</div><div style="color:#64748b;font-size:.84rem;margin-top:4px;">As linhas do &lt;tbody&gt; começam com Ana, depois João e por último Marina, na ordem em que estão escritas.</div></div><div class="gabarito-item"><div style="color:#15803d;font-weight:800;">✅ Q11 — Você marcou (b), gabarito (b)</div><div style="color:#64748b;font-size:.84rem;margin-top:4px;">A média da linha é calculada com as notas da própria aluna: (8,5 + 9,5 + 9,0 + 9,5)/4 = 9,125, arredondado para duas casas decimais.</div></div><div class="gabarito-item"><div style="color:#15803d;font-weight:800;">✅ Q12 — Você marcou (a), gabarito (a)</div><div style="color:#64748b;font-size:.84rem;margin-top:4px;">O CSS só estiliza e controla a rolagem; a semântica da tabela está toda no HTML. Sem CSS, as cores e bordas mudam, a min-width desaparece, e o overflow-x: auto do contêiner também. Mas o conteúdo continua legível.</div></div></div>
+      </div>
+    </section>
+  </div>
+
+  <footer style="text-align:center;color:#94a3b8;font-size:.78rem;padding:22px 0;">
+    📊 Disciplina: Programação Front-End • Tema 04: Tabelas em HTML • 2026
+  </footer>
+</div>
+
+<div class="toast-notificacao" id="toastNotificacao">✅ Feito!</div>
+<button type="button" class="btn-top" id="btnTopo">⬆️ Topo</button>
+
+<script>
+/* ============================================================
+   UTILITÁRIO DE ESCAPE — protege conteúdo que contém <, >, &, "
+   ============================================================ */
+function esc(t) {
+  return String(t == null ? '' : t)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+/* ============================================================
+   CÓDIGO ORIGINAL — exatamente como o professor enviou
+   ============================================================ */
+var CODIGO_ORIGINAL = '<!DOCTYPE html>\n' +
+'<html lang="pt-BR">\n' +
+'<head>\n' +
+'  <meta charset="UTF-8">\n' +
+'  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
+'  <title>Notas — Front-End 2026</title>\n' +
+'\n' +
+'  <style>\n' +
+'    .tabela-container {\n' +
+'      overflow-x: auto;\n' +
+'    }\n' +
+'\n' +
+'    table {\n' +
+'      border-collapse: collapse;\n' +
+'      min-width: 500px;\n' +
+'    }\n' +
+'\n' +
+'    th, td {\n' +
+'      border: 1px solid #999;\n' +
+'      padding: 8px;\n' +
+'    }\n' +
+'  </style>\n' +
+'</head>\n' +
+'<body>\n' +
+'\n' +
+'  <div class="tabela-container">\n' +
+'    <table>\n' +
+'      <caption>Notas — Front-End 2026</caption>\n' +
+'\n' +
+'      <thead>\n' +
+'        <tr>\n' +
+'          <th scope="col">Aluno</th>\n' +
+'          <th scope="col">HTML</th>\n' +
+'          <th scope="col">CSS</th>\n' +
+'          <th scope="col">JS</th>\n' +
+'          <th scope="col">Projeto</th>\n' +
+'          <th scope="col">Média</th>\n' +
+'        </tr>\n' +
+'      </thead>\n' +
+'\n' +
+'      <tbody>\n' +
+'        <tr>\n' +
+'          <th scope="row">Ana</th>\n' +
+'          <td>9,0</td>\n' +
+'          <td>8,5</td>\n' +
+'          <td>8,0</td>\n' +
+'          <td>9,5</td>\n' +
+'          <td>8,75</td>\n' +
+'        </tr>\n' +
+'        <tr>\n' +
+'          <th scope="row">João</th>\n' +
+'          <td>7,5</td>\n' +
+'          <td>9,0</td>\n' +
+'          <td>8,5</td>\n' +
+'          <td>8,0</td>\n' +
+'          <td>8,25</td>\n' +
+'        </tr>\n' +
+'        <tr>\n' +
+'          <th scope="row">Marina</th>\n' +
+'          <td>8,5</td>\n' +
+'          <td>9,5</td>\n' +
+'          <td>9,0</td>\n' +
+'          <td>9,5</td>\n' +
+'          <td>9,13</td>\n' +
+'        </tr>\n' +
+'      </tbody>\n' +
+'    </table>\n' +
+'  </div>\n' +
+'\n' +
+'  <p>↔ Em telas pequenas, deslize horizontalmente para ver todas as colunas.</p>\n' +
+'\n' +
+'</body>\n' +
+'</html>';
+
+/* ============================================================
+   EXPLICAÇÃO LINHA A LINHA
+   ============================================================ */
+var EXPLICACOES = [
+  { grupo: 'Cabeçalho do documento', linhas: [
+    { n:'1', cod:'<!DOCTYPE html>', txt:'Declara que o documento é HTML5. Deve ser a primeira linha do arquivo. Sem ele, o navegador pode entrar em modo quirks (compatibilidade com navegadores antigos) e aplicar estilos antigos.' },
+    { n:'2', cod:'<html lang="pt-BR">', txt:'Elemento raiz do documento. O atributo <code>lang=&quot;pt-BR&quot;</code> informa o idioma principal da página — leitores de tela usam essa informação para escolher a pronúncia e o dicionário corretos.' },
+    { n:'3', cod:'<head>', txt:'Início do bloco de metadados. Conteúdo daqui não aparece na página, mas instrui o navegador (charset, viewport, título, estilo).' },
+    { n:'4', cod:'  <meta charset="UTF-8">', txt:'Define a codificação de caracteres. <code>UTF-8</code> aceita acentos, cedilha e símbolos como &quot;↔&quot;. Sem isso, caracteres como &quot;Média&quot; e &quot;João&quot; aparecem corrompidos.' },
+    { n:'5', cod:'  <meta name="viewport" content="width=device-width, initial-scale=1.0">', txt:'Instrui o navegador móvel a usar a largura real do dispositivo como largura da viewport e a não aplicar zoom artificial. Sem esta meta, o celular finge ter ~980px de largura e a responsividade não funciona.' },
+    { n:'6', cod:'  <title>Notas — Front-End 2026</title>', txt:'Título da página. Aparece na aba do navegador e nos resultados de busca. Deve descrever o conteúdo. O travessão &quot;—&quot; foi digitado como Unicode direto (não como <code>&amp;mdash;</code>), o que é válido em UTF-8.' }
+  ]},
+  { grupo: 'CSS — as três regras da rolagem horizontal', linhas: [
+    { n:'7', cod:'  <style>', txt:'Abre um bloco de CSS embutido no HTML. Nesta aula usamos só CSS embutido. Em projetos maiores ele vira arquivo externo (.css).' },
+    { n:'9', cod:'    .tabela-container {', txt:'Seletor de classe. Aplica o bloco de regras em elementos que tenham <code>class=&quot;tabela-container&quot;</code>. O ponto (.) no começo identifica uma classe CSS.' },
+    { n:'10', cod:'      overflow-x: auto;', txt:'Permite rolagem horizontal APENAS quando o conteúdo excede a largura do contêiner. Em telas largas não há rolagem; em telas estreitas, o navegador coloca uma barra. Este é o coração do exemplo.' },
+    { n:'11', cod:'    }', txt:'Fecha a regra da classe.' },
+    { n:'13', cod:'    table {', txt:'Seletor de tag. Aplica a regra a TODA tabela do documento. Como este exemplo tem apenas uma, tudo bem — em páginas com várias tabelas, seria melhor usar uma classe.' },
+    { n:'14', cod:'      border-collapse: collapse;', txt:'Junta as bordas das células em uma única linha. Sem ele, cada célula exibe sua borda separada, criando aquele visual &quot;duplo&quot; e mais espaçado.' },
+    { n:'15', cod:'      min-width: 500px;', txt:'Largura mínima de 500px. Impede que as seis colunas fiquem esmagadas ao ponto de não conseguir ler. Se a tela for menor que 500px, a tabela excede o contêiner e o <code>overflow-x: auto</code> entra em ação.' },
+    { n:'16', cod:'    }', txt:'Fecha a regra de table.' },
+    { n:'18', cod:'    th, td {', txt:'Agrupamento de seletores: aplica as regras abaixo a TODOS os <code>&lt;th&gt;</code> e TODOS os <code>&lt;td&gt;</code> do documento.' },
+    { n:'19', cod:'      border: 1px solid #999;', txt:'Borda de 1 pixel, estilo sólido, cor cinza (#999). O # na frente significa hexadecimal. Dá o contorno visível a cada célula.' },
+    { n:'20', cod:'      padding: 8px;', txt:'Espaço interno de 8px entre o conteúdo e a borda da célula. Sem isso, o texto ficaria colado nas bordas, difícil de ler.' },
+    { n:'21', cod:'    }', txt:'Fecha a regra de th/td.' }
+  ]},
+  { grupo: 'Corpo e contêiner da tabela', linhas: [
+    { n:'25', cod:'<body>', txt:'Início do conteúdo visível da página.' },
+    { n:'27', cod:'  <div class="tabela-container">', txt:'Div com classe <code>tabela-container</code>. É o invólucro responsável por permitir a rolagem horizontal. Fica FORA da tabela, envolvendo-a.' },
+    { n:'28', cod:'    <table>', txt:'Elemento raiz da tabela. Não usa CSS para alinhamento de página — serve para apresentar dados em linhas e colunas.' }
+  ]},
+  { grupo: 'caption, thead e o cabeçalho', linhas: [
+    { n:'29', cod:'      <caption>Notas — Front-End 2026</caption>', txt:'Primeiro elemento dentro de <code>&lt;table&gt;</code>. Identifica o assunto da tabela para o leitor (visual, buscador e leitor de tela). Sempre útil, especialmente quando o contexto não deixa o propósito óbvio.' },
+    { n:'31', cod:'      <thead>', txt:'Agrupa as linhas de cabeçalho. O navegador entende que o conteúdo é título das colunas.' },
+    { n:'32', cod:'        <tr>', txt:'Table Row. Cria uma linha da tabela. Aqui dentro vão os cabeçalhos.' },
+    { n:'33', cod:'          <th scope="col">Aluno</th>', txt:'Célula de cabeçalho. <code>scope=&quot;col&quot;</code> declara que esta célula titula toda a coluna abaixo. Sem o scope, o navegador consegue deduzir em tabelas simples — mas declarar explicitamente é a boa prática.' },
+    { n:'34', cod:'          <th scope="col">HTML</th>', txt:'Cabeçalho da segunda coluna. Mesma regra: scope=&quot;col&quot; associa a célula a todas as células daquela coluna.' },
+    { n:'35', cod:'          <th scope="col">CSS</th>', txt:'Cabeçalho da terceira coluna.' },
+    { n:'36', cod:'          <th scope="col">JS</th>', txt:'Cabeçalho da quarta coluna. &quot;JS&quot; é abreviação de JavaScript.' },
+    { n:'37', cod:'          <th scope="col">Projeto</th>', txt:'Cabeçalho da quinta coluna.' },
+    { n:'38', cod:'          <th scope="col">Média</th>', txt:'Cabeçalho da sexta e última coluna.' },
+    { n:'39', cod:'        </tr>', txt:'Fecha a linha de cabeçalho.' },
+    { n:'40', cod:'      </thead>', txt:'Fecha o grupo de cabeçalho.' }
+  ]},
+  { grupo: 'tbody — os dados', linhas: [
+    { n:'42', cod:'      <tbody>', txt:'Agrupa as linhas de dados. Todo conteúdo de dados deve estar aqui, não solto entre thead e table.' },
+    { n:'43', cod:'        <tr>', txt:'Início da linha 1 (Ana).' },
+    { n:'44', cod:'          <th scope="row">Ana</th>', txt:'Célula de cabeçalho DE LINHA. O <code>scope=&quot;row&quot;</code> declara que &quot;Ana&quot; titula os dados desta mesma linha. Este é o conceito-chave: <code>&lt;th&gt;</code> não é só cabeçalho do topo — pode titular linhas.' },
+    { n:'45', cod:'          <td>9,0</td>', txt:'Célula de dado. Contém a nota em HTML. Vírgula decimal (padrão brasileiro).' },
+    { n:'46', cod:'          <td>8,5</td>', txt:'Nota em CSS.' },
+    { n:'47', cod:'          <td>8,0</td>', txt:'Nota em JS.' },
+    { n:'48', cod:'          <td>9,5</td>', txt:'Nota do projeto.' },
+    { n:'49', cod:'          <td>8,75</td>', txt:'Média calculada (9,0 + 8,5 + 8,0 + 9,5) / 4 = 8,75.' },
+    { n:'50', cod:'        </tr>', txt:'Fecha a linha da Ana.' },
+    { n:'51', cod:'        <tr>', txt:'Início da linha 2 (João).' },
+    { n:'52', cod:'          <th scope="row">João</th>', txt:'Cabeçalho de linha para João. Mesmo raciocínio.' },
+    { n:'53', cod:'          <td>7,5</td>', txt:'Nota em HTML.' },
+    { n:'54', cod:'          <td>9,0</td>', txt:'Nota em CSS.' },
+    { n:'55', cod:'          <td>8,5</td>', txt:'Nota em JS.' },
+    { n:'56', cod:'          <td>8,0</td>', txt:'Nota do projeto.' },
+    { n:'57', cod:'          <td>8,25</td>', txt:'Média de João: (7,5 + 9,0 + 8,5 + 8,0) / 4 = 8,25.' },
+    { n:'58', cod:'        </tr>', txt:'Fecha a linha do João.' },
+    { n:'59', cod:'        <tr>', txt:'Início da linha 3 (Marina).' },
+    { n:'60', cod:'          <th scope="row">Marina</th>', txt:'Cabeçalho de linha para Marina.' },
+    { n:'61', cod:'          <td>8,5</td>', txt:'Nota em HTML.' },
+    { n:'62', cod:'          <td>9,5</td>', txt:'Nota em CSS.' },
+    { n:'63', cod:'          <td>9,0</td>', txt:'Nota em JS.' },
+    { n:'64', cod:'          <td>9,5</td>', txt:'Nota do projeto.' },
+    { n:'65', cod:'          <td>9,13</td>', txt:'Média de Marina: (8,5 + 9,5 + 9,0 + 9,5) / 4 = 9,125, arredondado para 9,13.' },
+    { n:'66', cod:'        </tr>', txt:'Fecha a linha da Marina.' },
+    { n:'67', cod:'      </tbody>', txt:'Fecha o grupo de dados.' },
+    { n:'68', cod:'    </table>', txt:'Fecha a tabela.' },
+    { n:'69', cod:'  </div>', txt:'Fecha o invólucro <code>tabela-container</code>. É ele quem recebe o <code>overflow-x: auto</code>, e não a tabela — essa é a sacada do exemplo.' }
+  ]},
+  { grupo: 'Instrução visual e fechamento', linhas: [
+    { n:'71', cod:'  <p>↔ Em telas pequenas, deslize horizontalmente para ver todas as colunas.</p>', txt:'Aviso textual ao usuário. Sem esse texto, o usuário em celular pode não descobrir que pode rolar para o lado. É uma boa prática de usabilidade — a barra de rolagem sozinha não é óbvia.' },
+    { n:'73', cod:'</body>', txt:'Fecha o conteúdo visível.' },
+    { n:'74', cod:'</html>', txt:'Fecha o elemento raiz.' }
+  ]}
+];
+
+/* ============================================================
+   BANCO DE QUESTÕES — todos os textos passam por esc() na renderização
+   ============================================================ */
+var QUESTOES = [
+  {
+    pergunta: 'Qual regra CSS é a principal responsável por permitir rolagem horizontal quando a tabela é maior que o contêiner?',
+    opcoes: [
+      { l:'a', t:'min-width: 500px;' },
+      { l:'b', t:'border-collapse: collapse;' },
+      { l:'c', t:'overflow-x: auto;' },
+      { l:'d', t:'padding: 8px;' }
+    ],
+    correta: 'c',
+    explicacao: 'overflow-x: auto permite rolagem horizontal CONDICIONAL — só aparece quando o conteúdo excede a largura do contêiner. Sem ela, a tabela estouraria o layout.'
+  },
+  {
+    pergunta: 'Por que o elemento <div class="tabela-container"> está FORA da <table>?',
+    opcoes: [
+      { l:'a', t:'Porque as regras de acessibilidade exigem essa hierarquia.' },
+      { l:'b', t:'Porque o contêiner precisa envolver a tabela para receber a rolagem: o overflow fica no invólucro, não na tabela.' },
+      { l:'c', t:'Porque a <table> não permite outros elementos dentro dela além de linhas e células.' },
+      { l:'d', t:'Porque sem o div a tabela não funciona no navegador.' }
+    ],
+    correta: 'b',
+    explicacao: 'Se o overflow-x: auto estivesse na <table>, o navegador rolaria a própria tabela, mas o comportamento do contêiner-pai não seria controlável. O padrão é envolver a tabela num invólucro que recebe o overflow.'
+  },
+  {
+    pergunta: 'O que acontece com uma tabela de seis colunas em um celular de 375px de largura, com o código apresentado?',
+    opcoes: [
+      { l:'a', t:'As colunas ficam empilhadas em cards automaticamente.' },
+      { l:'b', t:'Aparece uma barra de rolagem horizontal dentro do contêiner, porque a tabela tem min-width: 500px e a tela só tem 375px.' },
+      { l:'c', t:'A tabela encolhe as fontes para caber.' },
+      { l:'d', t:'O navegador recusa renderizar a tabela.' }
+    ],
+    correta: 'b',
+    explicacao: 'min-width: 500px força a tabela a ter pelo menos 500px. Como o celular tem 375px, o conteúdo excede, e o overflow-x: auto do contêiner faz aparecer a rolagem.'
+  },
+  {
+    pergunta: 'O que o atributo scope="row" em <th scope="row">Ana</th> informa ao leitor de tela?',
+    opcoes: [
+      { l:'a', t:'Que "Ana" é o cabeçalho da coluna onde ela está.' },
+      { l:'b', t:'Que "Ana" é o cabeçalho que titula os dados da mesma linha.' },
+      { l:'c', t:'Que "Ana" é uma célula de dado comum.' },
+      { l:'d', t:'Que "Ana" pertence ao <thead>.' }
+    ],
+    correta: 'b',
+    explicacao: 'scope="row" associa o <th> aos dados da linha. scope="col" associa aos dados da coluna. Este é o conceito do cabeçalho de linha.'
+  },
+  {
+    pergunta: 'Qual é o papel do <caption>Notas — Front-End 2026</caption>?',
+    opcoes: [
+      { l:'a', t:'Criar um título para a página na aba do navegador.' },
+      { l:'b', t:'Aplicar um estilo diferenciado ao topo da tabela.' },
+      { l:'c', t:'Identificar o assunto da tabela — recurso de acessibilidade e clareza.' },
+      { l:'d', t:'Substituir o <thead> quando a tabela é simples.' }
+    ],
+    correta: 'c',
+    explicacao: 'O <caption> identifica o assunto da tabela. Não substitui o <thead>, que agrupa os cabeçalhos das colunas. É recomendado em toda tabela.'
+  },
+  {
+    pergunta: 'Por que o arquivo tem <meta charset="UTF-8">?',
+    opcoes: [
+      { l:'a', t:'Para corrigir a codificação dos acentos e cedilhas na renderização.' },
+      { l:'b', t:'Para carregar a fonte Segoe UI automaticamente.' },
+      { l:'c', t:'Para permitir que a tabela use CSS.' },
+      { l:'d', t:'Para ativar o modo responsivo do navegador.' }
+    ],
+    correta: 'a',
+    explicacao: 'UTF-8 aceita acentos (á, ç, ã), símbolos (—, ↔) e caracteres especiais. Sem a meta charset, o navegador pode mostrar caracteres errados ou perder traços e cedilhas.'
+  },
+  {
+    pergunta: 'Onde fica a linha "min-width: 500px;" e em qual elemento ela é aplicada?',
+    opcoes: [
+      { l:'a', t:'Dentro de .tabela-container, aplicada ao div.' },
+      { l:'b', t:'Dentro do seletor table, aplicada à tabela.' },
+      { l:'c', t:'Dentro do seletor th, td, aplicada às células.' },
+      { l:'d', t:'Direto no HTML pelo atributo width="500".' }
+    ],
+    correta: 'b',
+    explicacao: 'O trecho está dentro do bloco "table { ... }", portanto se aplica ao elemento <table>. A min-width garante que a tabela não encolha demais.'
+  },
+  {
+    pergunta: 'Para que serve o trecho "border-collapse: collapse;"?',
+    opcoes: [
+      { l:'a', t:'Remover as bordas internas de todas as células.' },
+      { l:'b', t:'Juntar as bordas das células em uma única linha visual, evitando o efeito "borda dupla".' },
+      { l:'c', t:'Ativar a rolagem horizontal.' },
+      { l:'d', t:'Aplicar bordas apenas nas colunas de cabeçalho.' }
+    ],
+    correta: 'b',
+    explicacao: 'Sem border-collapse: collapse, cada célula mantém sua própria borda e o resultado visual é mais espaçado. Com collapse, as bordas adjacentes se fundem em uma linha.'
+  },
+  {
+    pergunta: 'Qual é o problema de declarar "table { ... }" como seletor de tag em vez de usar uma classe?',
+    opcoes: [
+      { l:'a', t:'Não estiliza o elemento table.' },
+      { l:'b', t:'Aplica as regras a todas as tabelas da página, o que é indesejado em páginas com mais de uma tabela.' },
+      { l:'c', t:'Impede a rolagem horizontal.' },
+      { l:'d', t:'Não é compatível com border-collapse.' }
+    ],
+    correta: 'b',
+    explicacao: 'O seletor de tag table aplica a regra a TODAS as tabelas do documento. Em projetos com várias tabelas (e.g. uma tabela de contatos e uma de notas), você pode querer estilos diferentes — nesse caso, classes são mais apropriadas.'
+  },
+  {
+    pergunta: 'A tabela do exemplo exibe qual sequência de alunos na primeira coluna?',
+    opcoes: [
+      { l:'a', t:'João, Ana, Marina' },
+      { l:'b', t:'Marina, João, Ana' },
+      { l:'c', t:'Ana, João, Marina' },
+      { l:'d', t:'Ana, Marina, João' }
+    ],
+    correta: 'c',
+    explicacao: 'As linhas do <tbody> começam com Ana, depois João e por último Marina, na ordem em que estão escritas.'
+  },
+  {
+    pergunta: 'Na média da aluna Marina, o valor exibido é 9,13. Como esse valor foi obtido?',
+    opcoes: [
+      { l:'a', t:'Foi digitado por escolha do professor.' },
+      { l:'b', t:'É o resultado de (8,5 + 9,5 + 9,0 + 9,5) / 4 = 9,125, arredondado para 9,13.' },
+      { l:'c', t:'É a soma das notas dividida por 3.' },
+      { l:'d', t:'É a média dos três alunos.' }
+    ],
+    correta: 'b',
+    explicacao: 'A média da linha é calculada com as notas da própria aluna: (8,5 + 9,5 + 9,0 + 9,5)/4 = 9,125, arredondado para duas casas decimais.'
+  },
+  {
+    pergunta: 'Se o navegador exibisse a tabela SEM o trecho <style>...</style>, o que aconteceria?',
+    opcoes: [
+      { l:'a', t:'A estrutura da tabela permaneceria correta, mas a borda e o padding desapareceriam, e a rolagem horizontal automática do contêiner também.' },
+      { l:'b', t:'A tabela exibiria erro grave e o navegador recusaria o conteúdo.' },
+      { l:'c', t:'As células apareceriam em vermelho automaticamente.' },
+      { l:'d', t:'Os dados seriam embaralhados.' }
+    ],
+    correta: 'a',
+    explicacao: 'O CSS só estiliza e controla a rolagem; a semântica da tabela está toda no HTML. Sem CSS, as cores e bordas mudam, a min-width desaparece, e o overflow-x: auto do contêiner também. Mas o conteúdo continua legível.'
+  }
+];
+
+/* ============================================================
+   ESTADO
+   ============================================================ */
+var respostas = {};
+
+function trocarAba(idAba, botao) {
+  document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active'); });
+  document.querySelectorAll('.tab-content').forEach(function (c) { c.classList.remove('active'); });
+  botao.classList.add('active');
+  var alvo = document.getElementById(idAba);
+  if (alvo) alvo.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function montarExplicacoes() {
+  var container = document.getElementById('listaExplicacoes');
+  if (!container) return;
+  var html = '';
+  EXPLICACOES.forEach(function (grupo) {
+    html += '<h4>' + esc(grupo.grupo) + '</h4>';
+    grupo.linhas.forEach(function (linha) {
+      html += '<div class="linha-explicacao">' +
+                '<div class="linha-num">L' + esc(linha.n) + '</div>' +
+                '<div class="linha-conteudo">' +
+                  '<div class="linha-codigo">' + esc(linha.cod) + '</div>' +
+                  '<div class="linha-texto">' + linha.txt + '</div>' +
+                '</div>' +
+              '</div>';
+    });
+  });
+  container.innerHTML = html;
+}
+
+function montarQuestoes() {
+  var container = document.getElementById('containerQuestoes');
+  if (!container) return;
+  container.innerHTML = '';
+  QUESTOES.forEach(function (q, idx) {
+    var div = document.createElement('div');
+    div.className = 'question';
+    div.id = 'q' + (idx + 1);
+
+    var header = document.createElement('div');
+    header.className = 'question-header';
+    header.innerHTML = '<span class="question-number">' + (idx + 1) + '</span><div>' + esc(q.pergunta) + '</div>';
+    div.appendChild(header);
+
+    var options = document.createElement('div');
+    options.className = 'options';
+    q.opcoes.forEach(function (op) {
+      var opt = document.createElement('div');
+      opt.className = 'option';
+      opt.dataset.letra = op.l;
+      var radio = document.createElement('input');
+      radio.type = 'radio';
+      radio.name = 'q' + (idx + 1);
+      radio.value = op.l;
+      var label = document.createElement('label');
+      label.innerHTML = '<strong>' + esc(op.l) + ')</strong> ' + esc(op.t);
+      opt.appendChild(radio);
+      opt.appendChild(label);
+      opt.addEventListener('click', function (ev) {
+        ev.preventDefault();
+        marcarOpcao(idx + 1, op.l, opt);
+      });
+      options.appendChild(opt);
+    });
+    div.appendChild(options);
+    container.appendChild(div);
+  });
+}
+
+function marcarOpcao(numero, letra, opt) {
+  var questaoId = 'q' + numero;
+  var div = document.getElementById(questaoId);
+  if (!div) return;
+  div.querySelectorAll('.option').forEach(function (o) {
+    o.classList.remove('selecionada');
+    var rad = o.querySelector('input');
+    if (rad) rad.checked = false;
+  });
+  opt.classList.add('selecionada');
+  opt.querySelector('input').checked = true;
+  respostas[numero] = letra;
+  atualizarProgresso();
+}
+
+function atualizarProgresso() {
+  var total = QUESTOES.length;
+  var respondidas = Object.keys(respostas).length;
+  var txt = document.getElementById('txtProgresso');
+  var fill = document.getElementById('fillProgresso');
+  var btn = document.getElementById('btnFinalizar');
+  if (txt) txt.textContent = respondidas + ' de ' + total;
+  if (fill) fill.style.width = (respondidas / total * 100) + '%';
+  if (btn) btn.disabled = respondidas < total;
+}
+
+function finalizarQuestionario() {
+  var listaGabarito = document.getElementById('listaGabarito');
+  if (!listaGabarito) return;
+  var html = '';
+  QUESTOES.forEach(function (q, idx) {
+    var numero = idx + 1;
+    var respostaAluno = respostas[numero] || '—';
+    var acertou = respostaAluno === q.correta;
+    var cor = acertou ? '#15803d' : '#b91c1c';
+    var simb = acertou ? '✅' : '❌';
+    html += '<div class="gabarito-item">' +
+              '<div style="color:' + cor + ';font-weight:800;">' + simb + ' Q' + numero + ' — Você marcou (' + esc(respostaAluno) + '), gabarito (' + esc(q.correta) + ')</div>' +
+              '<div style="color:#64748b;font-size:.84rem;margin-top:4px;">' + esc(q.explicacao) + '</div>' +
+            '</div>';
+  });
+  listaGabarito.innerHTML = html;
+  document.getElementById('resultados').classList.add('mostrar');
+  document.getElementById('resultados').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function limparQuestionario() {
+  if (!confirm('Deseja limpar todas as respostas?')) return;
+  respostas = {};
+  document.querySelectorAll('.option').forEach(function (opt) {
+    opt.classList.remove('selecionada');
+    var rad = opt.querySelector('input');
+    if (rad) rad.checked = false;
+  });
+  document.getElementById('resultados').classList.remove('mostrar');
+  document.getElementById('listaGabarito').innerHTML = '';
+  atualizarProgresso();
+}
+
+function copiarTextoFallback(texto) {
+  var area = document.createElement('textarea');
+  area.value = texto;
+  area.setAttribute('readonly', '');
+  area.style.position = 'fixed';
+  area.style.top = '-1000px';
+  document.body.appendChild(area);
+  area.select();
+  var ok = false;
+  try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+  document.body.removeChild(area);
+  return ok;
+}
+
+function copiarTexto(texto, botao) {
+  if (!texto) return;
+  var finalizar = function (sucesso) {
+    if (sucesso) {
+      mostrarToast('✅ Copiado!');
+      if (botao) {
+        var orig = botao.textContent;
+        botao.textContent = '✅ Copiado!';
+        setTimeout(function () { botao.textContent = orig; }, 1800);
+      }
+    } else {
+      mostrarToast('⚠️ Selecione e copie manualmente.');
+    }
+  };
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(texto).then(function () { finalizar(true); }).catch(function () { finalizar(copiarTextoFallback(texto)); });
+  } else {
+    finalizar(copiarTextoFallback(texto));
+  }
+}
+
+function abrirPreview(html) {
+  var anchor = document.getElementById('previewAnchor');
+  if (!anchor) return;
+  var anterior = anchor.querySelector('.preview-inline');
+  if (anterior) anterior.remove();
+  var caixa = document.createElement('div');
+  caixa.className = 'preview-inline';
+  var header = document.createElement('div');
+  header.className = 'preview-header';
+  header.innerHTML = '<span>🧪 Preview — notas-front-end-2026.html</span>';
+  var botaoFechar = document.createElement('button');
+  botaoFechar.type = 'button';
+  botaoFechar.className = 'preview-close';
+  botaoFechar.textContent = '✕ Fechar';
+  header.appendChild(botaoFechar);
+  var iframe = document.createElement('iframe');
+  iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms');
+  iframe.setAttribute('title', 'Preview da tabela');
+  iframe.srcdoc = html;
+  caixa.appendChild(header);
+  caixa.appendChild(iframe);
+  anchor.appendChild(caixa);
+  botaoFechar.addEventListener('click', function () { caixa.remove(); });
+  caixa.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function abrirNoOneCompiler(html) {
+  var urlGet = 'https://onecompiler.com/html?code=' + encodeURIComponent(html);
+  if (urlGet.length < 7500) {
+    var win = window.open(urlGet, '_blank');
+    if (!win) mostrarToast('⚠️ Pop-up bloqueado. Use o botão Copiar e cole em onecompiler.com/html.');
+    return;
+  }
+  var form = document.createElement('form');
+  form.method = 'POST';
+  form.action = 'https://onecompiler.com/html';
+  form.target = '_blank';
+  form.style.display = 'none';
+  var campo = document.createElement('input');
+  campo.type = 'hidden';
+  campo.name = 'code';
+  campo.value = html;
+  form.appendChild(campo);
+  document.body.appendChild(form);
+  try { form.submit(); }
+  catch (e) { mostrarToast('⚠️ Erro ao abrir OneCompiler. Use o botão Copiar e cole manualmente.'); }
+  document.body.removeChild(form);
+  mostrarToast('📤 Enviando código para o OneCompiler…');
+}
+
+var toastTimer = null;
+function mostrarToast(msg) {
+  var t = document.getElementById('toastNotificacao');
+  if (!t) return;
+  t.textContent = msg;
+  t.style.display = 'block';
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () { t.style.display = 'none'; }, 3800);
+}
+
+window.addEventListener('DOMContentLoaded', function () {
+  var pre = document.getElementById('codigoOriginal');
+  if (pre) pre.textContent = CODIGO_ORIGINAL;
+
+  montarExplicacoes();
+  montarQuestoes();
+  atualizarProgresso();
+
+  document.querySelectorAll('.tab-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () { trocarAba(btn.dataset.aba, btn); });
+  });
+
+  var btnCopiar = document.getElementById('btnCopiarCodigo');
+  if (btnCopiar) btnCopiar.addEventListener('click', function () { copiarTexto(CODIGO_ORIGINAL, btnCopiar); });
+
+  var btnPreview = document.getElementById('btnPreviewInline');
+  if (btnPreview) btnPreview.addEventListener('click', function () { abrirPreview(CODIGO_ORIGINAL); });
+
+  var btnOC = document.getElementById('btnOneCompiler');
+  if (btnOC) {
+    btnOC.addEventListener('click', function () {
+      var original = btnOC.textContent;
+      btnOC.disabled = true;
+      btnOC.textContent = '⏳ Enviando…';
+      try { abrirNoOneCompiler(CODIGO_ORIGINAL); }
+      finally {
+        setTimeout(function () { btnOC.disabled = false; btnOC.textContent = original; }, 1200);
+      }
+    });
+  }
+
+  var btnFinalizar = document.getElementById('btnFinalizar');
+  if (btnFinalizar) btnFinalizar.addEventListener('click', finalizarQuestionario);
+
+  var btnLimpar = document.getElementById('btnLimpar');
+  if (btnLimpar) btnLimpar.addEventListener('click', limparQuestionario);
+
+  var btnTopo = document.getElementById('btnTopo');
+  if (btnTopo) btnTopo.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+});
+</script>
+
+</body></html>

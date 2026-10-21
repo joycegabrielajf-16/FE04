@@ -1,0 +1,2600 @@
+<!DOCTYPE html>
+<!-- saved from url=(0045)https://almeida-cma.github.io/fe04/t4_v4.html -->
+<html lang="pt-BR"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📊 TEMA 04 • Tabelas em HTML — Laboratório Interativo v4</title>
+<style>
+  :root{
+    --bg-body:#06101c; --surface-dark:#0f1b2d; --surface-hover:#1b2a42;
+    --card-white:#ffffff; --primary:#0369a1; --primary-hover:#075985;
+    --primary-light:#38bdf8; --accent:#0d9488; --accent-light:#2dd4bf;
+    --text-dark:#0f172a; --text-muted:#64748b;
+    --border-light:#e2e8f0; --border-dark:#334155; --radius-main:20px;
+    --transicao:all .25s ease; --tok-bg:#0a1420; --tok-tag:#7dd3fc;
+    --tok-attr:#fbbf24; --tok-string:#86efac; --tok-punct:#cbd5e1; --tok-text:#ffffff;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    background:radial-gradient(circle at 10% 15%,#062a3a 0%,#06101c 65%);
+    color:var(--text-dark);min-height:100vh;padding:24px 14px 90px;line-height:1.6;}
+  .container{max-width:1100px;margin:0 auto;}
+  .header{background:linear-gradient(135deg,#0c4a6e 0%,#0369a1 50%,#0d9488 100%);
+    border-radius:var(--radius-main);padding:38px 24px;margin-bottom:24px;text-align:center;
+    color:#fff;box-shadow:0 12px 35px rgba(3,105,161,.4);}
+  .header h1{font-size:2.1rem;margin-bottom:8px;letter-spacing:-.5px;
+    display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;}
+  .header h1 span{color:#a7f3d0;}
+  .header p{opacity:.95;font-size:1.05rem;max-width:900px;margin:0 auto;}
+  .badge-group{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:18px;}
+  .badge{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);
+    padding:5px 14px;border-radius:30px;font-size:.75rem;font-weight:700;color:#fff;}
+  .tabs-nav{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:22px;}
+  .tab-btn{background:var(--surface-dark);color:#94a3b8;border:1px solid var(--border-dark);
+    padding:12px 18px;border-radius:30px;font-size:.88rem;font-weight:700;cursor:pointer;
+    white-space:nowrap;transition:var(--transicao);font-family:inherit;}
+  .tab-btn:hover{color:#fff;background:var(--surface-hover);}
+  .tab-btn.active{background:linear-gradient(135deg,#075985,#0d9488);color:#fff;
+    border-color:#2dd4bf;box-shadow:0 0 16px rgba(13,148,136,.45);}
+  .tab-content{display:none;animation:fadeIn .3s ease-out;}
+  .tab-content.active{display:block;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+  .card{background:var(--card-white);border-radius:var(--radius-main);padding:28px;
+    margin-bottom:24px;box-shadow:0 10px 30px rgba(0,0,0,.15);}
+  .card h2{color:#075985;margin-bottom:14px;border-left:5px solid var(--primary);
+    padding-left:12px;font-size:1.45rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .card h3{color:#0f172a;margin:22px 0 10px 0;font-size:1.15rem;border-bottom:2px dashed #cbd5e1;padding-bottom:6px;}
+  .card h4{color:#1e293b;margin:18px 0 8px 0;font-size:1rem;font-weight:700;}
+  .card p{color:#334155;margin-bottom:12px;font-size:.96rem;}
+  .card ul,.card ol{color:#334155;line-height:1.8;margin:8px 0 14px 25px;font-size:.95rem;}
+  .highlight-box{padding:16px 20px;border-radius:12px;margin:14px 0;font-size:.94rem;line-height:1.7;}
+  .highlight-box.blue{background:#e0f2fe;border-left:5px solid #0284c7;color:#0c4a6e;}
+  .highlight-box.teal{background:#ccfbf1;border-left:5px solid #0d9488;color:#115e59;}
+  .highlight-box.amber{background:#fef3c7;border-left:5px solid #d97706;color:#78350f;}
+  .highlight-box.rose{background:#ffe4e6;border-left:5px solid #e11d48;color:#881337;}
+  .highlight-box.purple{background:#ede9fe;border-left:5px solid #7c3aed;color:#4c1d95;}
+  .highlight-box code{background:rgba(255,255,255,.85);border:1px solid rgba(0,0,0,.15);
+    color:#0f172a;padding:2px 6px;border-radius:4px;font-weight:800;font-family:'Courier New',monospace;font-size:.88em;}
+  code{background:#f1f5f9;color:#0c4a6e;padding:2px 6px;border-radius:4px;
+    font-family:'Courier New',monospace;font-weight:700;font-size:.88em;border:1px solid var(--border-light);}
+  pre code,.code-pane code,.diag-codigo code,.anatomia-tag code,.solucao-codigo code,
+  .entidade-codigo code,.estrategia-codigo code{background:transparent;border:0;padding:0;color:inherit;font-weight:inherit;font-size:inherit;}
+
+  .tabela-logica{width:100%;border-collapse:collapse;margin:16px 0;font-size:.9rem;}
+  .tabela-logica th{background:linear-gradient(135deg,#0c4a6e,#0d9488);color:#fff;padding:12px 14px;text-align:left;font-weight:600;}
+  .tabela-logica td{padding:12px 14px;border-bottom:1px solid var(--border-light);color:#334155;vertical-align:top;}
+  .tabela-logica tr:hover td{background:#f8fafc;}
+  .tabela-logica code{font-size:.85em;}
+
+  .anatomia-tag{background:var(--tok-bg);border:1px solid var(--border-dark);border-radius:12px;
+    padding:16px 18px;margin:14px 0;font-family:'Courier New',monospace;
+    font-size:clamp(.72rem,2.3vw,.9rem);line-height:1.9;overflow-x:auto;
+    white-space:pre-wrap;word-break:break-word;color:#f1f5f9;}
+  .anatomia-tag .tok-punct{color:var(--tok-punct);font-weight:700;}
+  .anatomia-tag .tok-tag{color:var(--tok-tag);}
+  .anatomia-tag .tok-attr{color:var(--tok-attr);}
+  .anatomia-tag .tok-string{color:var(--tok-string);}
+  .anatomia-tag .tok-text{color:var(--tok-text);}
+  .anatomia-tag code{background:transparent;border:0;padding:0;color:inherit;font-weight:800;font-size:inherit;}
+
+  .mapa-tabela{background:#0a1420;border:2px solid var(--border-dark);border-radius:16px;
+    padding:22px;margin:18px 0;color:#fff;overflow-x:auto;}
+  .mapa-tabela table{width:100%;border-collapse:separate;border-spacing:6px;min-width:520px;}
+  .mapa-tabela th,.mapa-tabela td{padding:12px;border-radius:8px;font-family:'Courier New',monospace;
+    font-size:.85rem;text-align:center;cursor:pointer;transition:var(--transicao);}
+  .mapa-tabela th{background:rgba(56,189,248,.15);border:2px solid #38bdf8;color:#7dd3fc;}
+  .mapa-tabela td{background:rgba(45,212,191,.08);border:2px solid #2dd4bf;color:#5eead4;}
+  .mapa-tabela .celula-destaque{background:#f59e0b;color:#1e293b;border-color:#fbbf24;font-weight:900;}
+
+  .grid-comparativo{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0;}
+  .comparativo-card{background:#f8fafc;border-radius:12px;padding:18px;border:2px solid var(--border-light);}
+  .comparativo-card.antigo{border-color:#fca5a5;background:#fef2f2;}
+  .comparativo-card.moderno{border-color:#6ee7b7;background:#f0fdf4;}
+  .comparativo-card h4{font-size:.95rem;margin-bottom:10px;color:#0f172a;}
+  .comparativo-card.antigo h4{color:#991b1b;}
+  .comparativo-card.moderno h4{color:#15803d;}
+  .comparativo-card p{font-size:.85rem;margin-bottom:8px;color:#334155;}
+  .comparativo-card code{display:inline-block;font-size:.78rem;}
+
+  .code-wrapper{position:relative;margin:18px 0 16px;border-radius:14px;overflow:hidden;
+    border:1px solid var(--border-dark);background:#0a1420;}
+  .code-header{display:flex;justify-content:space-between;align-items:center;
+    background:#0f1b2d;padding:10px 16px;border-bottom:1px solid var(--border-dark);flex-wrap:wrap;gap:8px;}
+  .code-title{color:#7dd3fc;font-size:.84rem;font-weight:700;font-family:monospace;}
+  .code-actions{display:flex;gap:6px;flex-wrap:wrap;}
+  .code-actions button{border:none;padding:5px 12px;border-radius:6px;cursor:pointer;
+    font-size:.75rem;font-weight:700;transition:var(--transicao);
+    display:inline-flex;align-items:center;gap:4px;font-family:inherit;}
+  .code-actions button:disabled{opacity:.6;cursor:progress;}
+  .copy-btn{background:#10b981;color:#042f2e;}
+  .copy-btn:hover:not(:disabled){background:#059669;color:#fff;}
+  .run-oc-btn{background:#0d9488;color:#fff;}
+  .run-oc-btn:hover:not(:disabled){background:#0f766e;transform:scale(1.02);}
+  .run-inline-btn{background:#0284c7;color:#fff;}
+  .run-inline-btn:hover:not(:disabled){background:#0369a1;transform:scale(1.02);}
+  .download-btn{background:#7c3aed;color:#fff;}
+  .download-btn:hover:not(:disabled){background:#6d28d9;transform:scale(1.02);}
+  .code-pane{display:none;padding:16px 18px;color:#e2e8f0;font-family:'Courier New',monospace;
+    font-size:.79rem;line-height:1.65;overflow-x:auto;white-space:pre;max-height:440px;}
+  .code-pane.active{display:block;}
+  .preview-inline{margin:14px 0;border:1px solid var(--border-dark);border-radius:12px;overflow:hidden;background:#0a1420;}
+  .preview-inline .preview-header{display:flex;justify-content:space-between;align-items:center;
+    padding:8px 12px;background:#0f1b2d;border-bottom:1px solid #1e293b;color:#cbd5e1;
+    font-size:.78rem;font-weight:700;font-family:monospace;gap:8px;flex-wrap:wrap;}
+  .preview-inline .preview-close{background:transparent;border:1px solid #334155;color:#f87171;
+    padding:3px 10px;border-radius:6px;cursor:pointer;font-size:.72rem;font-weight:700;font-family:inherit;}
+  .preview-inline iframe{width:100%;height:440px;border:none;background:#fff;display:block;}
+  .code-abas-nav{display:flex;gap:4px;background:#0a1420;padding:6px 14px 0;border-bottom:1px solid #1e293b;overflow-x:auto;}
+  .code-aba-btn{background:transparent;border:none;color:#64748b;padding:8px 14px;font-size:.8rem;
+    font-weight:700;cursor:pointer;border-bottom:2px solid transparent;font-family:inherit;
+    transition:var(--transicao);white-space:nowrap;}
+  .code-aba-btn:hover{color:#cbd5e1;}
+  .code-aba-btn.active{color:#7dd3fc;border-bottom-color:#7dd3fc;}
+
+  .entidade-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin:16px 0;}
+  .entidade-card{background:#fff;border:2px solid var(--border-light);border-radius:12px;padding:14px;
+    transition:var(--transicao);}
+  .entidade-card:hover{border-color:var(--primary);box-shadow:0 4px 14px rgba(3,105,161,.15);}
+  .entidade-card .codigo-ent{display:block;background:#0a1420;color:#7dd3fc;font-family:'Courier New',monospace;
+    padding:8px 12px;border-radius:8px;font-size:.82rem;font-weight:800;margin-bottom:10px;text-align:center;}
+  .entidade-card .resultado-ent{display:block;color:#0f172a;font-size:1.4rem;font-weight:700;
+    text-align:center;margin-bottom:8px;min-height:2rem;line-height:1.2;}
+  .entidade-card .nome-ent{display:block;font-weight:800;color:#0c4a6e;font-size:.85rem;margin-bottom:6px;text-align:center;}
+  .entidade-card .desc-ent{font-size:.78rem;color:#64748b;line-height:1.5;text-align:center;}
+
+  .estrategias-grid{display:grid;grid-template-columns:1fr;gap:18px;margin:16px 0;}
+  .estrategia-card{background:#f8fafc;border:2px solid var(--border-light);border-radius:14px;overflow:hidden;}
+  .estrategia-card-header{padding:16px 20px;background:linear-gradient(135deg,#0c4a6e,#0369a1);color:#fff;}
+  .estrategia-card-header h4{color:#fff;margin:0 0 4px 0;font-size:1.05rem;}
+  .estrategia-card-header .subtitulo{font-size:.82rem;opacity:.9;}
+  .estrategia-meta{padding:14px 20px;background:#fff;border-bottom:1px solid var(--border-light);}
+  .estrategia-meta p{font-size:.85rem;color:#475569;margin:0 0 8px 0;}
+  .estrategia-meta p:last-child{margin-bottom:0;}
+  .estrategia-meta strong{color:#0f172a;}
+  .estrategia-meta .trade-off{display:inline-block;background:#fef3c7;color:#78350f;
+    padding:4px 10px;border-radius:6px;font-size:.75rem;font-weight:700;margin-top:8px;}
+  .estrategia-demo{background:#f8fafc;padding:16px;overflow-x:auto;}
+  .estrategia-demo table{border-collapse:collapse;font-size:.82rem;background:#fff;border-radius:8px;overflow:hidden;}
+
+  .diag-tabela-bloco{background:#fef2f2;border:2px solid #fca5a5;border-radius:14px;
+    padding:20px;margin:18px 0;}
+  .diag-tabela-bloco h4{color:#991b1b;margin-bottom:10px;font-size:1.05rem;}
+  .diag-codigo{background:#1a0606;border:1px solid #7f1d1d;border-radius:10px;padding:16px;
+    font-family:'Courier New',monospace;font-size:.78rem;line-height:1.7;color:#fecaca;
+    overflow-x:auto;white-space:pre;margin:12px 0;}
+  .btn-revelar{background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;border:none;
+    padding:10px 20px;border-radius:24px;font-weight:700;font-size:.85rem;cursor:pointer;
+    font-family:inherit;transition:var(--transicao);margin-top:8px;}
+  .btn-revelar:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(220,38,38,.4);}
+  .feedback-diag{display:none;background:#fff;border-left:4px solid #16a34a;border-radius:8px;
+    padding:14px 18px;margin-top:12px;font-size:.88rem;line-height:1.65;color:#166534;}
+  .feedback-diag.mostrar{display:block;animation:fadeIn .3s ease-out;}
+  .feedback-diag strong{color:#14532d;}
+  .feedback-diag code{background:#dcfce7;border-color:#86efac;color:#14532d;}
+
+  .solucao-wrapper{background:#f0fdf4;border:2px solid #86efac;border-radius:14px;padding:20px;margin:16px 0;}
+  .solucao-wrapper h4{color:#15803d;margin-bottom:12px;}
+  .solucao-wrapper p{color:#166534;font-size:.9rem;margin-bottom:10px;}
+  .solucao-codigo{background:#0a1420;border:1px solid var(--border-dark);border-radius:10px;
+    padding:16px;margin:12px 0;overflow-x:auto;font-family:'Courier New',monospace;
+    font-size:.78rem;line-height:1.7;color:#e2e8f0;white-space:pre;}
+
+  .desafio-bloco{background:#fffbeb;border:2px dashed #f59e0b;border-radius:14px;padding:22px;margin:16px 0;}
+  .desafio-bloco h4{color:#b45309;margin-bottom:10px;font-size:1.05rem;}
+  .desafio-bloco p{color:#78350f;font-size:.92rem;margin-bottom:10px;}
+  .desafio-bloco ul,.desafio-bloco ol{color:#78350f;font-size:.92rem;}
+  .desafio-bloco code{background:#fff;border-color:#fde68a;color:#78350f;}
+  .desafio-secao{background:#fff;border-left:4px solid #f59e0b;border-radius:8px;padding:12px 16px;margin:10px 0;}
+  .desafio-secao strong{color:#b45309;display:block;margin-bottom:4px;font-size:.9rem;}
+
+  .glossario-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin:16px 0;}
+  .glossario-item{background:#f8fafc;border:1px solid var(--border-light);border-radius:10px;
+    padding:14px 16px;border-left:4px solid var(--primary);}
+  .glossario-item .termo{font-weight:800;color:#0c4a6e;font-size:.92rem;margin-bottom:4px;
+    font-family:'Courier New',monospace;}
+  .glossario-item .definicao{font-size:.84rem;color:#475569;line-height:1.6;}
+
+  .aria-demo{background:#0a1420;border:2px solid var(--border-dark);border-radius:14px;padding:20px;margin:16px 0;color:#e2e8f0;font-size:.85rem;}
+  .aria-demo .comentario{color:#86efac;font-style:italic;}
+  .aria-demo .destaque-aria{color:#fbbf24;font-weight:700;}
+  .aria-demo pre{white-space:pre-wrap;font-family:'Courier New',monospace;line-height:1.7;}
+
+  .quiz-header{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;
+    background:#0f1b2d;color:#fff;padding:14px 20px;border-radius:12px;margin-bottom:20px;}
+  .quiz-header .progresso-texto{font-size:.9rem;}
+  .barra-fundo{flex:1;min-width:140px;height:10px;background:#334155;border-radius:5px;overflow:hidden;}
+  .barra-preenchimento{height:100%;width:0%;background:linear-gradient(90deg,#38bdf8,#0d9488);transition:width .3s;}
+
+  .question{background:#f8fafc;border-radius:12px;padding:18px 20px;margin-bottom:16px;
+    border-left:4px solid var(--primary);border-top:1px solid var(--border-light);
+    border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);}
+  .question.correta-q{border-left-color:#16a34a;background:#f0fdf4;}
+  .question.errada-q{border-left-color:#dc2626;background:#fef2f2;}
+  .question-header{font-weight:700;color:#0f172a;margin-bottom:12px;display:flex;
+    align-items:flex-start;gap:10px;font-size:.96rem;line-height:1.5;}
+  .question-number{background:var(--primary);color:#fff;width:26px;height:26px;border-radius:50%;
+    text-align:center;line-height:26px;font-size:12px;font-weight:bold;flex-shrink:0;margin-top:2px;}
+  .question.correta-q .question-number{background:#16a34a;}
+  .question.errada-q .question-number{background:#dc2626;}
+  .options{display:flex;flex-direction:column;gap:8px;}
+  .option{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fff;
+    border-radius:8px;border:2px solid var(--border-light);cursor:pointer;
+    transition:var(--transicao);font-size:.9rem;color:#334155;}
+  .option:hover:not(.disabled){border-color:var(--primary);background:#e0f2fe;transform:translateX(3px);}
+  .option.correct{border-color:#16a34a!important;background:#dcfce7!important;color:#15803d;}
+  .option.wrong{border-color:#dc2626!important;background:#fee2e2!important;color:#b91c1c;}
+  .option.disabled{cursor:default;}
+  .option input{accent-color:var(--primary);}
+  .feedback-imediato{margin-top:10px;padding:10px 14px;border-radius:8px;font-size:.85rem;line-height:1.55;display:none;}
+  .feedback-imediato.mostrar{display:block;}
+  .feedback-imediato.ok{background:#dcfce7;color:#15803d;border-left:4px solid #16a34a;}
+  .feedback-imediato.no{background:#fee2e2;color:#b91c1c;border-left:4px solid #dc2626;}
+
+  .btn-grupo{display:flex;gap:10px;justify-content:center;margin-top:22px;flex-wrap:wrap;}
+  .btn{background:linear-gradient(135deg,var(--primary),#0d9488);color:#fff;border:none;
+    padding:12px 26px;border-radius:30px;cursor:pointer;font-size:.95rem;font-weight:700;
+    transition:var(--transicao);font-family:inherit;}
+  .btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 6px 18px rgba(3,105,161,.35);}
+  .btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none;}
+  .btn-secondary{background:#64748b;}
+  .btn-secondary:hover:not(:disabled){box-shadow:0 6px 18px rgba(100,116,139,.35);}
+  .btn-success{background:#10b981;}
+  .btn-success:hover:not(:disabled){box-shadow:0 6px 18px rgba(16,185,129,.35);}
+
+  .result-box{background:#fff;border-radius:16px;padding:24px;text-align:center;
+    border:3px solid var(--primary);display:none;margin-top:24px;box-shadow:0 10px 30px rgba(3,105,161,.15);}
+  .score{font-size:3.2rem;font-weight:900;color:var(--primary);}
+  .relatorio-textarea{width:100%;height:160px;font-family:monospace;font-size:.82rem;
+    border:1px solid #cbd5e1;border-radius:8px;padding:10px;margin:12px 0;
+    background:#f8fafc;color:#334155;resize:vertical;}
+
+  .campos-aluno{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-top:10px;}
+  .campo-input{width:100%;padding:10px 14px;border:2px solid #cbd5e1;border-radius:8px;
+    font-size:.92rem;outline:none;font-family:inherit;color:#0f172a;background:#fff;}
+  .campo-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(3,105,161,.15);}
+  .card-aluno{background:#f8fafc;border:2px solid var(--border-light);border-left:6px solid var(--primary);border-radius:14px;padding:20px;margin-bottom:24px;}
+
+  .modo-tabs{display:inline-flex;border:2px solid var(--primary);border-radius:24px;overflow:hidden;margin-bottom:16px;}
+  .modo-tab{background:#fff;color:var(--primary);border:none;padding:8px 18px;font-size:.85rem;
+    font-weight:700;cursor:pointer;font-family:inherit;transition:var(--transicao);}
+  .modo-tab.active{background:var(--primary);color:#fff;}
+  .modo-tab:hover:not(.active){background:#e0f2fe;}
+
+  .toast-notificacao{position:fixed;bottom:24px;right:24px;background:#0d9488;color:#fff;
+    padding:12px 20px;border-radius:10px;font-weight:bold;font-size:.85rem;
+    box-shadow:0 10px 25px rgba(0,0,0,.3);display:none;z-index:9999;animation:slideUp .3s ease;
+    max-width:340px;line-height:1.5;}
+  @keyframes slideUp{from{transform:translateY(20px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+  .footer-card{background:#fff;border-radius:var(--radius-main);padding:28px;
+    margin-top:30px;box-shadow:0 10px 30px rgba(0,0,0,.1);text-align:center;}
+  .footer-link{display:flex;align-items:center;gap:12px;padding:14px 22px;background:#f0fdf4;
+    border-radius:12px;text-decoration:none;color:#166534;border:2px solid #16a34a;
+    font-size:.95rem;max-width:520px;margin:0 auto;}
+
+  .btn-top{position:fixed;bottom:20px;right:20px;background:var(--primary);color:#fff;
+    border:none;padding:10px 18px;border-radius:50px;cursor:pointer;font-size:12px;
+    font-weight:700;box-shadow:0 4px 15px rgba(0,0,0,.25);z-index:100;}
+
+  @media print{
+    .container,.btn-top,.footer-card,.btn-grupo,.tabs-nav,.preview-inline{display:none!important;}
+    body{background:#fff!important;color:#000!important;padding:0!important;}
+    #area-impressao{display:block!important;padding:15mm!important;font-family:Arial,sans-serif!important;font-size:10.5pt!important;}
+    .print-header{border-bottom:2px solid #0369a1;padding-bottom:10px;margin-bottom:16px;}
+    .print-q{page-break-inside:avoid;border-left:3px solid #0369a1;padding:6px 10px;margin-bottom:10px;}
+    .print-q h4{font-size:10pt;color:#0f172a;margin-bottom:4px;}
+    .print-q .resp{background:#f1f5f9;padding:4px 8px;border-radius:4px;font-size:9pt;}
+  }
+  #area-impressao{display:none;}
+
+  @media (max-width:768px){
+    .header h1{font-size:1.6rem;}
+    .card{padding:18px 14px;}
+    .tab-btn{padding:10px 14px;font-size:.8rem;}
+    .preview-inline iframe{height:340px;}
+    .grid-comparativo,.campos-aluno{grid-template-columns:1fr;}
+    .mapa-tabela table{min-width:420px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="container" id="inicio">
+  <header class="header">
+    <h1>📊 TEMA <span>04</span> • Tabelas em HTML</h1>
+    <p>Dados tabulares, semântica, acessibilidade e apresentação responsiva: uma tabela que informa e não apenas alinha</p>
+    <div class="badge-group">
+      <span class="badge">📊 Dados vs Layout</span>
+      <span class="badge">🏷️ Anatomia Semântica</span>
+      <span class="badge">♿ Acessibilidade &amp; ARIA</span>
+      <span class="badge">📱 Responsividade</span>
+      <span class="badge">🧭 Glossário</span>
+      <span class="badge">🏆 Desafio Prático</span>
+      <span class="badge">📝 Avaliação</span>
+      <span class="badge">v4 • OneCompiler POST</span>
+    </div>
+  </header>
+
+  <nav class="tabs-nav">
+    <button type="button" class="tab-btn" data-aba="aba-fundamento">📊 1. Fundamento</button>
+    <button type="button" class="tab-btn" data-aba="aba-anatomia">🏷️ 2. Anatomia</button>
+    <button type="button" class="tab-btn" data-aba="aba-labs">💻 3. Laboratórios</button>
+    <button type="button" class="tab-btn" data-aba="aba-acess">♿ 4. Acessibilidade</button>
+    <button type="button" class="tab-btn" data-aba="aba-responsive">📱 5. Responsividade</button>
+    <button type="button" class="tab-btn" data-aba="aba-diag">🧭 6. Diagnóstico</button>
+    <button type="button" class="tab-btn" data-aba="aba-desafio">🏆 7. Desafio Prático</button>
+    <button type="button" class="tab-btn" data-aba="aba-glossario">📖 8. Glossário</button>
+    <button type="button" class="tab-btn active" data-aba="aba-avaliacao">📝 9. Avaliação</button>
+  </nav>
+
+  <div id="aba-fundamento" class="tab-content">
+    <section class="card">
+      <h2>📊 Quando uma tabela é apropriada</h2>
+      <p>Antes de qualquer código, a pergunta mais importante desta aula é: <strong>isso aqui é dado tabular mesmo?</strong></p>
+      <div class="highlight-box blue">
+        💡 <strong>Regra de ouro:</strong> use tabela quando as informações só fazem sentido <em>comparadas</em> entre linhas e colunas. Use CSS Grid ou Flexbox quando o objetivo for apenas organizar blocos visualmente.
+      </div>
+
+      <div class="grid-comparativo">
+        <div class="comparativo-card antigo">
+          <h4>❌ Uso incorreto (anos 2000)</h4>
+          <p>Montar o layout inteiro da página com tabelas aninhadas.</p>
+          <code>&lt;table&gt;&lt;tr&gt;&lt;td&gt;menu&lt;/td&gt;&lt;td&gt;conteúdo&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</code>
+          <p style="margin-top:10px;font-size:.78rem;">Problemas: códigos gigantes, manutenção difícil, inacessível para leitores de tela e impossível de adaptar a telas pequenas.</p>
+        </div>
+        <div class="comparativo-card moderno">
+          <h4>✅ Uso correto (hoje)</h4>
+          <p>Apresentar dados que existem em linhas e colunas.</p>
+          <code>&lt;table&gt;<br>&nbsp;&nbsp;&lt;caption&gt;Notas 2026&lt;/caption&gt;<br>&nbsp;&nbsp;&lt;tr&gt;&lt;th&gt;Aluno&lt;/th&gt;&lt;th&gt;Nota&lt;/th&gt;&lt;/tr&gt;<br>&lt;/table&gt;</code>
+          <p style="margin-top:10px;font-size:.78rem;">Benefícios: significados claros, leitor de tela anuncia cabeçalhos e cada célula pertence à linha e à coluna certas.</p>
+        </div>
+      </div>
+
+      <h3>🎯 Três perguntas de decisão</h3>
+      <table class="tabela-logica">
+        <thead><tr><th>Pergunta</th><th>Se "sim"</th><th>Se "não"</th></tr></thead>
+        <tbody>
+          <tr><td>Existem cabeçalhos que identificam linhas ou colunas?</td><td>Tabela é candidata séria.</td><td>Provavelmente uma lista ou bloco semântico.</td></tr>
+          <tr><td>Um leitor consegue comparar valores na mesma coluna?</td><td>Tabela é útil.</td><td>Talvez cartões com Grid/Flex.</td></tr>
+          <tr><td>Se eu remover o CSS, a informação continua fazendo sentido?</td><td>Estrutura está correta.</td><td>Está usando tabela só para alinhar.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="highlight-box amber">
+        ⚠️ <strong>Erro comum de iniciante:</strong> receber a tarefa "faça um card de preços" e resolver com uma tabela de uma linha. Isso gera código que funciona, mas não é semântico. Um card é um bloco, não uma linha de dados com cabeçalhos.
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>🔎 Hoje: para onde as tabelas realmente servem</h2>
+      <p>Fora do laboratório, tabelas aparecem em três contextos dominantes:</p>
+      <table class="tabela-logica">
+        <thead><tr><th>Contexto</th><th>Exemplo real</th><th>Por que tabela é a escolha certa</th></tr></thead>
+        <tbody>
+          <tr><td>Painel administrativo</td><td>Lista de alunos, notas, turmas</td><td>Cada linha é um registro, cada coluna um atributo comparável.</td></tr>
+          <tr><td>Comparação</td><td>Planos de internet, preços, especificações</td><td>Os valores precisam ser lidos na vertical e na horizontal.</td></tr>
+          <tr><td>Relatório</td><td>Boletim, extrato, calendário</td><td>A leitura precisa respeitar a relação entre cabeçalho e célula.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="highlight-box teal">
+        ✅ <strong>SEO e IA:</strong> uma tabela bem estruturada <em>pode</em> ajudar buscadores e sistemas de extração a interpretar as relações. Mas <strong>não há garantia</strong> de melhor posicionamento no Google, nem de que uma IA vai entender o conteúdo corretamente. O que importa é a coerência entre cabeçalho e dado.
+      </div>
+    </section>
+  </div>
+
+  <div id="aba-anatomia" class="tab-content">
+    <section class="card">
+      <h2>🏷️ As oito tags essenciais</h2>
+      <p>Clique em qualquer célula do mapa abaixo para ver o papel dela:</p>
+
+      <div class="mapa-tabela">
+        <table id="mapaTabela">
+          <caption style="color:#7dd3fc;font-family:inherit;font-weight:700;margin-bottom:10px;text-align:left;font-size:.9rem;cursor:pointer;" data-no="caption">&lt;caption&gt; 🎓 Notas da Turma &lt;/caption&gt;</caption>
+          <thead>
+            <tr>
+              <th data-no="th" scope="col">&lt;th scope="col"&gt; Aluno</th>
+              <th data-no="th" scope="col">&lt;th scope="col"&gt; HTML</th>
+              <th data-no="th" scope="col">&lt;th scope="col"&gt; CSS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th data-no="th-row" scope="row">&lt;th scope="row"&gt; Ana</th>
+              <td data-no="td">9,0</td>
+              <td data-no="td">8,5</td>
+            </tr>
+            <tr>
+              <th data-no="th-row" scope="row">&lt;th scope="row"&gt; João</th>
+              <td data-no="td">7,5</td>
+              <td data-no="td">9,0</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th data-no="tfoot" scope="row">&lt;tfoot&gt; Média</th>
+              <td data-no="tfoot">8,25</td>
+              <td data-no="tfoot">8,75</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <div class="highlight-box blue" id="explicacaoMapa">
+        <strong>👆 Clique em qualquer célula</strong> para ver o papel estrutural dela.
+      </div>
+
+      <h3>📋 Referência rápida</h3>
+      <table class="tabela-logica">
+        <thead><tr><th>Tag</th><th>Papel</th><th>Observação técnica</th></tr></thead>
+        <tbody>
+          <tr><td><code>&lt;table&gt;</code></td><td>Elemento raiz</td><td>Contém tudo: caption, thead, tbody, tfoot.</td></tr>
+          <tr><td><code>&lt;caption&gt;</code></td><td>Identificação do assunto da tabela</td><td>Deve ser o primeiro filho do <code>table</code>.</td></tr>
+          <tr><td><code>&lt;thead&gt;</code></td><td>Agrupamento do cabeçalho</td><td>Facilita leitura e estilização.</td></tr>
+          <tr><td><code>&lt;tbody&gt;</code></td><td>Agrupamento dos dados</td><td>Pode haver mais de um tbody (por exemplo, por mês).</td></tr>
+          <tr><td><code>&lt;tfoot&gt;</code></td><td>Rodapé da tabela</td><td>Útil para totais e médias.</td></tr>
+          <tr><td><code>&lt;tr&gt;</code></td><td>Uma linha</td><td>Filho de thead, tbody ou tfoot.</td></tr>
+          <tr><td><code>&lt;th&gt;</code></td><td>Célula de cabeçalho</td><td>Use <code>scope</code> quando houver ambiguidade.</td></tr>
+          <tr><td><code>&lt;td&gt;</code></td><td>Célula de dado</td><td>Contém o valor propriamente dito.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="highlight-box amber">
+        ⚠️ <strong>void elements não existem aqui:</strong> diferente de <code>&lt;img&gt;</code> ou <code>&lt;br&gt;</code>, todas as tags de tabela têm fechamento. Escrever <code>&lt;/td&gt;</code> é obrigatório.
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>🔑 O atributo scope</h2>
+      <p>O <code>scope</code> explica ao navegador (e ao leitor de tela) qual é a direção da relação entre um cabeçalho e as células.</p>
+
+      <div class="anatomia-tag">
+        <code class="tok-punct">&lt;</code><code class="tok-tag">th</code> <code class="tok-attr">scope</code><code class="tok-punct">=</code><code class="tok-string">"col"</code><code class="tok-punct">&gt;</code><code class="tok-text">HTML</code><code class="tok-punct">&lt;/</code><code class="tok-tag">th</code><code class="tok-punct">&gt;</code>
+      </div>
+
+      <table class="tabela-logica">
+        <thead><tr><th>Valor</th><th>Significado</th></tr></thead>
+        <tbody>
+          <tr><td><code>scope="col"</code></td><td>Este cabeçalho se aplica à coluna correspondente.</td></tr>
+          <tr><td><code>scope="row"</code></td><td>Este cabeçalho se aplica à linha correspondente.</td></tr>
+          <tr><td><code>scope="colgroup"</code></td><td>Vale para um grupo de colunas (definido com <code>&lt;colgroup&gt;</code>).</td></tr>
+          <tr><td><code>scope="rowgroup"</code></td><td>Vale para um grupo de linhas (dentro de um <code>tbody</code>).</td></tr>
+        </tbody>
+      </table>
+
+      <div class="highlight-box blue">
+        💡 <strong>Quando o <code>scope</code> é opcional?</strong> Em tabelas simples onde o cabeçalho está claramente na primeira linha, o navegador consegue deduzir a direção. Em tabelas com cabeçalhos em linhas e colunas simultaneamente, o <code>scope</code> deixa a associação explícita e evita interpretação errada por leitor de tela.
+      </div>
+
+      <div class="highlight-box rose">
+        ❌ <strong>Não use <code>scope</code> como decoração:</strong> colocá-lo em toda <code>&lt;th&gt;</code> de toda tabela sem pensar é tão ruim quanto não colocar. O atributo só ajuda quando está coerente com a estrutura real.
+      </div>
+    </section>
+  </div>
+
+  <div id="aba-labs" class="tab-content">
+    <section class="card">
+      <h2>💻 Laboratórios — Evolução do código</h2>
+      <p>Cinco versões do mesmo boletim, da mais frágil à mais completa. Execute cada uma e compare.</p>
+
+      <h3>📄 Lab 1 — Boletim mínimo (tabela funciona, mas sem agrupamentos)</h3>
+      <div class="code-wrapper" id="card-lab1">
+        <div class="code-header">
+          <span class="code-title">📄 lab1-boletim-inicial.html</span>
+          <div class="code-actions">
+            <button type="button" class="copy-btn" data-copiar="lab1">📋 Copiar</button>
+            <button type="button" class="run-inline-btn" data-preview-inline="lab1">🧪 Preview</button>
+            <button type="button" class="run-oc-btn" data-onecompiler="lab1">▶️ OneCompiler</button>
+            <button type="button" class="download-btn" data-download="lab1">⬇️ Baixar</button>
+          </div>
+        </div>
+        <div class="code-pane active" id="lab1-pane-html"><pre>&lt;h1&gt;Boletim da Turma&lt;/h1&gt;
+
+&lt;table&gt;
+  &lt;tr&gt;
+    &lt;th&gt;Aluno&lt;/th&gt;
+    &lt;th&gt;HTML&lt;/th&gt;
+    &lt;th&gt;CSS&lt;/th&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;Ana&lt;/td&gt;
+    &lt;td&gt;9,0&lt;/td&gt;
+    &lt;td&gt;8,5&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;João&lt;/td&gt;
+    &lt;td&gt;7,5&lt;/td&gt;
+    &lt;td&gt;9,0&lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;</pre></div>
+        <div class="code-pane" id="lab1-pane-css"><pre>body { font-family: Segoe UI, sans-serif; padding: 20px; background: #f8fafc; }
+h1 { color: #075985; margin-bottom: 16px; }
+table { border-collapse: collapse; width: 100%; max-width: 500px; }
+th, td { border: 1px solid #cbd5e1; padding: 10px; text-align: left; }
+th { background: #0369a1; color: #fff; }</pre></div>
+        <div class="code-pane" id="lab1-pane-tudo"><pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-BR"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;Lab HTML5&lt;/title&gt;
+  &lt;style&gt;
+body { font-family: Segoe UI, sans-serif; padding: 20px; background: #f8fafc; }
+h1 { color: #075985; margin-bottom: 16px; }
+table { border-collapse: collapse; width: 100%; max-width: 500px; }
+th, td { border: 1px solid #cbd5e1; padding: 10px; text-align: left; }
+th { background: #0369a1; color: #fff; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Boletim da Turma&lt;/h1&gt;
+
+&lt;table&gt;
+  &lt;tr&gt;
+    &lt;th&gt;Aluno&lt;/th&gt;
+    &lt;th&gt;HTML&lt;/th&gt;
+    &lt;th&gt;CSS&lt;/th&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;Ana&lt;/td&gt;
+    &lt;td&gt;9,0&lt;/td&gt;
+    &lt;td&gt;8,5&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;João&lt;/td&gt;
+    &lt;td&gt;7,5&lt;/td&gt;
+    &lt;td&gt;9,0&lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre></div>
+        <div class="code-abas-nav">
+          <button type="button" class="code-aba-btn active" data-lab="lab1" data-pane="html">HTML</button>
+          <button type="button" class="code-aba-btn" data-lab="lab1" data-pane="css">CSS</button>
+          <button type="button" class="code-aba-btn" data-lab="lab1" data-pane="tudo">Arquivo Único</button>
+        </div>
+      </div>
+
+      <h3>📄 Lab 2 — Boletim completo (caption + thead + tbody + tfoot + scope)</h3>
+      <div class="code-wrapper" id="card-lab2">
+        <div class="code-header">
+          <span class="code-title">📄 lab2-boletim-semantico.html</span>
+          <div class="code-actions">
+            <button type="button" class="copy-btn" data-copiar="lab2">📋 Copiar</button>
+            <button type="button" class="run-inline-btn" data-preview-inline="lab2">🧪 Preview</button>
+            <button type="button" class="run-oc-btn" data-onecompiler="lab2">▶️ OneCompiler</button>
+            <button type="button" class="download-btn" data-download="lab2">⬇️ Baixar</button>
+          </div>
+        </div>
+        <div class="code-pane active" id="lab2-pane-html"><pre>&lt;h1&gt;Boletim da Turma&lt;/h1&gt;
+
+&lt;table&gt;
+  &lt;caption&gt;Notas finais &amp;mdash; Programação Front-End 2026&lt;/caption&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th scope="col"&gt;Aluno&lt;/th&gt;
+      &lt;th scope="col"&gt;HTML&lt;/th&gt;
+      &lt;th scope="col"&gt;CSS&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th scope="row"&gt;Ana&lt;/th&gt;
+      &lt;td&gt;9,0&lt;/td&gt;
+      &lt;td&gt;8,5&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th scope="row"&gt;João&lt;/th&gt;
+      &lt;td&gt;7,5&lt;/td&gt;
+      &lt;td&gt;9,0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th scope="row"&gt;Marina&lt;/th&gt;
+      &lt;td&gt;8,5&lt;/td&gt;
+      &lt;td&gt;9,5&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+  &lt;tfoot&gt;
+    &lt;tr&gt;
+      &lt;th scope="row"&gt;Média&lt;/th&gt;
+      &lt;td&gt;8,3&lt;/td&gt;
+      &lt;td&gt;9,0&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tfoot&gt;
+&lt;/table&gt;</pre></div>
+        <div class="code-pane" id="lab2-pane-css"><pre>body { font-family: Segoe UI, sans-serif; padding: 20px; background: #f8fafc; }
+h1 { color: #075985; margin-bottom: 16px; }
+table { border-collapse: collapse; width: 100%; max-width: 600px; }
+caption { text-align: left; font-weight: 700; color: #0c4a6e; padding: 8px 0; }
+th, td { border: 1px solid #cbd5e1; padding: 10px; text-align: left; }
+thead th { background: #0369a1; color: #fff; }
+tbody th { background: #e0f2fe; color: #0c4a6e; }
+tfoot th, tfoot td { background: #ccfbf1; color: #115e59; font-weight: 700; }</pre></div>
+        <div class="code-pane" id="lab2-pane-tudo"><pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-BR"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;Lab HTML5&lt;/title&gt;
+  &lt;style&gt;
+body { font-family: Segoe UI, sans-serif; padding: 20px; background: #f8fafc; }
+h1 { color: #075985; margin-bottom: 16px; }
+table { border-collapse: collapse; width: 100%; max-width: 600px; }
+caption { text-align: left; font-weight: 700; color: #0c4a6e; padding: 8px 0; }
+th, td { border: 1px solid #cbd5e1; padding: 10px; text-align: left; }
+thead th { background: #0369a1; color: #fff; }
+tbody th { background: #e0f2fe; color: #0c4a6e; }
+tfoot th, tfoot td { background: #ccfbf1; color: #115e59; font-weight: 700; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Boletim da Turma&lt;/h1&gt;
+
+&lt;table&gt;
+  &lt;caption&gt;Notas finais &amp;mdash; Programação Front-End 2026&lt;/caption&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th scope="col"&gt;Aluno&lt;/th&gt;
+      &lt;th scope="col"&gt;HTML&lt;/th&gt;
+      &lt;th scope="col"&gt;CSS&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th scope="row"&gt;Ana&lt;/th&gt;
+      &lt;td&gt;9,0&lt;/td&gt;
+      &lt;td&gt;8,5&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th scope="row"&gt;João&lt;/th&gt;
+      &lt;td&gt;7,5&lt;/td&gt;
+      &lt;td&gt;9,0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th scope="row"&gt;Marina&lt;/th&gt;
+      &lt;td&gt;8,5&lt;/td&gt;
+      &lt;td&gt;9,5&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+  &lt;tfoot&gt;
+    &lt;tr&gt;
+      &lt;th scope="row"&gt;Média&lt;/th&gt;
+      &lt;td&gt;8,3&lt;/td&gt;
+      &lt;td&gt;9,0&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tfoot&gt;
+&lt;/table&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre></div>
+        <div class="code-abas-nav">
+          <button type="button" class="code-aba-btn active" data-lab="lab2" data-pane="html">HTML</button>
+          <button type="button" class="code-aba-btn" data-lab="lab2" data-pane="css">CSS</button>
+          <button type="button" class="code-aba-btn" data-lab="lab2" data-pane="tudo">Arquivo Único</button>
+        </div>
+      </div>
+
+      <h3>📄 Lab 3 — Cabeçalho duplo (linha + coluna) com scope duplo</h3>
+      <div class="code-wrapper" id="card-lab3">
+        <div class="code-header">
+          <span class="code-title">📄 lab3-cabecalho-duplo.html</span>
+          <div class="code-actions">
+            <button type="button" class="copy-btn" data-copiar="lab3">📋 Copiar</button>
+            <button type="button" class="run-inline-btn" data-preview-inline="lab3">🧪 Preview</button>
+            <button type="button" class="run-oc-btn" data-onecompiler="lab3">▶️ OneCompiler</button>
+            <button type="button" class="download-btn" data-download="lab3">⬇️ Baixar</button>
+          </div>
+        </div>
+        <div class="code-pane active" id="lab3-pane-html"><pre>&lt;h1&gt;Cronograma da Semana&lt;/h1&gt;
+
+&lt;table&gt;
+  &lt;caption&gt;Horário das aulas &amp;mdash; Turma Front-End&lt;/caption&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th scope="col"&gt;Horário&lt;/th&gt;
+      &lt;th scope="col"&gt;Segunda&lt;/th&gt;
+      &lt;th scope="col"&gt;Terça&lt;/th&gt;
+      &lt;th scope="col"&gt;Quarta&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th scope="row"&gt;08h &amp;ndash; 10h&lt;/th&gt;
+      &lt;td&gt;HTML&lt;/td&gt;
+      &lt;td&gt;CSS&lt;/td&gt;
+      &lt;td&gt;JS&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th scope="row"&gt;10h &amp;ndash; 12h&lt;/th&gt;
+      &lt;td&gt;Projeto&lt;/td&gt;
+      &lt;td&gt;HTML&lt;/td&gt;
+      &lt;td&gt;Projeto&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</pre></div>
+        <div class="code-pane" id="lab3-pane-css"><pre>body { font-family: Segoe UI, sans-serif; padding: 20px; background: #f8fafc; }
+h1 { color: #075985; margin-bottom: 16px; }
+table { border-collapse: collapse; width: 100%; max-width: 640px; }
+caption { text-align: left; font-weight: 700; color: #0c4a6e; padding: 8px 0; }
+th, td { border: 1px solid #cbd5e1; padding: 10px; text-align: left; }
+thead th { background: #0369a1; color: #fff; }
+tbody th { background: #ccfbf1; color: #115e59; }
+tbody td { background: #fff; }</pre></div>
+        <div class="code-pane" id="lab3-pane-tudo"><pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-BR"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;Lab HTML5&lt;/title&gt;
+  &lt;style&gt;
+body { font-family: Segoe UI, sans-serif; padding: 20px; background: #f8fafc; }
+h1 { color: #075985; margin-bottom: 16px; }
+table { border-collapse: collapse; width: 100%; max-width: 640px; }
+caption { text-align: left; font-weight: 700; color: #0c4a6e; padding: 8px 0; }
+th, td { border: 1px solid #cbd5e1; padding: 10px; text-align: left; }
+thead th { background: #0369a1; color: #fff; }
+tbody th { background: #ccfbf1; color: #115e59; }
+tbody td { background: #fff; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Cronograma da Semana&lt;/h1&gt;
+
+&lt;table&gt;
+  &lt;caption&gt;Horário das aulas &amp;mdash; Turma Front-End&lt;/caption&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th scope="col"&gt;Horário&lt;/th&gt;
+      &lt;th scope="col"&gt;Segunda&lt;/th&gt;
+      &lt;th scope="col"&gt;Terça&lt;/th&gt;
+      &lt;th scope="col"&gt;Quarta&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th scope="row"&gt;08h &amp;ndash; 10h&lt;/th&gt;
+      &lt;td&gt;HTML&lt;/td&gt;
+      &lt;td&gt;CSS&lt;/td&gt;
+      &lt;td&gt;JS&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th scope="row"&gt;10h &amp;ndash; 12h&lt;/th&gt;
+      &lt;td&gt;Projeto&lt;/td&gt;
+      &lt;td&gt;HTML&lt;/td&gt;
+      &lt;td&gt;Projeto&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre></div>
+        <div class="code-abas-nav">
+          <button type="button" class="code-aba-btn active" data-lab="lab3" data-pane="html">HTML</button>
+          <button type="button" class="code-aba-btn" data-lab="lab3" data-pane="css">CSS</button>
+          <button type="button" class="code-aba-btn" data-lab="lab3" data-pane="tudo">Arquivo Único</button>
+        </div>
+      </div>
+
+      <h3>📄 Lab 4 — Tabela com células mescladas (colspan e rowspan)</h3>
+      <div class="code-wrapper" id="card-lab4">
+        <div class="code-header">
+          <span class="code-title">📄 lab4-mesclagem.html</span>
+          <div class="code-actions">
+            <button type="button" class="copy-btn" data-copiar="lab4">📋 Copiar</button>
+            <button type="button" class="run-inline-btn" data-preview-inline="lab4">🧪 Preview</button>
+            <button type="button" class="run-oc-btn" data-onecompiler="lab4">▶️ OneCompiler</button>
+            <button type="button" class="download-btn" data-download="lab4">⬇️ Baixar</button>
+          </div>
+        </div>
+        <div class="code-pane active" id="lab4-pane-html"><pre>&lt;h1&gt;Contatos&lt;/h1&gt;
+
+&lt;table&gt;
+  &lt;caption&gt;Telefones dos alunos da turma&lt;/caption&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th scope="col"&gt;Nome&lt;/th&gt;
+      &lt;th scope="col" colspan="2"&gt;Telefones&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th scope="row" rowspan="2"&gt;Ana&lt;/th&gt;
+      &lt;td&gt;11 90000-0001&lt;/td&gt;
+      &lt;td&gt;11 90000-0002&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td colspan="2"&gt;ana@exemplo.com&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th scope="row"&gt;João&lt;/th&gt;
+      &lt;td&gt;11 90000-0003&lt;/td&gt;
+      &lt;td&gt;11 90000-0004&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</pre></div>
+        <div class="code-pane" id="lab4-pane-css"><pre>body { font-family: Segoe UI, sans-serif; padding: 20px; background: #f8fafc; }
+h1 { color: #075985; margin-bottom: 16px; }
+table { border-collapse: collapse; width: 100%; max-width: 640px; }
+caption { text-align: left; font-weight: 700; color: #0c4a6e; padding: 8px 0; }
+th, td { border: 1px solid #cbd5e1; padding: 10px; text-align: left; }
+thead th { background: #0369a1; color: #fff; }
+tbody th { background: #e0f2fe; color: #0c4a6e; }</pre></div>
+        <div class="code-pane" id="lab4-pane-tudo"><pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-BR"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;Lab HTML5&lt;/title&gt;
+  &lt;style&gt;
+body { font-family: Segoe UI, sans-serif; padding: 20px; background: #f8fafc; }
+h1 { color: #075985; margin-bottom: 16px; }
+table { border-collapse: collapse; width: 100%; max-width: 640px; }
+caption { text-align: left; font-weight: 700; color: #0c4a6e; padding: 8px 0; }
+th, td { border: 1px solid #cbd5e1; padding: 10px; text-align: left; }
+thead th { background: #0369a1; color: #fff; }
+tbody th { background: #e0f2fe; color: #0c4a6e; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Contatos&lt;/h1&gt;
+
+&lt;table&gt;
+  &lt;caption&gt;Telefones dos alunos da turma&lt;/caption&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th scope="col"&gt;Nome&lt;/th&gt;
+      &lt;th scope="col" colspan="2"&gt;Telefones&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th scope="row" rowspan="2"&gt;Ana&lt;/th&gt;
+      &lt;td&gt;11 90000-0001&lt;/td&gt;
+      &lt;td&gt;11 90000-0002&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td colspan="2"&gt;ana@exemplo.com&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th scope="row"&gt;João&lt;/th&gt;
+      &lt;td&gt;11 90000-0003&lt;/td&gt;
+      &lt;td&gt;11 90000-0004&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre></div>
+        <div class="code-abas-nav">
+          <button type="button" class="code-aba-btn active" data-lab="lab4" data-pane="html">HTML</button>
+          <button type="button" class="code-aba-btn" data-lab="lab4" data-pane="css">CSS</button>
+          <button type="button" class="code-aba-btn" data-lab="lab4" data-pane="tudo">Arquivo Único</button>
+        </div>
+      </div>
+
+      <h3>📄 Lab 5 — Tabela responsiva (rolagem horizontal, o padrão recomendado)</h3>
+      <div class="code-wrapper" id="card-lab5">
+        <div class="code-header">
+          <span class="code-title">📄 lab5-responsiva.html</span>
+          <div class="code-actions">
+            <button type="button" class="copy-btn" data-copiar="lab5">📋 Copiar</button>
+            <button type="button" class="run-inline-btn" data-preview-inline="lab5">🧪 Preview</button>
+            <button type="button" class="run-oc-btn" data-onecompiler="lab5">▶️ OneCompiler</button>
+            <button type="button" class="download-btn" data-download="lab5">⬇️ Baixar</button>
+          </div>
+        </div>
+        <div class="code-pane active" id="lab5-pane-html"><pre>&lt;h1&gt;Boletim Responsivo&lt;/h1&gt;
+
+&lt;div class="tabela-wrapper"&gt;
+  &lt;table&gt;
+    &lt;caption&gt;Notas &amp;mdash; Front-End 2026&lt;/caption&gt;
+    &lt;thead&gt;
+      &lt;tr&gt;
+        &lt;th scope="col"&gt;Aluno&lt;/th&gt;
+        &lt;th scope="col"&gt;HTML&lt;/th&gt;
+        &lt;th scope="col"&gt;CSS&lt;/th&gt;
+        &lt;th scope="col"&gt;JS&lt;/th&gt;
+        &lt;th scope="col"&gt;Média&lt;/th&gt;
+      &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+      &lt;tr&gt;
+        &lt;th scope="row"&gt;Ana&lt;/th&gt;
+        &lt;td&gt;9,0&lt;/td&gt;
+        &lt;td&gt;8,5&lt;/td&gt;
+        &lt;td&gt;8,0&lt;/td&gt;
+        &lt;td&gt;8,5&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;th scope="row"&gt;João&lt;/th&gt;
+        &lt;td&gt;7,5&lt;/td&gt;
+        &lt;td&gt;9,0&lt;/td&gt;
+        &lt;td&gt;8,5&lt;/td&gt;
+        &lt;td&gt;8,3&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;th scope="row"&gt;Marina&lt;/th&gt;
+        &lt;td&gt;8,5&lt;/td&gt;
+        &lt;td&gt;9,5&lt;/td&gt;
+        &lt;td&gt;9,0&lt;/td&gt;
+        &lt;td&gt;9,0&lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/div&gt;</pre></div>
+        <div class="code-pane" id="lab5-pane-css"><pre>body { font-family: Segoe UI, sans-serif; padding: 20px; background: #f8fafc; }
+h1 { color: #075985; margin-bottom: 16px; }
+.tabela-wrapper { overflow-x: auto; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.08); }
+table { width: 100%; min-width: 560px; border-collapse: collapse; background: #fff; }
+caption { background: #0369a1; color: #fff; padding: 12px 16px; text-align: left; font-weight: 700; }
+thead th { background: #082f49; color: #fff; padding: 10px 16px; text-align: left; font-size: .88rem; }
+tbody th, tbody td { padding: 10px 16px; border-bottom: 1px solid #e2e8f0; text-align: left; font-size: .88rem; }
+tbody th { background: #e0f2fe; color: #0c4a6e; }</pre></div>
+        <div class="code-pane" id="lab5-pane-tudo"><pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-BR"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;Lab HTML5&lt;/title&gt;
+  &lt;style&gt;
+body { font-family: Segoe UI, sans-serif; padding: 20px; background: #f8fafc; }
+h1 { color: #075985; margin-bottom: 16px; }
+.tabela-wrapper { overflow-x: auto; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.08); }
+table { width: 100%; min-width: 560px; border-collapse: collapse; background: #fff; }
+caption { background: #0369a1; color: #fff; padding: 12px 16px; text-align: left; font-weight: 700; }
+thead th { background: #082f49; color: #fff; padding: 10px 16px; text-align: left; font-size: .88rem; }
+tbody th, tbody td { padding: 10px 16px; border-bottom: 1px solid #e2e8f0; text-align: left; font-size: .88rem; }
+tbody th { background: #e0f2fe; color: #0c4a6e; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Boletim Responsivo&lt;/h1&gt;
+
+&lt;div class="tabela-wrapper"&gt;
+  &lt;table&gt;
+    &lt;caption&gt;Notas &amp;mdash; Front-End 2026&lt;/caption&gt;
+    &lt;thead&gt;
+      &lt;tr&gt;
+        &lt;th scope="col"&gt;Aluno&lt;/th&gt;
+        &lt;th scope="col"&gt;HTML&lt;/th&gt;
+        &lt;th scope="col"&gt;CSS&lt;/th&gt;
+        &lt;th scope="col"&gt;JS&lt;/th&gt;
+        &lt;th scope="col"&gt;Média&lt;/th&gt;
+      &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+      &lt;tr&gt;
+        &lt;th scope="row"&gt;Ana&lt;/th&gt;
+        &lt;td&gt;9,0&lt;/td&gt;
+        &lt;td&gt;8,5&lt;/td&gt;
+        &lt;td&gt;8,0&lt;/td&gt;
+        &lt;td&gt;8,5&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;th scope="row"&gt;João&lt;/th&gt;
+        &lt;td&gt;7,5&lt;/td&gt;
+        &lt;td&gt;9,0&lt;/td&gt;
+        &lt;td&gt;8,5&lt;/td&gt;
+        &lt;td&gt;8,3&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;th scope="row"&gt;Marina&lt;/th&gt;
+        &lt;td&gt;8,5&lt;/td&gt;
+        &lt;td&gt;9,5&lt;/td&gt;
+        &lt;td&gt;9,0&lt;/td&gt;
+        &lt;td&gt;9,0&lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre></div>
+        <div class="code-abas-nav">
+          <button type="button" class="code-aba-btn active" data-lab="lab5" data-pane="html">HTML</button>
+          <button type="button" class="code-aba-btn" data-lab="lab5" data-pane="css">CSS</button>
+          <button type="button" class="code-aba-btn" data-lab="lab5" data-pane="tudo">Arquivo Único</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div id="aba-acess" class="tab-content">
+    <section class="card">
+      <h2>♿ Acessibilidade: o que o leitor de tela precisa</h2>
+      <p>Uma tabela sem caption e sem scope é, para quem usa leitor de tela, um emaranhado de células soltas. Uma tabela bem construída é lida em ordem: caption, cabeçalhos, dados.</p>
+
+      <h3>📢 Como o leitor de tela anuncia</h3>
+      <div class="highlight-box teal">
+        <strong>Boa prática:</strong> "Tabela. Notas da turma. Aluno, Ana. HTML, 9,0. CSS, 8,5." — cada célula vem associada ao cabeçalho correto. O anúncio audível exato varia conforme leitor de tela, navegador, idioma e forma de navegação.
+      </div>
+      <div class="highlight-box rose">
+        <strong>Má prática:</strong> "Tabela. 9,0. 8,5. 7,5. 9,0." — o usuário ouve números sem saber a quem pertencem.
+      </div>
+
+      <h3>✅ Checklist de acessibilidade</h3>
+      <table class="tabela-logica">
+        <thead><tr><th>Item</th><th>Por quê</th></tr></thead>
+        <tbody>
+          <tr><td><code>caption</code> presente</td><td>Identifica o assunto antes da leitura das células.</td></tr>
+          <tr><td><code>th</code> em vez de <code>td</code> nos cabeçalhos</td><td>O leitor de tela sabe que aquilo é um título de coluna/linha.</td></tr>
+          <tr><td><code>scope</code> quando há cabeçalho duplo</td><td>Elimina a ambiguidade da relação th → td.</td></tr>
+          <tr><td>Contraste de cor suficiente</td><td>Legibilidade para baixa visão.</td></tr>
+          <tr><td>Uso coerente de <code>aria-hidden</code></td><td>Não esconder conteúdo relevante — apenas decoração visual.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <h2>🎭 ARIA: o que é e quando usar</h2>
+      <p>ARIA significa <strong>Accessible Rich Internet Applications</strong>. É um conjunto de atributos HTML cujo único propósito é dizer às tecnologias assistivas (leitores de tela) o que cada elemento "é" e "faz" quando a semântica nativa do HTML não é suficiente.</p>
+
+      <div class="highlight-box blue">
+        💡 <strong>Regra de ouro do ARIA:</strong> <em>"Nenhum ARIA é melhor que ARIA ruim."</em> Antes de usar ARIA, verifique se a tag HTML nativa já resolve. Um <code>&lt;button&gt;</code> já tem role de botão, foco de teclado e semântica; um <code>&lt;div role="button"&gt;</code> precisa de JS para tudo e ainda pode ser esquecido.
+      </div>
+
+      <h3>🎯 Os atributos ARIA mais usados (e o que evitam)</h3>
+      <table class="tabela-logica">
+        <thead><tr><th>Atributo</th><th>Para que serve</th><th>Exemplo prático</th></tr></thead>
+        <tbody>
+          <tr><td><code>aria-hidden</code></td><td>Esconde do leitor de tela, mas mantém visível</td><td>Ícones decorativos ao lado de texto</td></tr>
+          <tr><td><code>aria-label</code></td><td>Rótulo textual para elemento sem texto visível</td><td>Botão só com ícone de "X" → <code>aria-label="Fechar"</code></td></tr>
+          <tr><td><code>aria-labelledby</code></td><td>Rótulo obtido de outro elemento (por id)</td><td>Título de modal como rótulo do próprio modal</td></tr>
+          <tr><td><code>aria-describedby</code></td><td>Descrição adicional</td><td>Mensagem de erro vinculada a um input</td></tr>
+          <tr><td><code>aria-live</code></td><td>Anuncia mudança dinâmica</td><td>Aviso de "Item adicionado ao carrinho"</td></tr>
+          <tr><td><code>role</code></td><td>Força um papel quando a tag nativa não o fornece</td><td><code>role="alert"</code>, <code>role="dialog"</code></td></tr>
+        </tbody>
+      </table>
+
+      <h3>🎬 Demonstração: icon decorativo vs. icon informativo</h3>
+      <div class="aria-demo"><pre><span class="comentario">&lt;!-- ❌ Ruim: ícone decorativo exposto ao leitor --&gt;</span>
+&lt;a href="/perfil"&gt;👤 &lt;span&gt;Perfil&lt;/span&gt;&lt;/a&gt;
+<span class="comentario">&lt;!-- O emoji pode ser anunciado mesmo sem ser informação. --&gt;</span>
+
+<span class="comentario">&lt;!-- ✅ Bom: emoji decorativo nunca chega ao leitor --&gt;</span>
+&lt;a href="/perfil"&gt;
+  &lt;span <span class="destaque-aria">aria-hidden="true"</span>&gt;👤&lt;/span&gt;
+  &lt;span&gt;Perfil&lt;/span&gt;
+&lt;/a&gt;
+
+<span class="comentario">&lt;!-- ❌ Ruim: botão de fechar sem rótulo --&gt;</span>
+&lt;button&gt;✕&lt;/button&gt;
+&lt;!-- Leitor pode anunciar apenas "BOTÃO ✕" — sem ação clara. --&gt;
+
+<span class="comentario">&lt;!-- ✅ Bom: rótulo explícito --&gt;</span>
+&lt;button <span class="destaque-aria">aria-label="Fechar janela"</span>&gt;
+  &lt;span <span class="destaque-aria">aria-hidden="true"</span>&gt;✕&lt;/span&gt;
+&lt;/button&gt;</pre></div>
+
+      <div class="highlight-box amber">
+        ⚠️ <strong>Nunca use <code>aria-hidden</code> em conteúdo informativo nem em elementos interativos.</strong> Se o usuário precisa daquela informação para tomar uma decisão, escondê-la do leitor de tela viola a regra de ouro da acessibilidade. Só esconda decoração. <code>aria-hidden="true"</code> também não oculta visualmente o elemento — apenas o retira da árvore de acessibilidade.
+      </div>
+
+      <h3>🧪 Teste você mesmo</h3>
+      <ol>
+        <li>Abra o DevTools do navegador.</li>
+        <li>Vá em <strong>Elements</strong> e clique com o botão direito sobre a tabela.</li>
+        <li>Escolha <strong>Inspect Accessibility Properties</strong>.</li>
+        <li>Confira se a árvore de acessibilidade lista <code>role="table"</code>, <code>columnheader</code> e <code>rowheader</code> corretamente. O navegador expõe esses papéis automaticamente para uma tabela HTML semântica — você não precisa escrever o atributo <code>role</code>.</li>
+      </ol>
+    </section>
+  </div>
+
+  <div id="aba-responsive" class="tab-content">
+    <section class="card">
+      <h2>📱 Responsividade: as três estratégias com exemplo executável</h2>
+      <p>Em telas pequenas, uma tabela larga estoura o layout. Existem três formas honestas de resolver, e cada uma serve a um caso. A escolha não é universal: depende do conteúdo e do uso.</p>
+
+      <div class="estrategias-grid">
+        <div class="estrategia-card">
+          <div class="estrategia-card-header">
+            <h4>⚡ Estratégia 1 — Rolagem horizontal controlada</h4>
+            <div class="subtitulo">A tabela mantém todas as colunas, mas o usuário rola horizontalmente.</div>
+          </div>
+          <div class="estrategia-meta">
+            <p><strong>Quando usar:</strong> tabelas com muitas colunas comparáveis (painéis administrativos, extratos longos).</p>
+            <p><strong>Como funciona:</strong> um invólucro com <code>overflow-x: auto</code> permite rolagem só no bloco da tabela, sem quebrar a página.</p>
+            <p><strong>Por que é o padrão recomendado:</strong> preserva a estrutura nativa da tabela e a associação entre cabeçalhos e células na árvore de acessibilidade.</p>
+            <span class="trade-off">⚠️ Trade-off: exige gesto de rolagem horizontal — em mobile, usuários podem não descobrir.</span>
+          </div>
+          <div class="estrategia-demo">
+            <div style="overflow-x:auto;background:#fff;border-radius:8px;">
+              <table style="width:100%;min-width:560px;border-collapse:collapse;font-size:.82rem;">
+                <caption style="background:#0369a1;color:#fff;padding:10px 14px;text-align:left;font-weight:700;">Notas — Front-End 2026</caption>
+                <thead>
+                  <tr style="background:#0369a1;color:#fff;">
+                    <th scope="col" style="padding:10px 14px;text-align:left;">Aluno</th>
+                    <th scope="col" style="padding:10px 14px;text-align:left;">HTML</th>
+                    <th scope="col" style="padding:10px 14px;text-align:left;">CSS</th>
+                    <th scope="col" style="padding:10px 14px;text-align:left;">JS</th>
+                    <th scope="col" style="padding:10px 14px;text-align:left;">Projeto</th>
+                    <th scope="col" style="padding:10px 14px;text-align:left;">Média</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><th scope="row" style="padding:10px 14px;text-align:left;background:#e0f2fe;color:#0c4a6e;">Ana</th><td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;">9,0</td><td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;">8,5</td><td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;">8,0</td><td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;">9,5</td><td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;">8,75</td></tr>
+                  <tr><th scope="row" style="padding:10px 14px;text-align:left;background:#e0f2fe;color:#0c4a6e;">João</th><td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;">7,5</td><td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;">9,0</td><td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;">8,5</td><td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;">8,0</td><td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;">8,25</td></tr>
+                  <tr><th scope="row" style="padding:10px 14px;text-align:left;background:#e0f2fe;color:#0c4a6e;">Marina</th><td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;">8,5</td><td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;">9,5</td><td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;">9,0</td><td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;">9,5</td><td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;">9,13</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p style="color:#94a3b8;font-size:.72rem;text-align:center;margin-top:8px;">↔ Arraste horizontalmente para ver todas as colunas</p>
+          </div>
+        </div>
+
+        <div class="estrategia-card">
+          <div class="estrategia-card-header" style="background:linear-gradient(135deg,#7c3aed,#4c1d95);">
+            <h4>📋 Estratégia 2 — Empilhamento em cards</h4>
+            <div class="subtitulo">Cada linha da tabela vira um "cartão" em telas pequenas.</div>
+          </div>
+          <div class="estrategia-meta">
+            <p><strong>Quando usar:</strong> poucos campos por registro, telas pequenas, cenários tipo "ficha de contato".</p>
+            <p><strong>Como funciona:</strong> no breakpoint, <code>thead</code> desaparece, <code>tr</code> vira bloco, cada <code>td</code> ganha <code>::before { content: attr(data-label) }</code>.</p>
+            <p><strong>Exige teste de acessibilidade:</strong> a transformação em bloco pode alterar a exposição das relações entre cabeçalho e célula na árvore de acessibilidade.</p>
+            <span class="trade-off">⚠️ Trade-off: perde a comparação vertical entre registros — o que era a razão da tabela.</span>
+          </div>
+          <div class="estrategia-demo">
+            <div style="background:#fff;padding:12px;border-radius:8px;">
+              <div style="border:2px solid #7c3aed;border-radius:8px;margin-bottom:10px;overflow:hidden;font-size:.85rem;">
+                <div style="background:#7c3aed;color:#fff;padding:10px 14px;font-weight:700;">Ana</div>
+                <div style="padding:10px 14px;border-bottom:1px solid #e2e8f0;"><strong style="color:#7c3aed;">HTML:</strong> 9,0</div>
+                <div style="padding:10px 14px;border-bottom:1px solid #e2e8f0;"><strong style="color:#7c3aed;">CSS:</strong> 8,5</div>
+                <div style="padding:10px 14px;"><strong style="color:#7c3aed;">Média:</strong> 8,75</div>
+              </div>
+              <div style="border:2px solid #7c3aed;border-radius:8px;overflow:hidden;font-size:.85rem;">
+                <div style="background:#7c3aed;color:#fff;padding:10px 14px;font-weight:700;">João</div>
+                <div style="padding:10px 14px;border-bottom:1px solid #e2e8f0;"><strong style="color:#7c3aed;">HTML:</strong> 7,5</div>
+                <div style="padding:10px 14px;border-bottom:1px solid #e2e8f0;"><strong style="color:#7c3aed;">CSS:</strong> 9,0</div>
+                <div style="padding:10px 14px;"><strong style="color:#7c3aed;">Média:</strong> 8,25</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="estrategia-card">
+          <div class="estrategia-card-header" style="background:linear-gradient(135deg,#b45309,#78350f);">
+            <h4>🎯 Estratégia 3 — Ocultar colunas secundárias</h4>
+            <div class="subtitulo">Algumas colunas somem no celular para privilegiar o essencial.</div>
+          </div>
+          <div class="estrategia-meta">
+            <p><strong>Quando usar:</strong> quando existe uma coluna "principal" e as outras são apoio (ex: notas muito detalhadas).</p>
+            <p><strong>Como funciona:</strong> <code>@media</code> aplica <code>display: none</code> nas colunas de baixa prioridade.</p>
+            <span class="trade-off">⚠️ Trade-off: o usuário mobile não vê a comparação completa — precisa de outra via.</span>
+          </div>
+          <div class="estrategia-demo">
+            <div style="background:#fff;border-radius:8px;overflow:hidden;display:inline-block;">
+              <table style="border-collapse:collapse;font-size:.82rem;">
+                <tbody><tr style="background:#b45309;color:#fff;"><th style="padding:10px 14px;text-align:left;">Aluno</th><th style="padding:10px 14px;text-align:left;">HTML</th><th style="padding:10px 14px;text-align:left;">CSS</th></tr>
+                <tr><th style="padding:10px 14px;text-align:left;background:#fef3c7;color:#78350f;">Ana</th><td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;">9,0</td><td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;">8,5</td></tr>
+                <tr><th style="padding:10px 14px;text-align:left;background:#fef3c7;color:#78350f;">João</th><td style="padding:10px 14px;">7,5</td><td style="padding:10px 14px;">9,0</td></tr>
+              </tbody></table>
+            </div>
+            <p style="color:#94a3b8;font-size:.72rem;text-align:center;margin-top:8px;">Exemplo visual: em mobile, esta tabela mantém só 2 das 5 colunas originais.</p>
+          </div>
+        </div>
+      </div>
+
+      <h3>💻 Código completo das três estratégias</h3>
+      <p>O arquivo abaixo contém as três implementações lado a lado, cada uma com sua própria tabela. Redimensione a janela para ver a mágica acontecer.</p>
+
+      <div class="code-wrapper" id="card-responsive-demo">
+        <div class="code-header">
+          <span class="code-title">📄 tres-estrategias-responsivas.html</span>
+          <div class="code-actions">
+            <button type="button" class="copy-btn" data-copiar="responsive-demo">📋 Copiar</button>
+            <button type="button" class="run-inline-btn" data-preview-inline="responsive-demo">🧪 Preview</button>
+            <button type="button" class="run-oc-btn" data-onecompiler="responsive-demo">▶️ OneCompiler</button>
+            <button type="button" class="download-btn" data-download="responsive-demo">⬇️ Baixar</button>
+          </div>
+        </div>
+        <div class="code-pane active" id="responsive-demo-pane-html"><pre>&lt;h1&gt;Três estratégias responsivas para tabelas&lt;/h1&gt;
+
+&lt;section class="bloco-estrategia"&gt;
+  &lt;h2&gt;1. Rolagem horizontal controlada&lt;/h2&gt;
+  &lt;p&gt;Use quando tiver muitas colunas e quiser manter a comparação vertical.&lt;/p&gt;
+  &lt;div class="tabela-scroll"&gt;
+    &lt;table&gt;
+      &lt;caption&gt;Boletim completo &amp;mdash; Front-End 2026&lt;/caption&gt;
+      &lt;thead&gt;
+        &lt;tr&gt;
+          &lt;th scope="col"&gt;Aluno&lt;/th&gt;
+          &lt;th scope="col"&gt;HTML&lt;/th&gt;
+          &lt;th scope="col"&gt;CSS&lt;/th&gt;
+          &lt;th scope="col"&gt;JavaScript&lt;/th&gt;
+          &lt;th scope="col"&gt;Projeto final&lt;/th&gt;
+          &lt;th scope="col"&gt;Média&lt;/th&gt;
+        &lt;/tr&gt;
+      &lt;/thead&gt;
+      &lt;tbody&gt;
+        &lt;tr&gt;
+          &lt;th scope="row"&gt;Ana&lt;/th&gt;
+          &lt;td&gt;9,0&lt;/td&gt;
+          &lt;td&gt;8,5&lt;/td&gt;
+          &lt;td&gt;8,0&lt;/td&gt;
+          &lt;td&gt;9,5&lt;/td&gt;
+          &lt;td&gt;8,75&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;th scope="row"&gt;João&lt;/th&gt;
+          &lt;td&gt;7,5&lt;/td&gt;
+          &lt;td&gt;9,0&lt;/td&gt;
+          &lt;td&gt;8,5&lt;/td&gt;
+          &lt;td&gt;8,0&lt;/td&gt;
+          &lt;td&gt;8,25&lt;/td&gt;
+        &lt;/tr&gt;
+      &lt;/tbody&gt;
+    &lt;/table&gt;
+  &lt;/div&gt;
+  &lt;p class="dica"&gt;↔ Arraste horizontalmente para ver todas as colunas&lt;/p&gt;
+&lt;/section&gt;
+
+&lt;section class="bloco-estrategia"&gt;
+  &lt;h2&gt;2. Empilhamento em cards&lt;/h2&gt;
+  &lt;p&gt;Use quando cada registro tem poucos campos e a tela é estreita.&lt;/p&gt;
+  &lt;table class="tabela-cards"&gt;
+    &lt;caption&gt;Boletim &amp;mdash; Front-End 2026&lt;/caption&gt;
+    &lt;thead&gt;
+      &lt;tr&gt;
+        &lt;th scope="col"&gt;Aluno&lt;/th&gt;
+        &lt;th scope="col"&gt;HTML&lt;/th&gt;
+        &lt;th scope="col"&gt;CSS&lt;/th&gt;
+        &lt;th scope="col"&gt;Média&lt;/th&gt;
+      &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+      &lt;tr&gt;
+        &lt;th scope="row" data-label="Aluno"&gt;Ana&lt;/th&gt;
+        &lt;td data-label="HTML"&gt;9,0&lt;/td&gt;
+        &lt;td data-label="CSS"&gt;8,5&lt;/td&gt;
+        &lt;td data-label="Média"&gt;8,75&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;th scope="row" data-label="Aluno"&gt;João&lt;/th&gt;
+        &lt;td data-label="HTML"&gt;7,5&lt;/td&gt;
+        &lt;td data-label="CSS"&gt;9,0&lt;/td&gt;
+        &lt;td data-label="Média"&gt;8,25&lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/section&gt;
+
+&lt;section class="bloco-estrategia"&gt;
+  &lt;h2&gt;3. Ocultar colunas secundárias&lt;/h2&gt;
+  &lt;p&gt;Use quando existem colunas principais e colunas de apoio.&lt;/p&gt;
+  &lt;table class="tabela-oculta"&gt;
+    &lt;caption&gt;Notas resumidas&lt;/caption&gt;
+    &lt;thead&gt;
+      &lt;tr&gt;
+        &lt;th scope="col"&gt;Aluno&lt;/th&gt;
+        &lt;th scope="col"&gt;Média&lt;/th&gt;
+        &lt;th scope="col" class="col-secundaria"&gt;HTML&lt;/th&gt;
+        &lt;th scope="col" class="col-secundaria"&gt;CSS&lt;/th&gt;
+      &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+      &lt;tr&gt;
+        &lt;th scope="row"&gt;Ana&lt;/th&gt;
+        &lt;td&gt;&lt;strong&gt;8,75&lt;/strong&gt;&lt;/td&gt;
+        &lt;td class="col-secundaria"&gt;9,0&lt;/td&gt;
+        &lt;td class="col-secundaria"&gt;8,5&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;th scope="row"&gt;João&lt;/th&gt;
+        &lt;td&gt;&lt;strong&gt;8,25&lt;/strong&gt;&lt;/td&gt;
+        &lt;td class="col-secundaria"&gt;7,5&lt;/td&gt;
+        &lt;td class="col-secundaria"&gt;9,0&lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/section&gt;</pre></div>
+        <div class="code-pane" id="responsive-demo-pane-css"><pre>* { box-sizing: border-box; }
+body { font-family: Segoe UI, sans-serif; padding: 20px; background: #f8fafc; color: #0f172a; }
+h1 { color: #075985; margin-bottom: 20px; }
+h2 { color: #0369a1; font-size: 1.1rem; margin-bottom: 6px; }
+.bloco-estrategia { background: #fff; border-radius: 12px; padding: 18px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,.08); }
+.bloco-estrategia &gt; p { color: #475569; font-size: .88rem; margin-bottom: 12px; }
+.dica { color: #64748b; font-size: .78rem; text-align: center; margin-top: 8px; }
+
+.tabela-scroll { overflow-x: auto; border-radius: 8px; }
+.tabela-scroll table { width: 100%; min-width: 560px; border-collapse: collapse; font-size: .85rem; }
+.tabela-scroll caption { background: #0369a1; color: #fff; padding: 10px 14px; text-align: left; font-weight: 700; }
+.tabela-scroll th, .tabela-scroll td { padding: 10px 14px; border-bottom: 1px solid #e2e8f0; text-align: left; }
+.tabela-scroll thead th { background: #082f49; color: #fff; }
+.tabela-scroll tbody th { background: #e0f2fe; color: #0c4a6e; }
+
+.tabela-cards { width: 100%; border-collapse: collapse; font-size: .85rem; }
+.tabela-cards caption { background: #0d9488; color: #fff; padding: 10px 14px; text-align: left; font-weight: 700; }
+.tabela-cards th, .tabela-cards td { padding: 10px 14px; border-bottom: 1px solid #e2e8f0; text-align: left; }
+.tabela-cards thead th { background: #134e4a; color: #fff; }
+.tabela-cards tbody th { background: #ccfbf1; color: #115e59; }
+@media (max-width: 520px) {
+  .tabela-cards thead { display: none; }
+  .tabela-cards, .tabela-cards tbody, .tabela-cards tr, .tabela-cards th, .tabela-cards td { display: block; width: 100%; }
+  .tabela-cards tr { margin-bottom: 14px; border: 2px solid #0d9488; border-radius: 10px; overflow: hidden; }
+  .tabela-cards th { background: #0d9488; color: #fff; padding: 10px 14px; }
+  .tabela-cards td, .tabela-cards tbody th { border: none; border-bottom: 1px solid #e2e8f0; padding: 10px 14px; }
+  .tabela-cards tbody th { background: #fff; color: #0f172a; }
+  .tabela-cards td::before { content: attr(data-label) ": "; font-weight: 700; color: #0d9488; }
+}
+
+.tabela-oculta { width: 100%; border-collapse: collapse; font-size: .85rem; }
+.tabela-oculta caption { background: #7c3aed; color: #fff; padding: 10px 14px; text-align: left; font-weight: 700; }
+.tabela-oculta th, .tabela-oculta td { padding: 10px 14px; border-bottom: 1px solid #e2e8f0; text-align: left; }
+.tabela-oculta thead th { background: #4c1d95; color: #fff; }
+.tabela-oculta tbody th { background: #ede9fe; color: #4c1d95; }
+@media (max-width: 600px) {
+  .col-secundaria { display: none; }
+}</pre></div>
+        <div class="code-pane" id="responsive-demo-pane-tudo"><pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-BR"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;Lab HTML5&lt;/title&gt;
+  &lt;style&gt;
+* { box-sizing: border-box; }
+body { font-family: Segoe UI, sans-serif; padding: 20px; background: #f8fafc; color: #0f172a; }
+h1 { color: #075985; margin-bottom: 20px; }
+h2 { color: #0369a1; font-size: 1.1rem; margin-bottom: 6px; }
+.bloco-estrategia { background: #fff; border-radius: 12px; padding: 18px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,.08); }
+.bloco-estrategia &gt; p { color: #475569; font-size: .88rem; margin-bottom: 12px; }
+.dica { color: #64748b; font-size: .78rem; text-align: center; margin-top: 8px; }
+
+.tabela-scroll { overflow-x: auto; border-radius: 8px; }
+.tabela-scroll table { width: 100%; min-width: 560px; border-collapse: collapse; font-size: .85rem; }
+.tabela-scroll caption { background: #0369a1; color: #fff; padding: 10px 14px; text-align: left; font-weight: 700; }
+.tabela-scroll th, .tabela-scroll td { padding: 10px 14px; border-bottom: 1px solid #e2e8f0; text-align: left; }
+.tabela-scroll thead th { background: #082f49; color: #fff; }
+.tabela-scroll tbody th { background: #e0f2fe; color: #0c4a6e; }
+
+.tabela-cards { width: 100%; border-collapse: collapse; font-size: .85rem; }
+.tabela-cards caption { background: #0d9488; color: #fff; padding: 10px 14px; text-align: left; font-weight: 700; }
+.tabela-cards th, .tabela-cards td { padding: 10px 14px; border-bottom: 1px solid #e2e8f0; text-align: left; }
+.tabela-cards thead th { background: #134e4a; color: #fff; }
+.tabela-cards tbody th { background: #ccfbf1; color: #115e59; }
+@media (max-width: 520px) {
+  .tabela-cards thead { display: none; }
+  .tabela-cards, .tabela-cards tbody, .tabela-cards tr, .tabela-cards th, .tabela-cards td { display: block; width: 100%; }
+  .tabela-cards tr { margin-bottom: 14px; border: 2px solid #0d9488; border-radius: 10px; overflow: hidden; }
+  .tabela-cards th { background: #0d9488; color: #fff; padding: 10px 14px; }
+  .tabela-cards td, .tabela-cards tbody th { border: none; border-bottom: 1px solid #e2e8f0; padding: 10px 14px; }
+  .tabela-cards tbody th { background: #fff; color: #0f172a; }
+  .tabela-cards td::before { content: attr(data-label) ": "; font-weight: 700; color: #0d9488; }
+}
+
+.tabela-oculta { width: 100%; border-collapse: collapse; font-size: .85rem; }
+.tabela-oculta caption { background: #7c3aed; color: #fff; padding: 10px 14px; text-align: left; font-weight: 700; }
+.tabela-oculta th, .tabela-oculta td { padding: 10px 14px; border-bottom: 1px solid #e2e8f0; text-align: left; }
+.tabela-oculta thead th { background: #4c1d95; color: #fff; }
+.tabela-oculta tbody th { background: #ede9fe; color: #4c1d95; }
+@media (max-width: 600px) {
+  .col-secundaria { display: none; }
+}
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Três estratégias responsivas para tabelas&lt;/h1&gt;
+
+&lt;section class="bloco-estrategia"&gt;
+  &lt;h2&gt;1. Rolagem horizontal controlada&lt;/h2&gt;
+  &lt;p&gt;Use quando tiver muitas colunas e quiser manter a comparação vertical.&lt;/p&gt;
+  &lt;div class="tabela-scroll"&gt;
+    &lt;table&gt;
+      &lt;caption&gt;Boletim completo &amp;mdash; Front-End 2026&lt;/caption&gt;
+      &lt;thead&gt;
+        &lt;tr&gt;
+          &lt;th scope="col"&gt;Aluno&lt;/th&gt;
+          &lt;th scope="col"&gt;HTML&lt;/th&gt;
+          &lt;th scope="col"&gt;CSS&lt;/th&gt;
+          &lt;th scope="col"&gt;JavaScript&lt;/th&gt;
+          &lt;th scope="col"&gt;Projeto final&lt;/th&gt;
+          &lt;th scope="col"&gt;Média&lt;/th&gt;
+        &lt;/tr&gt;
+      &lt;/thead&gt;
+      &lt;tbody&gt;
+        &lt;tr&gt;
+          &lt;th scope="row"&gt;Ana&lt;/th&gt;
+          &lt;td&gt;9,0&lt;/td&gt;
+          &lt;td&gt;8,5&lt;/td&gt;
+          &lt;td&gt;8,0&lt;/td&gt;
+          &lt;td&gt;9,5&lt;/td&gt;
+          &lt;td&gt;8,75&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;th scope="row"&gt;João&lt;/th&gt;
+          &lt;td&gt;7,5&lt;/td&gt;
+          &lt;td&gt;9,0&lt;/td&gt;
+          &lt;td&gt;8,5&lt;/td&gt;
+          &lt;td&gt;8,0&lt;/td&gt;
+          &lt;td&gt;8,25&lt;/td&gt;
+        &lt;/tr&gt;
+      &lt;/tbody&gt;
+    &lt;/table&gt;
+  &lt;/div&gt;
+  &lt;p class="dica"&gt;↔ Arraste horizontalmente para ver todas as colunas&lt;/p&gt;
+&lt;/section&gt;
+
+&lt;section class="bloco-estrategia"&gt;
+  &lt;h2&gt;2. Empilhamento em cards&lt;/h2&gt;
+  &lt;p&gt;Use quando cada registro tem poucos campos e a tela é estreita.&lt;/p&gt;
+  &lt;table class="tabela-cards"&gt;
+    &lt;caption&gt;Boletim &amp;mdash; Front-End 2026&lt;/caption&gt;
+    &lt;thead&gt;
+      &lt;tr&gt;
+        &lt;th scope="col"&gt;Aluno&lt;/th&gt;
+        &lt;th scope="col"&gt;HTML&lt;/th&gt;
+        &lt;th scope="col"&gt;CSS&lt;/th&gt;
+        &lt;th scope="col"&gt;Média&lt;/th&gt;
+      &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+      &lt;tr&gt;
+        &lt;th scope="row" data-label="Aluno"&gt;Ana&lt;/th&gt;
+        &lt;td data-label="HTML"&gt;9,0&lt;/td&gt;
+        &lt;td data-label="CSS"&gt;8,5&lt;/td&gt;
+        &lt;td data-label="Média"&gt;8,75&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;th scope="row" data-label="Aluno"&gt;João&lt;/th&gt;
+        &lt;td data-label="HTML"&gt;7,5&lt;/td&gt;
+        &lt;td data-label="CSS"&gt;9,0&lt;/td&gt;
+        &lt;td data-label="Média"&gt;8,25&lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/section&gt;
+
+&lt;section class="bloco-estrategia"&gt;
+  &lt;h2&gt;3. Ocultar colunas secundárias&lt;/h2&gt;
+  &lt;p&gt;Use quando existem colunas principais e colunas de apoio.&lt;/p&gt;
+  &lt;table class="tabela-oculta"&gt;
+    &lt;caption&gt;Notas resumidas&lt;/caption&gt;
+    &lt;thead&gt;
+      &lt;tr&gt;
+        &lt;th scope="col"&gt;Aluno&lt;/th&gt;
+        &lt;th scope="col"&gt;Média&lt;/th&gt;
+        &lt;th scope="col" class="col-secundaria"&gt;HTML&lt;/th&gt;
+        &lt;th scope="col" class="col-secundaria"&gt;CSS&lt;/th&gt;
+      &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+      &lt;tr&gt;
+        &lt;th scope="row"&gt;Ana&lt;/th&gt;
+        &lt;td&gt;&lt;strong&gt;8,75&lt;/strong&gt;&lt;/td&gt;
+        &lt;td class="col-secundaria"&gt;9,0&lt;/td&gt;
+        &lt;td class="col-secundaria"&gt;8,5&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;th scope="row"&gt;João&lt;/th&gt;
+        &lt;td&gt;&lt;strong&gt;8,25&lt;/strong&gt;&lt;/td&gt;
+        &lt;td class="col-secundaria"&gt;7,5&lt;/td&gt;
+        &lt;td class="col-secundaria"&gt;9,0&lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/section&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre></div>
+        <div class="code-abas-nav">
+          <button type="button" class="code-aba-btn active" data-lab="responsive-demo" data-pane="html">HTML</button>
+          <button type="button" class="code-aba-btn" data-lab="responsive-demo" data-pane="css">CSS</button>
+          <button type="button" class="code-aba-btn" data-lab="responsive-demo" data-pane="tudo">Arquivo Único</button>
+        </div>
+      </div>
+
+      <div class="highlight-box amber">
+        ⚠️ <strong>Regra final:</strong> não existe estratégia universalmente melhor para toda tabela. A escolha depende do conteúdo, do uso e da necessidade de preservar a comparação vertical contra a praticidade de adaptação. Quando o cenário é "consultar prazos e comparar projetos", a rolagem horizontal costuma ser a mais segura para iniciantes.
+      </div>
+    </section>
+  </div>
+
+  <div id="aba-diag" class="tab-content">
+    <section class="card">
+      <h2>🧭 Diagnóstico: encontre o problema</h2>
+      <p>Três tabelas com problemas reais de estrutura, semântica e acessibilidade. Para cada uma: identifique o que está errado, explique por quê, proponha a correção.</p>
+
+      <div class="diag-tabela-bloco">
+        <h4>🚨 Caso 1 — Estrutura</h4>
+        <div class="diag-codigo">&lt;table&gt;
+  &lt;tr&gt;
+    &lt;td&gt;Aluno&lt;/td&gt;
+    &lt;td&gt;Nota&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;Ana&lt;/td&gt;
+    &lt;td&gt;9,0&lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;</div>
+        <button type="button" class="btn-revelar" data-alvo="fb-caso1">👀 Revelar resposta</button>
+        <div class="feedback-diag" id="fb-caso1">
+          <p><strong>Problema:</strong> os cabeçalhos usam <code>&lt;td&gt;</code> em vez de <code>&lt;th&gt;</code>.</p>
+          <p><strong>Por quê:</strong> o leitor de tela não distingue cabeçalho de dado; anuncia as quatro células igualmente.</p>
+          <p><strong>Correção:</strong> trocar as duas primeiras células por <code>&lt;th scope="col"&gt;</code>. Adicionar <code>&lt;caption&gt;Notas dos alunos&lt;/caption&gt;</code>.</p>
+        </div>
+      </div>
+
+      <div class="diag-tabela-bloco">
+        <h4>🚨 Caso 2 — Semântica</h4>
+        <div class="diag-codigo">&lt;table&gt;
+  &lt;tr&gt;
+    &lt;th&gt;Plano&lt;/th&gt;
+    &lt;th&gt;Preço&lt;/th&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;Básico&lt;/td&gt;
+    &lt;td&gt;R$ 49,90&lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;
+&lt;!-- A página usa essa tabela para montar uma coluna lateral de planos. --&gt;</div>
+        <button type="button" class="btn-revelar" data-alvo="fb-caso2">👀 Revelar resposta</button>
+        <div class="feedback-diag" id="fb-caso2">
+          <p><strong>Problema:</strong> a "tabela" está sendo usada para montar layout de coluna lateral. Não há comparação real entre linhas e colunas — há apenas um bloco de planos.</p>
+          <p><strong>Por quê:</strong> essa é a "divite" travestida de tabela. O leitor de tela vai anunciar "tabela com duas colunas", induzindo o usuário ao erro.</p>
+          <p><strong>Correção:</strong> substituir por uma <code>&lt;section&gt;</code> com lista de cards ou Grid. Reservar <code>table</code> para dados que realmente existem em linhas e colunas.</p>
+        </div>
+      </div>
+
+      <div class="diag-tabela-bloco">
+        <h4>🚨 Caso 3 — Acessibilidade</h4>
+        <div class="diag-codigo">&lt;table&gt;
+  &lt;caption&gt;Cronograma&lt;/caption&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Segunda&lt;/th&gt;
+      &lt;th&gt;Terça&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;08h&lt;/th&gt;
+      &lt;td&gt;HTML&lt;/td&gt;
+      &lt;td&gt;CSS&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</div>
+        <button type="button" class="btn-revelar" data-alvo="fb-caso3">👀 Revelar resposta</button>
+        <div class="feedback-diag" id="fb-caso3">
+          <p><strong>Problema:</strong> a tabela tem cabeçalho de coluna (dias) <em>e</em> de linha (horário), mas nenhum dos <code>&lt;th&gt;</code> tem <code>scope</code>. O leitor de tela tem duas direções possíveis e não sabe qual vale.</p>
+          <p><strong>Por quê:</strong> em cabeçalho duplo, a associação precisa ser explícita. Sem <code>scope</code>, o comportamento varia entre navegadores e leitores.</p>
+          <p><strong>Correção:</strong> adicionar <code>scope="col"</code> em cada <code>&lt;th&gt;</code> do <code>thead</code> e <code>scope="row"</code> em cada <code>&lt;th&gt;</code> da primeira célula de cada linha do <code>tbody</code>.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div id="aba-desafio" class="tab-content">
+    <section class="card">
+      <h2>🏆 Desafio Prático — Painel de Acompanhamento de Projetos</h2>
+
+      <div class="desafio-bloco">
+        <h4>📋 Enunciado</h4>
+        <p>Você foi contratado para montar o painel de acompanhamento de projetos da escola. Precisará apresentar, numa única tabela, os projetos de quatro equipes com seus prazos, responsáveis e status. O painel precisa ser acessível e funcionar em celular.</p>
+        <p><strong>Objetivo central:</strong> construir uma tabela de acompanhamento de projetos semanticamente correta, acessível e utilizável em telas pequenas.</p>
+        <p><strong>Contexto de uso real:</strong> coordenadores de curso vão abrir esse painel todos os dias para saber o que está atrasado. Professores vão consultar pelo celular durante a feira de projetos.</p>
+      </div>
+
+      <div class="desafio-secao">
+        <strong>Etapa 1 — HTML: a tabela semântica</strong>
+        <ul style="margin-top:8px;">
+          <li><strong>4 projetos</strong> inventados (ex.: "Portal da Cantina", "App de Caronas").</li>
+          <li>Colunas: Nome do projeto, Equipe, Responsável, Data de entrega, Status.</li>
+          <li>Status possíveis: <em>Em andamento</em>, <em>Atrasado</em>, <em>Concluído</em>.</li>
+          <li><code>&lt;caption&gt;</code> identificando o assunto: "Projetos do 2º semestre — 2026".</li>
+          <li><code>&lt;thead&gt;</code> com 5 <code>&lt;th scope="col"&gt;</code>.</li>
+          <li><code>&lt;tbody&gt;</code> com o nome do projeto como <code>&lt;th scope="row"&gt;</code>.</li>
+          <li><code>&lt;tfoot&gt;</code> com o total de projetos atrasados, alinhado às colunas por <code>colspan</code>.</li>
+        </ul>
+      </div>
+
+      <div class="desafio-secao">
+        <strong>Etapa 2 — CSS: legibilidade e distinção dos status</strong>
+        <ul style="margin-top:8px;">
+          <li>Contraste mínimo de 4,5:1 em texto comum (WCAG AA).</li>
+          <li>Status não pode ser indicado só por cor — inclua texto ou ícone.</li>
+          <li>Espaçamento consistente nas células, cabeçalhos destacados.</li>
+        </ul>
+      </div>
+
+      <div class="desafio-secao">
+        <strong>Etapa 3 — Responsividade: rolagem horizontal</strong>
+        <ul style="margin-top:8px;">
+          <li>Aplicar rolagem horizontal em telas menores que 600px, <strong>sem transformar a estrutura da tabela</strong>.</li>
+          <li>Invólucro com <code>overflow-x: auto</code>; a tabela ganha <code>min-width</code> suficiente para manter legibilidade.</li>
+          <li>O contraste e a legibilidade devem ser mantidos.</li>
+        </ul>
+        <p style="font-size:.82rem;color:#78350f;margin-top:8px;"><em>Por que a rolagem foi escolhida no enunciado:</em> preserva a estrutura nativa da tabela e a associação entre cabeçalhos e células na árvore de acessibilidade. A abordagem em cards será apresentada como <strong>desafio de extensão</strong>, não como resposta esperada.</p>
+      </div>
+
+      <div class="desafio-secao">
+        <strong>Etapa 4 — Validação</strong>
+        <ul style="margin-top:8px;">
+          <li>Abra o DevTools → Accessibility Properties sobre a tabela.</li>
+          <li>Confirme que a árvore de acessibilidade expõe <code>role="table"</code>, <code>columnheader</code> e <code>rowheader</code> automaticamente para uma tabela HTML semântica. <strong>Você não precisa escrever o atributo <code>role</code></strong>.</li>
+          <li>Teste em 3 larguras: 1200px (desktop), 800px (tablet), 375px (celular). Em todas, a tabela deve ser legível com rolagem horizontal quando necessário.</li>
+        </ul>
+      </div>
+
+      <div class="desafio-secao">
+        <strong>Etapa 5 — Reflexão</strong>
+        <ul style="margin-top:8px;">
+          <li>Justifique em uma frase por que escolheu a rolagem horizontal.</li>
+          <li>Descreva um cenário em que o empilhamento em cards seria mais apropriado para este painel.</li>
+        </ul>
+      </div>
+
+      <div class="desafio-secao" style="background:#ede9fe;border-left-color:#7c3aed;">
+        <strong style="color:#4c1d95;">💡 Dicas graduais (pule direto para a solução só depois de tentar)</strong>
+        <ol style="margin-top:8px;color:#4c1d95;">
+          <li><strong>Dica 1:</strong> comece sem CSS, apenas com a estrutura HTML completa. Marque a tabela com <code>border-collapse: collapse</code> depois.</li>
+          <li><strong>Dica 2:</strong> na linha do total no <code>&lt;tfoot&gt;</code>, a primeira célula ocupa 4 colunas (<code>colspan="4"</code>) e a última fica com o valor. Use <code>&lt;td colspan="4"&gt;</code> + <code>&lt;td&gt;</code>, sem <code>&lt;th&gt;</code> no valor total — evita induzir o leitor a esperar um rótulo que não existe.</li>
+          <li><strong>Dica 3:</strong> para a rolagem horizontal, envolva a tabela num <code>&lt;div style="overflow-x: auto"&gt;</code> e aplique <code>min-width</code> na tabela.</li>
+          <li><strong>Dica 4:</strong> para testar acessibilidade, use o leitor de tela nativo do seu sistema (NVDA no Windows, VoiceOver no Mac).</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>🎯 Solução de referência comentada</h2>
+      <p style="color:#64748b;font-size:.88rem;">A solução abaixo segue a estratégia de <strong>rolagem horizontal</strong>, alinhada ao contexto de consulta de prazos. O empilhamento em cards fica como desafio de extensão, depois de a turma dominar a tabela semântica.</p>
+
+      <div class="solucao-wrapper">
+        <h4>✅ Versão completa — rolagem horizontal + tfoot sem data-label</h4>
+
+        <div class="solucao-codigo"><span style="color:#86efac;">&lt;!DOCTYPE html&gt;</span>
+<span style="color:#86efac;">&lt;html lang="pt-BR"&gt;</span>
+<span style="color:#86efac;">&lt;head&gt;</span>
+  <span style="color:#86efac;">&lt;meta charset="UTF-8"&gt;</span>
+  <span style="color:#86efac;">&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</span>
+  <span style="color:#86efac;">&lt;title&gt;Painel de Projetos — 2026&lt;/title&gt;</span>
+  <span style="color:#86efac;">&lt;style&gt;</span>
+    body { font-family: system-ui, sans-serif; background: #f8fafc; padding: 24px; color: #0f172a; }
+    h1 { color: #0c4a6e; margin-bottom: 16px; }
+
+    .tabela-wrapper {
+      overflow-x: auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,.08);
+    }
+
+    table {
+      width: 100%;
+      min-width: 640px;
+      border-collapse: collapse;
+      background: #fff;
+    }
+
+    caption {
+      background: #0369a1;
+      color: #fff;
+      padding: 14px 18px;
+      text-align: left;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    thead th {
+      background: #082f49;
+      color: #fff;
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 700;
+      font-size: .88rem;
+    }
+
+    tbody th, tbody td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: .88rem;
+      text-align: left;
+    }
+
+    tbody th {
+      background: #e0f2fe;
+      color: #0c4a6e;
+      font-weight: 700;
+    }
+
+    tfoot td {
+      padding: 14px 16px;
+      background: #f0fdf4;
+      color: #166534;
+      font-weight: 700;
+      border-top: 2px solid #16a34a;
+    }
+
+    .status { font-weight: 700; }
+    .status.atrasado { color: #b91c1c; }
+    .status.concluido { color: #15803d; }
+    .status.andamento { color: #b45309; }
+  <span style="color:#86efac;">&lt;/style&gt;</span>
+<span style="color:#86efac;">&lt;/head&gt;</span>
+<span style="color:#86efac;">&lt;body&gt;</span>
+
+  <span style="color:#86efac;">&lt;h1&gt;</span>📊 Painel de Projetos<span style="color:#86efac;">&lt;/h1&gt;</span>
+
+  <span style="color:#86efac;">&lt;div class="tabela-wrapper"&gt;</span>
+    <span style="color:#86efac;">&lt;table&gt;</span>
+      <span style="color:#86efac;">&lt;caption&gt;</span>Projetos do 2º semestre — 2026<span style="color:#86efac;">&lt;/caption&gt;</span>
+
+      <span style="color:#86efac;">&lt;thead&gt;</span>
+        <span style="color:#86efac;">&lt;tr&gt;</span>
+          <span style="color:#86efac;">&lt;th scope="col"&gt;</span>Projeto<span style="color:#86efac;">&lt;/th&gt;</span>
+          <span style="color:#86efac;">&lt;th scope="col"&gt;</span>Equipe<span style="color:#86efac;">&lt;/th&gt;</span>
+          <span style="color:#86efac;">&lt;th scope="col"&gt;</span>Responsável<span style="color:#86efac;">&lt;/th&gt;</span>
+          <span style="color:#86efac;">&lt;th scope="col"&gt;</span>Entrega<span style="color:#86efac;">&lt;/th&gt;</span>
+          <span style="color:#86efac;">&lt;th scope="col"&gt;</span>Status<span style="color:#86efac;">&lt;/th&gt;</span>
+        <span style="color:#86efac;">&lt;/tr&gt;</span>
+      <span style="color:#86efac;">&lt;/thead&gt;</span>
+
+      <span style="color:#86efac;">&lt;tbody&gt;</span>
+        <span style="color:#86efac;">&lt;tr&gt;</span>
+          <span style="color:#86efac;">&lt;th scope="row"&gt;</span>Portal da Cantina<span style="color:#86efac;">&lt;/th&gt;</span>
+          <span style="color:#86efac;">&lt;td&gt;</span>Equipe Alpha<span style="color:#86efac;">&lt;/td&gt;</span>
+          <span style="color:#86efac;">&lt;td&gt;</span>Marina Silva<span style="color:#86efac;">&lt;/td&gt;</span>
+          <span style="color:#86efac;">&lt;td&gt;</span>12/11/2026<span style="color:#86efac;">&lt;/td&gt;</span>
+          <span style="color:#86efac;">&lt;td&gt;&lt;span class="status concluido"&gt;</span>✔ Concluído<span style="color:#86efac;">&lt;/span&gt;&lt;/td&gt;</span>
+        <span style="color:#86efac;">&lt;/tr&gt;</span>
+        <span style="color:#86efac;">&lt;tr&gt;</span>
+          <span style="color:#86efac;">&lt;th scope="row"&gt;</span>App de Caronas<span style="color:#86efac;">&lt;/th&gt;</span>
+          <span style="color:#86efac;">&lt;td&gt;</span>Equipe Beta<span style="color:#86efac;">&lt;/td&gt;</span>
+          <span style="color:#86efac;">&lt;td&gt;</span>João Pereira<span style="color:#86efac;">&lt;/td&gt;</span>
+          <span style="color:#86efac;">&lt;td&gt;</span>20/11/2026<span style="color:#86efac;">&lt;/td&gt;</span>
+          <span style="color:#86efac;">&lt;td&gt;&lt;span class="status andamento"&gt;</span>⟳ Em andamento<span style="color:#86efac;">&lt;/span&gt;&lt;/td&gt;</span>
+        <span style="color:#86efac;">&lt;/tr&gt;</span>
+        <span style="color:#86efac;">&lt;tr&gt;</span>
+          <span style="color:#86efac;">&lt;th scope="row"&gt;</span>Painel de Notas<span style="color:#86efac;">&lt;/th&gt;</span>
+          <span style="color:#86efac;">&lt;td&gt;</span>Equipe Gamma<span style="color:#86efac;">&lt;/td&gt;</span>
+          <span style="color:#86efac;">&lt;td&gt;</span>Ana Costa<span style="color:#86efac;">&lt;/td&gt;</span>
+          <span style="color:#86efac;">&lt;td&gt;</span>05/11/2026<span style="color:#86efac;">&lt;/td&gt;</span>
+          <span style="color:#86efac;">&lt;td&gt;&lt;span class="status atrasado"&gt;</span>⚠ Atrasado<span style="color:#86efac;">&lt;/span&gt;&lt;/td&gt;</span>
+        <span style="color:#86efac;">&lt;/tr&gt;</span>
+        <span style="color:#86efac;">&lt;tr&gt;</span>
+          <span style="color:#86efac;">&lt;th scope="row"&gt;</span>Blog da Escola<span style="color:#86efac;">&lt;/th&gt;</span>
+          <span style="color:#86efac;">&lt;td&gt;</span>Equipe Delta<span style="color:#86efac;">&lt;/td&gt;</span>
+          <span style="color:#86efac;">&lt;td&gt;</span>Pedro Lima<span style="color:#86efac;">&lt;/td&gt;</span>
+          <span style="color:#86efac;">&lt;td&gt;</span>28/10/2026<span style="color:#86efac;">&lt;/td&gt;</span>
+          <span style="color:#86efac;">&lt;td&gt;&lt;span class="status atrasado"&gt;</span>⚠ Atrasado<span style="color:#86efac;">&lt;/span&gt;&lt;/td&gt;</span>
+        <span style="color:#86efac;">&lt;/tr&gt;</span>
+      <span style="color:#86efac;">&lt;/tbody&gt;</span>
+
+      <span style="color:#86efac;">&lt;tfoot&gt;</span>
+        <span style="color:#86efac;">&lt;tr&gt;</span>
+          <span style="color:#86efac;">&lt;td colspan="4"&gt;</span>Total de projetos atrasados<span style="color:#86efac;">&lt;/td&gt;</span>
+          <span style="color:#86efac;">&lt;td&gt;</span>2<span style="color:#86efac;">&lt;/td&gt;</span>
+        <span style="color:#86efac;">&lt;/tr&gt;</span>
+      <span style="color:#86efac;">&lt;/tfoot&gt;</span>
+    <span style="color:#86efac;">&lt;/table&gt;</span>
+  <span style="color:#86efac;">&lt;/div&gt;</span>
+
+<span style="color:#86efac;">&lt;/body&gt;</span>
+<span style="color:#86efac;">&lt;/html&gt;</span></div>
+
+        <h4 style="margin-top:18px;color:#15803d;">🔍 Análise técnica da solução</h4>
+        <table class="tabela-logica" style="background:#fff;">
+          <thead><tr><th>Decisão</th><th>Por que foi tomada</th></tr></thead>
+          <tbody>
+            <tr><td><code>&lt;caption&gt;</code> no topo da tabela</td><td>Identifica o assunto. É recomendável, especialmente quando o contexto não deixa o propósito claro. Não é garantido que seja o "primeiro item lido" em todas as formas de navegação por leitor de tela.</td></tr>
+            <tr><td><code>scope="col"</code> nos cabeçalhos</td><td>Associa cada <code>th</code> à coluna correspondente, sem ambiguidade.</td></tr>
+            <tr><td><code>scope="row"</code> nas células de projeto</td><td>Associa cada linha ao nome do projeto — o "eixo" principal da tabela.</td></tr>
+            <tr><td><code>&lt;tfoot&gt;</code> com <code>colspan="4"</code></td><td>O total ocupa 4 das 5 colunas; o valor final fica isolado na última. Sem <code>data-label</code> no <code>tfoot</code>, evita-se que a técnica de cards produza o efeito <code>: 2</code> órfão quando o mode responsivo transforma tudo em bloco.</td></tr>
+            <tr><td>Rolagem horizontal via <code>.tabela-wrapper</code></td><td>Preserva a estrutura nativa da tabela e a associação cabeçalho/célula na árvore de acessibilidade. Estratégia mais segura para iniciantes no contexto de consulta de prazos.</td></tr>
+            <tr><td>Ícones no status (<code>✔</code>, <code>⟳</code>, <code>⚠</code>)</td><td>Não dependem apenas de cor — funcionam para daltônicos e para leitores de tela que anunciam símbolos.</td></tr>
+            <tr><td>Sem atributo <code>role="table"</code></td><td>O navegador expõe automaticamente <code>role="table"</code>, <code>columnheader</code> e <code>rowheader</code> para uma tabela HTML semântica. Escrevê-lo manualmente é redundante.</td></tr>
+          </tbody>
+        </table>
+
+        <div style="background:#eff6ff;border-left:4px solid #3b82f6;border-radius:8px;padding:14px 18px;margin-top:14px;">
+          <strong style="color:#1e40af;">🎁 Desafio de extensão (opcional, depois do domínio da tabela semântica)</strong>
+          <p style="color:#1e3a8a;font-size:.88rem;margin-top:8px;">Reimplemente a tabela usando a estratégia de <strong>empilhamento em cards</strong>: em telas &lt; 600px, cada linha vira um cartão, o <code>thead</code> é escondido e cada <code>td</code> ganha <code>data-label</code> para exibir o nome da coluna via <code>::before</code>. Cuidado: certifique-se de que o <code>tfoot</code> também fique compreensível sem <code>data-label</code> (ou aplique a estratégia de rolagem apenas ao <code>tfoot</code>). Teste a árvore de acessibilidade novamente no DevTools e compare as duas abordagens.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div id="aba-glossario" class="tab-content">
+    <section class="card">
+      <h2>📖 Glossário — Tabelas, entidades HTML e acessibilidade</h2>
+      <p>Consulta rápida para os termos usados nesta aula. Cada termo tem definição curta e exemplo quando aplicável.</p>
+
+      <h3>🏷️ Tags essenciais de tabela</h3>
+      <div class="glossario-grid">
+        <div class="glossario-item">
+          <div class="termo">&lt;table&gt;</div>
+          <div class="definicao">Elemento raiz da tabela. Envolve tudo: caption, thead, tbody, tfoot.</div>
+        </div>
+        <div class="glossario-item">
+          <div class="termo">&lt;caption&gt;</div>
+          <div class="definicao">Fornece um título ou descrição breve para a tabela. Recomendado sobretudo quando o propósito não é evidente pelo contexto.</div>
+        </div>
+        <div class="glossario-item">
+          <div class="termo">&lt;thead&gt;</div>
+          <div class="definicao">Agrupa os cabeçalhos. Facilita leitura por leitores de tela e estilização via CSS.</div>
+        </div>
+        <div class="glossario-item">
+          <div class="termo">&lt;tbody&gt;</div>
+          <div class="definicao">Agrupa os dados propriamente ditos. Pode haver múltiplos (por mês, por grupo).</div>
+        </div>
+        <div class="glossario-item">
+          <div class="termo">&lt;tfoot&gt;</div>
+          <div class="definicao">Rodapé da tabela. Útil para totais, médias e resumos.</div>
+        </div>
+        <div class="glossario-item">
+          <div class="termo">&lt;tr&gt;</div>
+          <div class="definicao">Uma linha da tabela. Filho de <code>thead</code>, <code>tbody</code> ou <code>tfoot</code>.</div>
+        </div>
+        <div class="glossario-item">
+          <div class="termo">&lt;th&gt;</div>
+          <div class="definicao">Célula de cabeçalho. Ajuda o leitor de tela a identificar o significado da célula.</div>
+        </div>
+        <div class="glossario-item">
+          <div class="termo">&lt;td&gt;</div>
+          <div class="definicao">Célula de dado. Contém o valor propriamente dito.</div>
+        </div>
+      </div>
+
+      <h3>🔤 Entidades HTML — caracteres especiais</h3>
+      <p>Caracteres especiais em HTML são escritos com <strong>entidades</strong>: começam com <code>&amp;</code> e terminam com <code>;</code>. Servem para representar símbolos que não existem no teclado ou que conflitam com a sintaxe do HTML.</p>
+
+      <div class="entidade-grid">
+        <div class="entidade-card">
+          <span class="codigo-ent">&amp;mdash;</span>
+          <span class="resultado-ent">—</span>
+          <span class="nome-ent">Em dash</span>
+          <span class="desc-ent">Travessão longo. Usado para intercalar informações dentro de uma frase. Ex: "O projeto — que ainda estava em teste — foi adiado."</span>
+        </div>
+        <div class="entidade-card">
+          <span class="codigo-ent">&amp;ndash;</span>
+          <span class="resultado-ent">–</span>
+          <span class="nome-ent">En dash</span>
+          <span class="desc-ent">Travessão curto. Usado para intervalos: "2024–2026", "páginas 10–25", "segunda–sexta".</span>
+        </div>
+        <div class="entidade-card">
+          <span class="codigo-ent">&amp;nbsp;</span>
+          <span class="resultado-ent">(espaço)</span>
+          <span class="nome-ent">Non-breaking space</span>
+          <span class="desc-ent">Espaço que não quebra linha. Útil para "R$&nbsp;1.234" não quebrar entre o "R$" e o número.</span>
+        </div>
+        <div class="entidade-card">
+          <span class="codigo-ent">&amp;lt;</span>
+          <span class="resultado-ent">&lt;</span>
+          <span class="nome-ent">Menor que</span>
+          <span class="desc-ent">Sinal de "menor que". Precisa ser escapado para não ser confundido com abertura de tag.</span>
+        </div>
+        <div class="entidade-card">
+          <span class="codigo-ent">&amp;gt;</span>
+          <span class="resultado-ent">&gt;</span>
+          <span class="nome-ent">Maior que</span>
+          <span class="desc-ent">Sinal de "maior que". Idem — precisa ser escapado.</span>
+        </div>
+        <div class="entidade-card">
+          <span class="codigo-ent">&amp;amp;</span>
+          <span class="resultado-ent">&amp;</span>
+          <span class="nome-ent">E comercial</span>
+          <span class="desc-ent">O "&amp;". Deve ser escapado, senão o navegador tenta interpretar como início de entidade.</span>
+        </div>
+        <div class="entidade-card">
+          <span class="codigo-ent">&amp;copy;</span>
+          <span class="resultado-ent">©</span>
+          <span class="nome-ent">Copyright</span>
+          <span class="desc-ent">Símbolo de direitos autorais. Comum em rodapés.</span>
+        </div>
+        <div class="entidade-card">
+          <span class="codigo-ent">&amp;sect;</span>
+          <span class="resultado-ent">§</span>
+          <span class="nome-ent">Seção / parágrafo</span>
+          <span class="desc-ent">Símbolo de parágrafo jurídico ou seção de código.</span>
+        </div>
+      </div>
+
+      <h4>🎬 Exemplo completo em código</h4>
+      <div class="entidade-codigo" style="background:#0a1420;color:#e2e8f0;padding:16px;border-radius:10px;font-family:'Courier New',monospace;font-size:.82rem;line-height:1.7;overflow-x:auto;white-space:pre;margin:12px 0;">&lt;p&gt;
+  O preço &amp;mdash; que já era alto &amp;mdash; subiu de R$&amp;nbsp;499 para R$&amp;nbsp;549.
+&lt;/p&gt;
+
+&lt;p&gt;
+  O evento acontece das 14h&amp;nbsp;&amp;ndash;&amp;nbsp;16h no auditório &amp;sect;&amp;nbsp;2º andar.
+&lt;/p&gt;</div>
+
+      <h4>Resultado renderizado</h4>
+      <div style="background:#f8fafc;border:1px solid var(--border-light);border-radius:10px;padding:16px;margin:12px 0;">
+        <p style="color:#334155;font-size:.9rem;margin-bottom:10px;">O preço — que já era alto — subiu de R$&nbsp;499 para R$&nbsp;549.</p>
+        <p style="color:#334155;font-size:.9rem;margin-bottom:0;">O evento acontece das 14h&nbsp;–&nbsp;16h no auditório §&nbsp;2º andar.</p>
+      </div>
+
+      <div class="highlight-box amber">
+        ⚠️ <strong>Cuidado:</strong> entidades são case-sensitive. <code>&amp;mdash;</code> funciona, mas <code>&amp;MDASH;</code> não. E sempre feche com <code>;</code> — sem o ponto e vírgula, o navegador não reconhece.
+      </div>
+
+      <h3>♿ Acessibilidade: termos do dia a dia</h3>
+      <div class="glossario-grid">
+        <div class="glossario-item">
+          <div class="termo">ARIA</div>
+          <div class="definicao">Accessible Rich Internet Applications. Conjunto de atributos HTML que descrevem o papel e o estado de elementos para leitores de tela.</div>
+        </div>
+        <div class="glossario-item">
+          <div class="termo">aria-hidden="true"</div>
+          <div class="definicao">Esconde um elemento apenas do leitor de tela, mantendo-o visível. Use só para decoração (ícones, emojis) — nunca em conteúdo informativo nem em elementos interativos.</div>
+        </div>
+        <div class="glossario-item">
+          <div class="termo">aria-label</div>
+          <div class="definicao">Rótulo textual para elemento sem texto visível. Ex: botão só com ícone de fechar.</div>
+        </div>
+        <div class="glossario-item">
+          <div class="termo">columnheader</div>
+          <div class="definicao">Papel exposto na árvore de acessibilidade para uma célula de cabeçalho de coluna. O navegador o aplica automaticamente para <code>&lt;th scope="col"&gt;</code>.</div>
+        </div>
+        <div class="glossario-item">
+          <div class="termo">rowheader</div>
+          <div class="definicao">Papel exposto na árvore de acessibilidade para uma célula de cabeçalho de linha. O navegador o aplica automaticamente para <code>&lt;th scope="row"&gt;</code>.</div>
+        </div>
+        <div class="glossario-item">
+          <div class="termo">role="table"</div>
+          <div class="definicao">Papel de acessibilidade da tabela, exposto automaticamente para a tag <code>&lt;table&gt;</code>. Não precisa ser escrito manualmente quando se usa uma tabela HTML semântica.</div>
+        </div>
+        <div class="glossario-item">
+          <div class="termo">scope</div>
+          <div class="definicao">Atributo de <code>&lt;th&gt;</code> que declara em que direção a célula se relaciona com as células de dados.</div>
+        </div>
+        <div class="glossario-item">
+          <div class="termo">WCAG AA</div>
+          <div class="definicao">Nível de conformidade com acessibilidade que exige contraste mínimo de 4,5:1 em texto comum.</div>
+        </div>
+      </div>
+
+      <h3>📊 Termos de estrutura de tabela</h3>
+      <div class="glossario-grid">
+        <div class="glossario-item">
+          <div class="termo">caption</div>
+          <div class="definicao">Primeiro elemento dentro da tabela, que descreve o assunto.</div>
+        </div>
+        <div class="glossario-item">
+          <div class="termo">scope="col"</div>
+          <div class="definicao">Atributo de th que associa o cabeçalho à coluna correspondente.</div>
+        </div>
+        <div class="glossario-item">
+          <div class="termo">scope="row"</div>
+          <div class="definicao">Atributo de th que associa o cabeçalho à linha correspondente.</div>
+        </div>
+        <div class="glossario-item">
+          <div class="termo">colspan</div>
+          <div class="definicao">Atributo que mescla células horizontalmente. <code>colspan="2"</code> faz uma célula ocupar 2 colunas.</div>
+        </div>
+        <div class="glossario-item">
+          <div class="termo">rowspan</div>
+          <div class="definicao">Atributo que mescla células verticalmente. <code>rowspan="3"</code> faz uma célula ocupar 3 linhas.</div>
+        </div>
+        <div class="glossario-item">
+          <div class="termo">data-label</div>
+          <div class="definicao">Atributo personalizado que guarda o nome da coluna. Pode ser lido pelo CSS, por exemplo com <code>content: attr(data-label)</code>. Não altera a semântica da tabela.</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div id="aba-avaliacao" class="tab-content active">
+    <section class="card">
+      <h2>📝 Avaliação</h2>
+
+      <div class="modo-tabs" role="tablist" aria-label="Modo de avaliação">
+        <button type="button" class="modo-tab active" data-modo="estudo" role="tab" aria-selected="true">📚 Modo Estudo (feedback imediato)</button>
+        <button type="button" class="modo-tab" data-modo="prova" role="tab" aria-selected="false">📝 Modo Prova (sem gabarito)</button>
+      </div>
+
+      <div class="highlight-box amber" id="avisoModoProva" style="display:none;">
+        <strong>Modo Prova ativo.</strong> As respostas ficam selecionadas, mas nenhum gabarito nem feedback é exibido até você clicar em <em>Finalizar</em>. Depois de finalizar, o relatório mostra todas as respostas corretas de uma vez.
+      </div>
+
+      <div class="card-aluno">
+        <h4>👤 Identificação</h4>
+        <div class="campos-aluno">
+          <input type="text" id="alunoNome" class="campo-input" placeholder="Nome completo...">
+          <input type="text" id="alunoTurma" class="campo-input" placeholder="Turma (ex.: Front-End 2026)">
+        </div>
+      </div>
+      <div class="quiz-header">
+        <span class="progresso-texto">Progresso: <strong id="txtProgresso">15 de 15</strong></span>
+        <div class="barra-fundo"><div class="barra-preenchimento" id="fillProgresso" style="width: 100%;"></div></div>
+      </div>
+      <form id="formQuizTema4">
+        <div id="containerQuestoes"><div class="question correta-q" id="q1"><div class="question-header"><span class="question-number">1</span><div>Qual elemento é a raiz de uma tabela HTML?</div></div><div class="options"><div class="option disabled correct" data-letra="a"><input type="radio" name="q1" value="a" tabindex="-1"><label><strong>a)</strong> &lt;table&gt;</label></div><div class="option disabled" data-letra="b"><input type="radio" name="q1" value="b" tabindex="-1"><label><strong>b)</strong> &lt;grid&gt;</label></div><div class="option disabled" data-letra="c"><input type="radio" name="q1" value="c" tabindex="-1"><label><strong>c)</strong> &lt;layout&gt;</label></div><div class="option disabled" data-letra="d"><input type="radio" name="q1" value="d" tabindex="-1"><label><strong>d)</strong> &lt;tabela&gt;</label></div></div><div class="feedback-imediato mostrar ok" id="feed-q1">✅ <strong>Correto!</strong> A tag &lt;table&gt; é o elemento raiz que envolve caption, thead, tbody e tfoot.</div></div><div class="question correta-q" id="q2"><div class="question-header"><span class="question-number">2</span><div>Qual tag define uma célula de cabeçalho em uma tabela?</div></div><div class="options"><div class="option disabled" data-letra="a"><input type="radio" name="q2" value="a" tabindex="-1"><label><strong>a)</strong> &lt;header-cell&gt;</label></div><div class="option disabled" data-letra="b"><input type="radio" name="q2" value="b" tabindex="-1"><label><strong>b)</strong> &lt;td&gt;</label></div><div class="option disabled correct" data-letra="c"><input type="radio" name="q2" value="c" tabindex="-1"><label><strong>c)</strong> &lt;th&gt;</label></div><div class="option disabled" data-letra="d"><input type="radio" name="q2" value="d" tabindex="-1"><label><strong>d)</strong> &lt;thead&gt;</label></div></div><div class="feedback-imediato mostrar ok" id="feed-q2">✅ <strong>Correto!</strong> &lt;th&gt; (table header) é a célula de cabeçalho. &lt;td&gt; é célula de dado e &lt;thead&gt; agrupa os cabeçalhos.</div></div><div class="question correta-q" id="q3"><div class="question-header"><span class="question-number">3</span><div>Qual tag agrupa as linhas de dados (o "corpo" da tabela)?</div></div><div class="options"><div class="option disabled" data-letra="a"><input type="radio" name="q3" value="a" tabindex="-1"><label><strong>a)</strong> &lt;main&gt;</label></div><div class="option disabled correct" data-letra="b"><input type="radio" name="q3" value="b" tabindex="-1"><label><strong>b)</strong> &lt;tbody&gt;</label></div><div class="option disabled" data-letra="c"><input type="radio" name="q3" value="c" tabindex="-1"><label><strong>c)</strong> &lt;content&gt;</label></div><div class="option disabled" data-letra="d"><input type="radio" name="q3" value="d" tabindex="-1"><label><strong>d)</strong> &lt;data&gt;</label></div></div><div class="feedback-imediato mostrar ok" id="feed-q3">✅ <strong>Correto!</strong> &lt;tbody&gt; agrupa o corpo da tabela (os dados). &lt;thead&gt; agrupa os cabeçalhos e &lt;tfoot&gt; o rodapé.</div></div><div class="question correta-q" id="q4"><div class="question-header"><span class="question-number">4</span><div>Qual atributo faz uma célula ocupar duas colunas?</div></div><div class="options"><div class="option disabled" data-letra="a"><input type="radio" name="q4" value="a" tabindex="-1"><label><strong>a)</strong> rowspan="2"</label></div><div class="option disabled correct" data-letra="b"><input type="radio" name="q4" value="b" tabindex="-1"><label><strong>b)</strong> colspan="2"</label></div><div class="option disabled" data-letra="c"><input type="radio" name="q4" value="c" tabindex="-1"><label><strong>c)</strong> merge="2"</label></div><div class="option disabled" data-letra="d"><input type="radio" name="q4" value="d" tabindex="-1"><label><strong>d)</strong> span="2"</label></div></div><div class="feedback-imediato mostrar ok" id="feed-q4">✅ <strong>Correto!</strong> colspan="2" faz uma célula ocupar duas colunas. rowspan="2" faz uma célula ocupar duas linhas. São atributos, não tags.</div></div><div class="question correta-q" id="q5"><div class="question-header"><span class="question-number">5</span><div>Qual é a função do &lt;caption&gt; em uma tabela?</div></div><div class="options"><div class="option disabled" data-letra="a"><input type="radio" name="q5" value="a" tabindex="-1"><label><strong>a)</strong> Definir uma cor para a tabela</label></div><div class="option disabled correct" data-letra="b"><input type="radio" name="q5" value="b" tabindex="-1"><label><strong>b)</strong> Identificar o assunto da tabela e ajudar o usuário a compreender seu propósito</label></div><div class="option disabled" data-letra="c"><input type="radio" name="q5" value="c" tabindex="-1"><label><strong>c)</strong> Criar uma legenda exclusiva para imagens</label></div><div class="option disabled" data-letra="d"><input type="radio" name="q5" value="d" tabindex="-1"><label><strong>d)</strong> Agrupar os cabeçalhos</label></div></div><div class="feedback-imediato mostrar ok" id="feed-q5">✅ <strong>Correto!</strong> O &lt;caption&gt; identifica o assunto da tabela. É altamente recomendável, especialmente quando o contexto não deixa o propósito evidente.</div></div><div class="question correta-q" id="q6"><div class="question-header"><span class="question-number">6</span><div>O que o atributo scope="col" declara em uma célula &lt;th&gt;?</div></div><div class="options"><div class="option disabled" data-letra="a"><input type="radio" name="q6" value="a" tabindex="-1"><label><strong>a)</strong> Que a coluna tem mais de uma célula</label></div><div class="option disabled correct" data-letra="b"><input type="radio" name="q6" value="b" tabindex="-1"><label><strong>b)</strong> Que este cabeçalho se aplica à coluna correspondente</label></div><div class="option disabled" data-letra="c"><input type="radio" name="q6" value="c" tabindex="-1"><label><strong>c)</strong> Que a célula está no topo da tabela</label></div><div class="option disabled" data-letra="d"><input type="radio" name="q6" value="d" tabindex="-1"><label><strong>d)</strong> Que a célula pertence ao tfoot</label></div></div><div class="feedback-imediato mostrar ok" id="feed-q6">✅ <strong>Correto!</strong> scope="col" associa o &lt;th&gt; à coluna correspondente. scope="row" associa o &lt;th&gt; à linha correspondente.</div></div><div class="question correta-q" id="q7"><div class="question-header"><span class="question-number">7</span><div>Quando uma tabela deve ser substituída por outra estrutura HTML?</div></div><div class="options"><div class="option disabled" data-letra="a"><input type="radio" name="q7" value="a" tabindex="-1"><label><strong>a)</strong> Sempre que tiver menos de 3 linhas</label></div><div class="option disabled correct" data-letra="b"><input type="radio" name="q7" value="b" tabindex="-1"><label><strong>b)</strong> Quando é usada para montar layout visual, sem comparação real de dados</label></div><div class="option disabled" data-letra="c"><input type="radio" name="q7" value="c" tabindex="-1"><label><strong>c)</strong> Quando tiver imagens dentro das células</label></div><div class="option disabled" data-letra="d"><input type="radio" name="q7" value="d" tabindex="-1"><label><strong>d)</strong> Quando o usuário acessar pelo celular</label></div></div><div class="feedback-imediato mostrar ok" id="feed-q7">✅ <strong>Correto!</strong> Use tabela para dados com relação entre linhas e colunas. Layout de página é papel de Grid ou Flexbox.</div></div><div class="question correta-q" id="q8"><div class="question-header"><span class="question-number">8</span><div>Sobre o atributo scope="row", a afirmação correta é:</div></div><div class="options"><div class="option disabled correct" data-letra="a"><input type="radio" name="q8" value="a" tabindex="-1"><label><strong>a)</strong> Indica que o cabeçalho se aplica à linha correspondente</label></div><div class="option disabled" data-letra="b"><input type="radio" name="q8" value="b" tabindex="-1"><label><strong>b)</strong> Indica que o cabeçalho se aplica à coluna acima dele</label></div><div class="option disabled" data-letra="c"><input type="radio" name="q8" value="c" tabindex="-1"><label><strong>c)</strong> Indica que a célula é a última da linha</label></div><div class="option disabled" data-letra="d"><input type="radio" name="q8" value="d" tabindex="-1"><label><strong>d)</strong> Indica que a célula pertence ao tfoot</label></div></div><div class="feedback-imediato mostrar ok" id="feed-q8">✅ <strong>Correto!</strong> scope="row" marca cabeçalhos de linha: cada linha começa com um &lt;th scope="row"&gt; que titula as células correspondentes.</div></div><div class="question correta-q" id="q9"><div class="question-header"><span class="question-number">9</span><div>O que a entidade &amp;mdash; produz quando renderizada?</div></div><div class="options"><div class="option disabled" data-letra="a"><input type="radio" name="q9" value="a" tabindex="-1"><label><strong>a)</strong> Um espaço simples</label></div><div class="option disabled correct" data-letra="b"><input type="radio" name="q9" value="b" tabindex="-1"><label><strong>b)</strong> Um travessão longo (—)</label></div><div class="option disabled" data-letra="c"><input type="radio" name="q9" value="c" tabindex="-1"><label><strong>c)</strong> Um travessão curto (–)</label></div><div class="option disabled" data-letra="d"><input type="radio" name="q9" value="d" tabindex="-1"><label><strong>d)</strong> Uma quebra de linha</label></div></div><div class="feedback-imediato mostrar ok" id="feed-q9">✅ <strong>Correto!</strong> &amp;mdash; produz o travessão longo (—). &amp;ndash; produz o travessão curto (–), usado em intervalos como "2024–2026".</div></div><div class="question correta-q" id="q10"><div class="question-header"><span class="question-number">10</span><div>O que a entidade &amp;nbsp; representa?</div></div><div class="options"><div class="option disabled" data-letra="a"><input type="radio" name="q10" value="a" tabindex="-1"><label><strong>a)</strong> Uma quebra de linha</label></div><div class="option disabled" data-letra="b"><input type="radio" name="q10" value="b" tabindex="-1"><label><strong>b)</strong> Um tab</label></div><div class="option disabled correct" data-letra="c"><input type="radio" name="q10" value="c" tabindex="-1"><label><strong>c)</strong> Um espaço que não quebra linha</label></div><div class="option disabled" data-letra="d"><input type="radio" name="q10" value="d" tabindex="-1"><label><strong>d)</strong> Um travessão</label></div></div><div class="feedback-imediato mostrar ok" id="feed-q10">✅ <strong>Correto!</strong> &amp;nbsp; é o non-breaking space. Útil para manter "R$ 1.000" numa linha só, sem quebrar entre o "R$" e o número.</div></div><div class="question correta-q" id="q11"><div class="question-header"><span class="question-number">11</span><div>Sobre o atributo aria-hidden="true", é correto afirmar:</div></div><div class="options"><div class="option disabled" data-letra="a"><input type="radio" name="q11" value="a" tabindex="-1"><label><strong>a)</strong> Esconde o elemento visualmente da tela</label></div><div class="option disabled correct" data-letra="b"><input type="radio" name="q11" value="b" tabindex="-1"><label><strong>b)</strong> Esconde o elemento apenas do leitor de tela, mantendo-o visível</label></div><div class="option disabled" data-letra="c"><input type="radio" name="q11" value="c" tabindex="-1"><label><strong>c)</strong> Remove o elemento do DOM</label></div><div class="option disabled" data-letra="d"><input type="radio" name="q11" value="d" tabindex="-1"><label><strong>d)</strong> Impede cliques no elemento</label></div></div><div class="feedback-imediato mostrar ok" id="feed-q11">✅ <strong>Correto!</strong> aria-hidden="true" retira o elemento da árvore de acessibilidade. O elemento continua visível. Use apenas em decoração (ícones, emojis), nunca em conteúdo informativo nem em elementos interativos.</div></div><div class="question correta-q" id="q12"><div class="question-header"><span class="question-number">12</span><div>Na árvore de acessibilidade do navegador, qual papel normalmente corresponde a um &lt;th scope="col"&gt;?</div></div><div class="options"><div class="option disabled" data-letra="a"><input type="radio" name="q12" value="a" tabindex="-1"><label><strong>a)</strong> cell</label></div><div class="option disabled correct" data-letra="b"><input type="radio" name="q12" value="b" tabindex="-1"><label><strong>b)</strong> columnheader</label></div><div class="option disabled" data-letra="c"><input type="radio" name="q12" value="c" tabindex="-1"><label><strong>c)</strong> rowheader</label></div><div class="option disabled" data-letra="d"><input type="radio" name="q12" value="d" tabindex="-1"><label><strong>d)</strong> caption</label></div></div><div class="feedback-imediato mostrar ok" id="feed-q12">✅ <strong>Correto!</strong> O navegador expõe &lt;th scope="col"&gt; como columnheader na árvore de acessibilidade. &lt;th scope="row"&gt; recebe rowheader. O anúncio audível exato varia conforme leitor de tela, navegador, idioma e forma de navegação.</div></div><div class="question correta-q" id="q13"><div class="question-header"><span class="question-number">13</span><div>Para uma tabela com 10 colunas em celular, qual é a recomendação geral?</div></div><div class="options"><div class="option disabled" data-letra="a"><input type="radio" name="q13" value="a" tabindex="-1"><label><strong>a)</strong> Sempre empilhar tudo em cards</label></div><div class="option disabled correct" data-letra="b"><input type="radio" name="q13" value="b" tabindex="-1"><label><strong>b)</strong> Rolagem horizontal controlada para preservar a comparação entre colunas</label></div><div class="option disabled" data-letra="c"><input type="radio" name="q13" value="c" tabindex="-1"><label><strong>c)</strong> Ocultar todas as colunas menos a primeira</label></div><div class="option disabled" data-letra="d"><input type="radio" name="q13" value="d" tabindex="-1"><label><strong>d)</strong> Trocar a tabela por uma imagem</label></div></div><div class="feedback-imediato mostrar ok" id="feed-q13">✅ <strong>Correto!</strong> Não existe estratégia universalmente melhor: depende do conteúdo e do uso. Para tabelas com muitas colunas comparáveis, a rolagem horizontal costuma ser a mais segura, porque preserva a estrutura nativa da tabela.</div></div><div class="question correta-q" id="q14"><div class="question-header"><span class="question-number">14</span><div>Em qual situação o uso de tabela é correto?</div></div><div class="options"><div class="option disabled" data-letra="a"><input type="radio" name="q14" value="a" tabindex="-1"><label><strong>a)</strong> Para alinhar três caixas lado a lado na página</label></div><div class="option disabled correct" data-letra="b"><input type="radio" name="q14" value="b" tabindex="-1"><label><strong>b)</strong> Para mostrar o boletim de notas dos alunos</label></div><div class="option disabled" data-letra="c"><input type="radio" name="q14" value="c" tabindex="-1"><label><strong>c)</strong> Para montar o rodapé da página</label></div><div class="option disabled" data-letra="d"><input type="radio" name="q14" value="d" tabindex="-1"><label><strong>d)</strong> Para estruturar o menu de navegação</label></div></div><div class="feedback-imediato mostrar ok" id="feed-q14">✅ <strong>Correto!</strong> Boletins são dados tabulares: alunos (linhas) × disciplinas (colunas), com cabeçalhos claros. Alinhar caixas, rodapé e menu é papel de CSS Grid/Flexbox.</div></div><div class="question correta-q" id="q15"><div class="question-header"><span class="question-number">15</span><div>Sobre o atributo data-label em uma tabela responsiva:</div></div><div class="options"><div class="option disabled" data-letra="a"><input type="radio" name="q15" value="a" tabindex="-1"><label><strong>a)</strong> Aplica estilo automático a toda célula que o possuir</label></div><div class="option disabled" data-letra="b"><input type="radio" name="q15" value="b" tabindex="-1"><label><strong>b)</strong> Define o cabeçalho semântico da coluna, substituindo o &lt;th&gt;</label></div><div class="option disabled correct" data-letra="c"><input type="radio" name="q15" value="c" tabindex="-1"><label><strong>c)</strong> É um atributo personalizado que pode ser lido pelo CSS, por exemplo com content: attr(data-label), para exibir um rótulo visual no modo de cards</label></div><div class="option disabled" data-letra="d"><input type="radio" name="q15" value="d" tabindex="-1"><label><strong>d)</strong> Torna a célula clicável automaticamente</label></div></div><div class="feedback-imediato mostrar ok" id="feed-q15">✅ <strong>Correto!</strong> data-label guarda o nome da coluna. O CSS pode exibi-lo via content: attr(data-label). O atributo não altera a semântica da tabela nem substitui &lt;th&gt;.</div></div></div>
+        <div class="btn-grupo">
+          <button type="button" class="btn" id="btnCorrigir">✅ Finalizar</button>
+          <button type="button" class="btn btn-secondary" id="btnLimpar">🔄 Limpar</button>
+        </div>
+      </form>
+      <div class="result-box" id="caixaResultado" style="display: block;">
+        <h3 style="color:#0369a1;margin-bottom:4px;">📊 Relatório</h3>
+        <div class="score" id="pontuacaoNota">15 / 15</div>
+        <p id="msgDiagnostico" style="font-weight:bold;font-size:1.05rem;margin-bottom:12px;">Aproveitamento: 100% (🏆 Excelente! Domínio pleno.)</p>
+        <div id="listaFeedback"><div style="padding:10px 0;border-bottom:1px solid #e2e8f0;text-align:left;font-size:.9rem;color:#15803d;">✅ <strong>Q1:</strong> Correta!<div style="color:#64748b;font-style:italic;margin-left:18px;margin-top:2px;">A tag &lt;table&gt; é o elemento raiz que envolve caption, thead, tbody e tfoot.</div></div><div style="padding:10px 0;border-bottom:1px solid #e2e8f0;text-align:left;font-size:.9rem;color:#15803d;">✅ <strong>Q2:</strong> Correta!<div style="color:#64748b;font-style:italic;margin-left:18px;margin-top:2px;">&lt;th&gt; (table header) é a célula de cabeçalho. &lt;td&gt; é célula de dado e &lt;thead&gt; agrupa os cabeçalhos.</div></div><div style="padding:10px 0;border-bottom:1px solid #e2e8f0;text-align:left;font-size:.9rem;color:#15803d;">✅ <strong>Q3:</strong> Correta!<div style="color:#64748b;font-style:italic;margin-left:18px;margin-top:2px;">&lt;tbody&gt; agrupa o corpo da tabela (os dados). &lt;thead&gt; agrupa os cabeçalhos e &lt;tfoot&gt; o rodapé.</div></div><div style="padding:10px 0;border-bottom:1px solid #e2e8f0;text-align:left;font-size:.9rem;color:#15803d;">✅ <strong>Q4:</strong> Correta!<div style="color:#64748b;font-style:italic;margin-left:18px;margin-top:2px;">colspan="2" faz uma célula ocupar duas colunas. rowspan="2" faz uma célula ocupar duas linhas. São atributos, não tags.</div></div><div style="padding:10px 0;border-bottom:1px solid #e2e8f0;text-align:left;font-size:.9rem;color:#15803d;">✅ <strong>Q5:</strong> Correta!<div style="color:#64748b;font-style:italic;margin-left:18px;margin-top:2px;">O &lt;caption&gt; identifica o assunto da tabela. É altamente recomendável, especialmente quando o contexto não deixa o propósito evidente.</div></div><div style="padding:10px 0;border-bottom:1px solid #e2e8f0;text-align:left;font-size:.9rem;color:#15803d;">✅ <strong>Q6:</strong> Correta!<div style="color:#64748b;font-style:italic;margin-left:18px;margin-top:2px;">scope="col" associa o &lt;th&gt; à coluna correspondente. scope="row" associa o &lt;th&gt; à linha correspondente.</div></div><div style="padding:10px 0;border-bottom:1px solid #e2e8f0;text-align:left;font-size:.9rem;color:#15803d;">✅ <strong>Q7:</strong> Correta!<div style="color:#64748b;font-style:italic;margin-left:18px;margin-top:2px;">Use tabela para dados com relação entre linhas e colunas. Layout de página é papel de Grid ou Flexbox.</div></div><div style="padding:10px 0;border-bottom:1px solid #e2e8f0;text-align:left;font-size:.9rem;color:#15803d;">✅ <strong>Q8:</strong> Correta!<div style="color:#64748b;font-style:italic;margin-left:18px;margin-top:2px;">scope="row" marca cabeçalhos de linha: cada linha começa com um &lt;th scope="row"&gt; que titula as células correspondentes.</div></div><div style="padding:10px 0;border-bottom:1px solid #e2e8f0;text-align:left;font-size:.9rem;color:#15803d;">✅ <strong>Q9:</strong> Correta!<div style="color:#64748b;font-style:italic;margin-left:18px;margin-top:2px;">&amp;mdash; produz o travessão longo (—). &amp;ndash; produz o travessão curto (–), usado em intervalos como "2024–2026".</div></div><div style="padding:10px 0;border-bottom:1px solid #e2e8f0;text-align:left;font-size:.9rem;color:#15803d;">✅ <strong>Q10:</strong> Correta!<div style="color:#64748b;font-style:italic;margin-left:18px;margin-top:2px;">&amp;nbsp; é o non-breaking space. Útil para manter "R$ 1.000" numa linha só, sem quebrar entre o "R$" e o número.</div></div><div style="padding:10px 0;border-bottom:1px solid #e2e8f0;text-align:left;font-size:.9rem;color:#15803d;">✅ <strong>Q11:</strong> Correta!<div style="color:#64748b;font-style:italic;margin-left:18px;margin-top:2px;">aria-hidden="true" retira o elemento da árvore de acessibilidade. O elemento continua visível. Use apenas em decoração (ícones, emojis), nunca em conteúdo informativo nem em elementos interativos.</div></div><div style="padding:10px 0;border-bottom:1px solid #e2e8f0;text-align:left;font-size:.9rem;color:#15803d;">✅ <strong>Q12:</strong> Correta!<div style="color:#64748b;font-style:italic;margin-left:18px;margin-top:2px;">O navegador expõe &lt;th scope="col"&gt; como columnheader na árvore de acessibilidade. &lt;th scope="row"&gt; recebe rowheader. O anúncio audível exato varia conforme leitor de tela, navegador, idioma e forma de navegação.</div></div><div style="padding:10px 0;border-bottom:1px solid #e2e8f0;text-align:left;font-size:.9rem;color:#15803d;">✅ <strong>Q13:</strong> Correta!<div style="color:#64748b;font-style:italic;margin-left:18px;margin-top:2px;">Não existe estratégia universalmente melhor: depende do conteúdo e do uso. Para tabelas com muitas colunas comparáveis, a rolagem horizontal costuma ser a mais segura, porque preserva a estrutura nativa da tabela.</div></div><div style="padding:10px 0;border-bottom:1px solid #e2e8f0;text-align:left;font-size:.9rem;color:#15803d;">✅ <strong>Q14:</strong> Correta!<div style="color:#64748b;font-style:italic;margin-left:18px;margin-top:2px;">Boletins são dados tabulares: alunos (linhas) × disciplinas (colunas), com cabeçalhos claros. Alinhar caixas, rodapé e menu é papel de CSS Grid/Flexbox.</div></div><div style="padding:10px 0;border-bottom:1px solid #e2e8f0;text-align:left;font-size:.9rem;color:#15803d;">✅ <strong>Q15:</strong> Correta!<div style="color:#64748b;font-style:italic;margin-left:18px;margin-top:2px;">data-label guarda o nome da coluna. O CSS pode exibi-lo via content: attr(data-label). O atributo não altera a semântica da tabela nem substitui &lt;th&gt;.</div></div></div>
+        <div style="margin-top:20px;text-align:left;">
+          <label for="txtCopiaRelatorio" style="font-size:.85rem;font-weight:bold;color:#0f172a;display:block;margin-bottom:4px;">📋 Resumo para copy/paste:</label>
+          <textarea class="relatorio-textarea" id="txtCopiaRelatorio" readonly=""></textarea>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;">
+            <button type="button" class="btn btn-secondary" id="btnCopiarRel">✅ Copiado!</button>
+            <button type="button" class="btn btn-success" id="btnImprimir">🖨️ PDF (A4)</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer class="footer-card">
+    <h4 style="margin-bottom:12px;color:#075985;">📋 Envio do Relatório</h4>
+    <p style="font-size:.88rem;color:#475569;margin-bottom:16px;">Terminou a avaliação? Gere o PDF e envie pelo formulário abaixo.</p>
+    <a href="https://forms.gle/zbUB57A4FteUDsKSA" target="_blank" rel="noopener noreferrer" class="footer-link">
+      <span style="font-size:1.6rem;">📝</span>
+      <div style="text-align:left;flex:1;">
+        <strong>Enviar Relatório do Tema 04</strong>
+        <small style="display:block;color:#166534;font-size:.75rem;">Anexe o PDF ou cole o texto gerado</small>
+      </div>
+      <span style="font-size:1.2rem;color:#16a34a;">→</span>
+    </a>
+    <p style="margin-top:18px;font-size:.75rem;color:#64748b;">
+      📊 Disciplina: Programação Front-End • Tema 04: Tabelas em HTML • 2026
+    </p>
+  </footer>
+</div>
+
+<div class="toast-notificacao" id="toastNotificacao" style="display: block;">✅ Copiado!</div>
+
+<div id="area-impressao">
+  <div class="print-header">
+    <h1>📊 Relatório • Tema 04: Tabelas em HTML</h1>
+    <p><strong>Estudante:</strong> <span id="printNome">Joyce Gabriela Gomes Pereira</span> &nbsp;|&nbsp; <strong>Turma:</strong> <span id="printTurma">Turma Geral</span></p>
+    <p><strong>Data:</strong> <span id="printData">21/10/2026, 14:15:14</span> &nbsp;|&nbsp; <strong>Nota:</strong> <span id="printScore">15 / 15</span></p>
+  </div>
+  <div id="printQuestoesContainer"><div class="print-q"><h4>Q1: Qual elemento é a raiz de uma tabela HTML?</h4><div class="resp"><strong>Sua Resposta:</strong> (a) • <strong>Gabarito:</strong> (a) • <em>A tag &lt;table&gt; é o elemento raiz que envolve caption, thead, tbody e tfoot.</em></div></div><div class="print-q"><h4>Q2: Qual tag define uma célula de cabeçalho em uma tabela?</h4><div class="resp"><strong>Sua Resposta:</strong> (c) • <strong>Gabarito:</strong> (c) • <em>&lt;th&gt; (table header) é a célula de cabeçalho. &lt;td&gt; é célula de dado e &lt;thead&gt; agrupa os cabeçalhos.</em></div></div><div class="print-q"><h4>Q3: Qual tag agrupa as linhas de dados (o "corpo" da tabela)?</h4><div class="resp"><strong>Sua Resposta:</strong> (b) • <strong>Gabarito:</strong> (b) • <em>&lt;tbody&gt; agrupa o corpo da tabela (os dados). &lt;thead&gt; agrupa os cabeçalhos e &lt;tfoot&gt; o rodapé.</em></div></div><div class="print-q"><h4>Q4: Qual atributo faz uma célula ocupar duas colunas?</h4><div class="resp"><strong>Sua Resposta:</strong> (b) • <strong>Gabarito:</strong> (b) • <em>colspan="2" faz uma célula ocupar duas colunas. rowspan="2" faz uma célula ocupar duas linhas. São atributos, não tags.</em></div></div><div class="print-q"><h4>Q5: Qual é a função do &lt;caption&gt; em uma tabela?</h4><div class="resp"><strong>Sua Resposta:</strong> (b) • <strong>Gabarito:</strong> (b) • <em>O &lt;caption&gt; identifica o assunto da tabela. É altamente recomendável, especialmente quando o contexto não deixa o propósito evidente.</em></div></div><div class="print-q"><h4>Q6: O que o atributo scope="col" declara em uma célula &lt;th&gt;?</h4><div class="resp"><strong>Sua Resposta:</strong> (b) • <strong>Gabarito:</strong> (b) • <em>scope="col" associa o &lt;th&gt; à coluna correspondente. scope="row" associa o &lt;th&gt; à linha correspondente.</em></div></div><div class="print-q"><h4>Q7: Quando uma tabela deve ser substituída por outra estrutura HTML?</h4><div class="resp"><strong>Sua Resposta:</strong> (b) • <strong>Gabarito:</strong> (b) • <em>Use tabela para dados com relação entre linhas e colunas. Layout de página é papel de Grid ou Flexbox.</em></div></div><div class="print-q"><h4>Q8: Sobre o atributo scope="row", a afirmação correta é:</h4><div class="resp"><strong>Sua Resposta:</strong> (a) • <strong>Gabarito:</strong> (a) • <em>scope="row" marca cabeçalhos de linha: cada linha começa com um &lt;th scope="row"&gt; que titula as células correspondentes.</em></div></div><div class="print-q"><h4>Q9: O que a entidade &amp;mdash; produz quando renderizada?</h4><div class="resp"><strong>Sua Resposta:</strong> (b) • <strong>Gabarito:</strong> (b) • <em>&amp;mdash; produz o travessão longo (—). &amp;ndash; produz o travessão curto (–), usado em intervalos como "2024–2026".</em></div></div><div class="print-q"><h4>Q10: O que a entidade &amp;nbsp; representa?</h4><div class="resp"><strong>Sua Resposta:</strong> (c) • <strong>Gabarito:</strong> (c) • <em>&amp;nbsp; é o non-breaking space. Útil para manter "R$ 1.000" numa linha só, sem quebrar entre o "R$" e o número.</em></div></div><div class="print-q"><h4>Q11: Sobre o atributo aria-hidden="true", é correto afirmar:</h4><div class="resp"><strong>Sua Resposta:</strong> (b) • <strong>Gabarito:</strong> (b) • <em>aria-hidden="true" retira o elemento da árvore de acessibilidade. O elemento continua visível. Use apenas em decoração (ícones, emojis), nunca em conteúdo informativo nem em elementos interativos.</em></div></div><div class="print-q"><h4>Q12: Na árvore de acessibilidade do navegador, qual papel normalmente corresponde a um &lt;th scope="col"&gt;?</h4><div class="resp"><strong>Sua Resposta:</strong> (b) • <strong>Gabarito:</strong> (b) • <em>O navegador expõe &lt;th scope="col"&gt; como columnheader na árvore de acessibilidade. &lt;th scope="row"&gt; recebe rowheader. O anúncio audível exato varia conforme leitor de tela, navegador, idioma e forma de navegação.</em></div></div><div class="print-q"><h4>Q13: Para uma tabela com 10 colunas em celular, qual é a recomendação geral?</h4><div class="resp"><strong>Sua Resposta:</strong> (b) • <strong>Gabarito:</strong> (b) • <em>Não existe estratégia universalmente melhor: depende do conteúdo e do uso. Para tabelas com muitas colunas comparáveis, a rolagem horizontal costuma ser a mais segura, porque preserva a estrutura nativa da tabela.</em></div></div><div class="print-q"><h4>Q14: Em qual situação o uso de tabela é correto?</h4><div class="resp"><strong>Sua Resposta:</strong> (b) • <strong>Gabarito:</strong> (b) • <em>Boletins são dados tabulares: alunos (linhas) × disciplinas (colunas), com cabeçalhos claros. Alinhar caixas, rodapé e menu é papel de CSS Grid/Flexbox.</em></div></div><div class="print-q"><h4>Q15: Sobre o atributo data-label em uma tabela responsiva:</h4><div class="resp"><strong>Sua Resposta:</strong> (c) • <strong>Gabarito:</strong> (c) • <em>data-label guarda o nome da coluna. O CSS pode exibi-lo via content: attr(data-label). O atributo não altera a semântica da tabela nem substitui &lt;th&gt;.</em></div></div></div>
+</div>
+
+<button type="button" class="btn-top" id="btnTopo">⬆️ Topo</button>
+
+<script>
+var CODIGOS_LABS = {
+  lab1: {
+    html: '<h1>Boletim da Turma</h1>\n\n<table>\n  <tr>\n    <th>Aluno</th>\n    <th>HTML</th>\n    <th>CSS</th>\n  </tr>\n  <tr>\n    <td>Ana</td>\n    <td>9,0</td>\n    <td>8,5</td>\n  </tr>\n  <tr>\n    <td>João</td>\n    <td>7,5</td>\n    <td>9,0</td>\n  </tr>\n</table>',
+    css: 'body { font-family: Segoe UI, sans-serif; padding: 20px; background: #f8fafc; }\nh1 { color: #075985; margin-bottom: 16px; }\ntable { border-collapse: collapse; width: 100%; max-width: 500px; }\nth, td { border: 1px solid #cbd5e1; padding: 10px; text-align: left; }\nth { background: #0369a1; color: #fff; }'
+  },
+  lab2: {
+    html: '<h1>Boletim da Turma</h1>\n\n<table>\n  <caption>Notas finais &mdash; Programação Front-End 2026</caption>\n  <thead>\n    <tr>\n      <th scope="col">Aluno</th>\n      <th scope="col">HTML</th>\n      <th scope="col">CSS</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th scope="row">Ana</th>\n      <td>9,0</td>\n      <td>8,5</td>\n    </tr>\n    <tr>\n      <th scope="row">João</th>\n      <td>7,5</td>\n      <td>9,0</td>\n    </tr>\n    <tr>\n      <th scope="row">Marina</th>\n      <td>8,5</td>\n      <td>9,5</td>\n    </tr>\n  </tbody>\n  <tfoot>\n    <tr>\n      <th scope="row">Média</th>\n      <td>8,3</td>\n      <td>9,0</td>\n    </tr>\n  </tfoot>\n</table>',
+    css: 'body { font-family: Segoe UI, sans-serif; padding: 20px; background: #f8fafc; }\nh1 { color: #075985; margin-bottom: 16px; }\ntable { border-collapse: collapse; width: 100%; max-width: 600px; }\ncaption { text-align: left; font-weight: 700; color: #0c4a6e; padding: 8px 0; }\nth, td { border: 1px solid #cbd5e1; padding: 10px; text-align: left; }\nthead th { background: #0369a1; color: #fff; }\ntbody th { background: #e0f2fe; color: #0c4a6e; }\ntfoot th, tfoot td { background: #ccfbf1; color: #115e59; font-weight: 700; }'
+  },
+  lab3: {
+    html: '<h1>Cronograma da Semana</h1>\n\n<table>\n  <caption>Horário das aulas &mdash; Turma Front-End</caption>\n  <thead>\n    <tr>\n      <th scope="col">Horário</th>\n      <th scope="col">Segunda</th>\n      <th scope="col">Terça</th>\n      <th scope="col">Quarta</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th scope="row">08h &ndash; 10h</th>\n      <td>HTML</td>\n      <td>CSS</td>\n      <td>JS</td>\n    </tr>\n    <tr>\n      <th scope="row">10h &ndash; 12h</th>\n      <td>Projeto</td>\n      <td>HTML</td>\n      <td>Projeto</td>\n    </tr>\n  </tbody>\n</table>',
+    css: 'body { font-family: Segoe UI, sans-serif; padding: 20px; background: #f8fafc; }\nh1 { color: #075985; margin-bottom: 16px; }\ntable { border-collapse: collapse; width: 100%; max-width: 640px; }\ncaption { text-align: left; font-weight: 700; color: #0c4a6e; padding: 8px 0; }\nth, td { border: 1px solid #cbd5e1; padding: 10px; text-align: left; }\nthead th { background: #0369a1; color: #fff; }\ntbody th { background: #ccfbf1; color: #115e59; }\ntbody td { background: #fff; }'
+  },
+  lab4: {
+    html: '<h1>Contatos</h1>\n\n<table>\n  <caption>Telefones dos alunos da turma</caption>\n  <thead>\n    <tr>\n      <th scope="col">Nome</th>\n      <th scope="col" colspan="2">Telefones</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th scope="row" rowspan="2">Ana</th>\n      <td>11 90000-0001</td>\n      <td>11 90000-0002</td>\n    </tr>\n    <tr>\n      <td colspan="2">ana@exemplo.com</td>\n    </tr>\n    <tr>\n      <th scope="row">João</th>\n      <td>11 90000-0003</td>\n      <td>11 90000-0004</td>\n    </tr>\n  </tbody>\n</table>',
+    css: 'body { font-family: Segoe UI, sans-serif; padding: 20px; background: #f8fafc; }\nh1 { color: #075985; margin-bottom: 16px; }\ntable { border-collapse: collapse; width: 100%; max-width: 640px; }\ncaption { text-align: left; font-weight: 700; color: #0c4a6e; padding: 8px 0; }\nth, td { border: 1px solid #cbd5e1; padding: 10px; text-align: left; }\nthead th { background: #0369a1; color: #fff; }\ntbody th { background: #e0f2fe; color: #0c4a6e; }'
+  },
+  lab5: {
+    html: '<h1>Boletim Responsivo</h1>\n\n<div class="tabela-wrapper">\n  <table>\n    <caption>Notas &mdash; Front-End 2026</caption>\n    <thead>\n      <tr>\n        <th scope="col">Aluno</th>\n        <th scope="col">HTML</th>\n        <th scope="col">CSS</th>\n        <th scope="col">JS</th>\n        <th scope="col">Média</th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr>\n        <th scope="row">Ana</th>\n        <td>9,0</td>\n        <td>8,5</td>\n        <td>8,0</td>\n        <td>8,5</td>\n      </tr>\n      <tr>\n        <th scope="row">João</th>\n        <td>7,5</td>\n        <td>9,0</td>\n        <td>8,5</td>\n        <td>8,3</td>\n      </tr>\n      <tr>\n        <th scope="row">Marina</th>\n        <td>8,5</td>\n        <td>9,5</td>\n        <td>9,0</td>\n        <td>9,0</td>\n      </tr>\n    </tbody>\n  </table>\n</div>',
+    css: 'body { font-family: Segoe UI, sans-serif; padding: 20px; background: #f8fafc; }\nh1 { color: #075985; margin-bottom: 16px; }\n.tabela-wrapper { overflow-x: auto; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.08); }\ntable { width: 100%; min-width: 560px; border-collapse: collapse; background: #fff; }\ncaption { background: #0369a1; color: #fff; padding: 12px 16px; text-align: left; font-weight: 700; }\nthead th { background: #082f49; color: #fff; padding: 10px 16px; text-align: left; font-size: .88rem; }\ntbody th, tbody td { padding: 10px 16px; border-bottom: 1px solid #e2e8f0; text-align: left; font-size: .88rem; }\ntbody th { background: #e0f2fe; color: #0c4a6e; }'
+  },
+  'responsive-demo': {
+    html: '<h1>Três estratégias responsivas para tabelas</h1>\n\n<section class="bloco-estrategia">\n  <h2>1. Rolagem horizontal controlada</h2>\n  <p>Use quando tiver muitas colunas e quiser manter a comparação vertical.</p>\n  <div class="tabela-scroll">\n    <table>\n      <caption>Boletim completo &mdash; Front-End 2026</caption>\n      <thead>\n        <tr>\n          <th scope="col">Aluno</th>\n          <th scope="col">HTML</th>\n          <th scope="col">CSS</th>\n          <th scope="col">JavaScript</th>\n          <th scope="col">Projeto final</th>\n          <th scope="col">Média</th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr>\n          <th scope="row">Ana</th>\n          <td>9,0</td>\n          <td>8,5</td>\n          <td>8,0</td>\n          <td>9,5</td>\n          <td>8,75</td>\n        </tr>\n        <tr>\n          <th scope="row">João</th>\n          <td>7,5</td>\n          <td>9,0</td>\n          <td>8,5</td>\n          <td>8,0</td>\n          <td>8,25</td>\n        </tr>\n      </tbody>\n    </table>\n  </div>\n  <p class="dica">↔ Arraste horizontalmente para ver todas as colunas</p>\n</section>\n\n<section class="bloco-estrategia">\n  <h2>2. Empilhamento em cards</h2>\n  <p>Use quando cada registro tem poucos campos e a tela é estreita.</p>\n  <table class="tabela-cards">\n    <caption>Boletim &mdash; Front-End 2026</caption>\n    <thead>\n      <tr>\n        <th scope="col">Aluno</th>\n        <th scope="col">HTML</th>\n        <th scope="col">CSS</th>\n        <th scope="col">Média</th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr>\n        <th scope="row" data-label="Aluno">Ana</th>\n        <td data-label="HTML">9,0</td>\n        <td data-label="CSS">8,5</td>\n        <td data-label="Média">8,75</td>\n      </tr>\n      <tr>\n        <th scope="row" data-label="Aluno">João</th>\n        <td data-label="HTML">7,5</td>\n        <td data-label="CSS">9,0</td>\n        <td data-label="Média">8,25</td>\n      </tr>\n    </tbody>\n  </table>\n</section>\n\n<section class="bloco-estrategia">\n  <h2>3. Ocultar colunas secundárias</h2>\n  <p>Use quando existem colunas principais e colunas de apoio.</p>\n  <table class="tabela-oculta">\n    <caption>Notas resumidas</caption>\n    <thead>\n      <tr>\n        <th scope="col">Aluno</th>\n        <th scope="col">Média</th>\n        <th scope="col" class="col-secundaria">HTML</th>\n        <th scope="col" class="col-secundaria">CSS</th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr>\n        <th scope="row">Ana</th>\n        <td><strong>8,75</strong></td>\n        <td class="col-secundaria">9,0</td>\n        <td class="col-secundaria">8,5</td>\n      </tr>\n      <tr>\n        <th scope="row">João</th>\n        <td><strong>8,25</strong></td>\n        <td class="col-secundaria">7,5</td>\n        <td class="col-secundaria">9,0</td>\n      </tr>\n    </tbody>\n  </table>\n</section>',
+    css: '* { box-sizing: border-box; }\nbody { font-family: Segoe UI, sans-serif; padding: 20px; background: #f8fafc; color: #0f172a; }\nh1 { color: #075985; margin-bottom: 20px; }\nh2 { color: #0369a1; font-size: 1.1rem; margin-bottom: 6px; }\n.bloco-estrategia { background: #fff; border-radius: 12px; padding: 18px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,.08); }\n.bloco-estrategia > p { color: #475569; font-size: .88rem; margin-bottom: 12px; }\n.dica { color: #64748b; font-size: .78rem; text-align: center; margin-top: 8px; }\n\n.tabela-scroll { overflow-x: auto; border-radius: 8px; }\n.tabela-scroll table { width: 100%; min-width: 560px; border-collapse: collapse; font-size: .85rem; }\n.tabela-scroll caption { background: #0369a1; color: #fff; padding: 10px 14px; text-align: left; font-weight: 700; }\n.tabela-scroll th, .tabela-scroll td { padding: 10px 14px; border-bottom: 1px solid #e2e8f0; text-align: left; }\n.tabela-scroll thead th { background: #082f49; color: #fff; }\n.tabela-scroll tbody th { background: #e0f2fe; color: #0c4a6e; }\n\n.tabela-cards { width: 100%; border-collapse: collapse; font-size: .85rem; }\n.tabela-cards caption { background: #0d9488; color: #fff; padding: 10px 14px; text-align: left; font-weight: 700; }\n.tabela-cards th, .tabela-cards td { padding: 10px 14px; border-bottom: 1px solid #e2e8f0; text-align: left; }\n.tabela-cards thead th { background: #134e4a; color: #fff; }\n.tabela-cards tbody th { background: #ccfbf1; color: #115e59; }\n@media (max-width: 520px) {\n  .tabela-cards thead { display: none; }\n  .tabela-cards, .tabela-cards tbody, .tabela-cards tr, .tabela-cards th, .tabela-cards td { display: block; width: 100%; }\n  .tabela-cards tr { margin-bottom: 14px; border: 2px solid #0d9488; border-radius: 10px; overflow: hidden; }\n  .tabela-cards th { background: #0d9488; color: #fff; padding: 10px 14px; }\n  .tabela-cards td, .tabela-cards tbody th { border: none; border-bottom: 1px solid #e2e8f0; padding: 10px 14px; }\n  .tabela-cards tbody th { background: #fff; color: #0f172a; }\n  .tabela-cards td::before { content: attr(data-label) ": "; font-weight: 700; color: #0d9488; }\n}\n\n.tabela-oculta { width: 100%; border-collapse: collapse; font-size: .85rem; }\n.tabela-oculta caption { background: #7c3aed; color: #fff; padding: 10px 14px; text-align: left; font-weight: 700; }\n.tabela-oculta th, .tabela-oculta td { padding: 10px 14px; border-bottom: 1px solid #e2e8f0; text-align: left; }\n.tabela-oculta thead th { background: #4c1d95; color: #fff; }\n.tabela-oculta tbody th { background: #ede9fe; color: #4c1d95; }\n@media (max-width: 600px) {\n  .col-secundaria { display: none; }\n}'
+  }
+};
+
+function montarArquivoUnico(lab) {
+  return '<!DOCTYPE html>\n<html lang="pt-BR">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>Lab HTML5</title>\n  <style>\n' + lab.css + '\n  </style>\n</head>\n<body>\n' + lab.html + '\n</body>\n</html>';
+}
+
+function escapeHtmlTexto(t) {
+  return String(t == null ? '' : t)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function trocarAba(idAba, botao) {
+  document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active'); });
+  document.querySelectorAll('.tab-content').forEach(function (c) { c.classList.remove('active'); });
+  botao.classList.add('active');
+  var alvo = document.getElementById(idAba);
+  if (alvo) alvo.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function trocarAbaLab(labId, pane, botao) {
+  var wrap = document.getElementById('card-' + labId);
+  if (!wrap) return;
+  wrap.querySelectorAll('.code-aba-btn').forEach(function (b) { b.classList.remove('active'); });
+  wrap.querySelectorAll('.code-pane').forEach(function (p) { p.classList.remove('active'); });
+  botao.classList.add('active');
+  var alvo = document.getElementById(labId + '-pane-' + pane);
+  if (alvo) alvo.classList.add('active');
+}
+
+function copiarTextoFallback(texto) {
+  var area = document.createElement('textarea');
+  area.value = texto; area.setAttribute('readonly', '');
+  area.style.position = 'fixed'; area.style.top = '-1000px';
+  document.body.appendChild(area); area.select();
+  var ok = false;
+  try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+  document.body.removeChild(area);
+  return ok;
+}
+
+function copiarTexto(texto, botao) {
+  if (!texto) return;
+  var finalizar = function (sucesso) {
+    if (sucesso) {
+      mostrarToast('✅ Copiado!');
+      if (botao) {
+        var orig = botao.textContent;
+        botao.textContent = '✅ Copiado!';
+        setTimeout(function () { botao.textContent = orig; }, 1800);
+      }
+    } else mostrarToast('⚠️ Não foi possível copiar. Selecione e copie manualmente.');
+  };
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(texto).then(function () { finalizar(true); }).catch(function () { finalizar(copiarTextoFallback(texto)); });
+  } else finalizar(copiarTextoFallback(texto));
+}
+
+function copiarCodigoLab(labId, botao) {
+  var wrap = document.getElementById('card-' + labId);
+  if (!wrap) return;
+  var pane = wrap.querySelector('.code-pane.active pre');
+  if (!pane) return;
+  copiarTexto(pane.textContent, botao);
+}
+
+function baixarLab(labId) {
+  var lab = CODIGOS_LABS[labId];
+  if (!lab) return;
+  var html = montarArquivoUnico(lab);
+  var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = labId + '.html';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function () { URL.revokeObjectURL(url); }, 30000);
+  mostrarToast('✅ Arquivo baixado.');
+}
+
+function abrirPreviewInline(labId) {
+  var lab = CODIGOS_LABS[labId];
+  if (!lab) return;
+  var wrapper = document.getElementById('card-' + labId);
+  if (!wrapper) return;
+  var anterior = wrapper.parentNode.querySelector('.preview-inline[data-lab="' + labId + '"]');
+  if (anterior) anterior.remove();
+  var caixa = document.createElement('div');
+  caixa.className = 'preview-inline'; caixa.dataset.lab = labId;
+  var header = document.createElement('div');
+  header.className = 'preview-header';
+  header.innerHTML = '<span>🧪 Preview — ' + labId + '.html</span>';
+  var botaoFechar = document.createElement('button');
+  botaoFechar.type = 'button'; botaoFechar.className = 'preview-close'; botaoFechar.textContent = '✕ Fechar';
+  header.appendChild(botaoFechar);
+  var iframe = document.createElement('iframe');
+  iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-popups');
+  iframe.setAttribute('title', 'Preview ' + labId);
+  iframe.srcdoc = montarArquivoUnico(lab);
+  caixa.appendChild(header); caixa.appendChild(iframe);
+  wrapper.parentNode.insertBefore(caixa, wrapper.nextSibling);
+  botaoFechar.addEventListener('click', function () { caixa.remove(); });
+  caixa.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function executarOneCompilerLab(labId) {
+  var lab = CODIGOS_LABS[labId];
+  if (!lab) return;
+  var html = montarArquivoUnico(lab);
+  var urlGet = 'https://onecompiler.com/html?code=' + encodeURIComponent(html);
+
+  if (urlGet.length < 7500) {
+    var win = window.open(urlGet, '_blank');
+    if (!win) {
+      mostrarToast('⚠️ Pop-up bloqueado. Use o botão Copiar e cole em onecompiler.com/html.');
+    }
+    return;
+  }
+
+  var form = document.createElement('form');
+  form.method = 'POST';
+  form.action = 'https://onecompiler.com/html';
+  form.target = '_blank';
+  form.style.display = 'none';
+
+  var campo = document.createElement('input');
+  campo.type = 'hidden';
+  campo.name = 'code';
+  campo.value = html;
+  form.appendChild(campo);
+
+  document.body.appendChild(form);
+  try { form.submit(); } catch (e) { mostrarToast('⚠️ Erro ao abrir OneCompiler. Use o botão Copiar e cole manualmente.'); }
+  document.body.removeChild(form);
+  mostrarToast('📤 Código grande: enviando via POST…');
+}
+
+var toastTimer = null;
+function mostrarToast(msg) {
+  var t = document.getElementById('toastNotificacao');
+  if (!t) return;
+  t.textContent = msg; t.style.display = 'block';
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () { t.style.display = 'none'; }, 3800);
+}
+
+var EXPLICACOES_MAPA = {
+  caption: { titulo: '&lt;caption&gt;', texto: 'Identifica o assunto da tabela. Deve ser a primeira coisa dentro de <code>&lt;table&gt;</code>.' },
+  th: { titulo: '&lt;th scope="col"&gt;', texto: 'Célula de cabeçalho de coluna. O <code>scope="col"</code> associa este cabeçalho à coluna correspondente.' },
+  'th-row': { titulo: '&lt;th scope="row"&gt;', texto: 'Célula de cabeçalho de linha. O <code>scope="row"</code> associa este cabeçalho à linha correspondente.' },
+  td: { titulo: '&lt;td&gt;', texto: 'Célula de dado. Não é cabeçalho. Contém o valor propriamente dito — nota, preço, horário.' },
+  tfoot: { titulo: '&lt;tfoot&gt;', texto: 'Rodapé da tabela. Útil para totais, médias, resumos.' }
+};
+
+function destacarMapa(no) {
+  document.querySelectorAll('#mapaTabela [data-no]').forEach(function (el) {
+    el.classList.remove('celula-destaque');
+  });
+  document.querySelectorAll('#mapaTabela [data-no="' + no + '"]').forEach(function (el) {
+    el.classList.add('celula-destaque');
+  });
+  var info = EXPLICACOES_MAPA[no];
+  if (!info) return;
+  var caixa = document.getElementById('explicacaoMapa');
+  if (!caixa) return;
+  caixa.innerHTML = '<strong>' + info.titulo + '</strong> — ' + info.texto;
+}
+
+var BANCO_AVALIACAO = [
+  { id: 'q1', pergunta: 'Qual elemento é a raiz de uma tabela HTML?', opcoes: [ { l: 'a', t: '&lt;table&gt;' }, { l: 'b', t: '&lt;grid&gt;' }, { l: 'c', t: '&lt;layout&gt;' }, { l: 'd', t: '&lt;tabela&gt;' } ], correta: 'a', explicacao: 'A tag &lt;table&gt; é o elemento raiz que envolve caption, thead, tbody e tfoot.' },
+  { id: 'q2', pergunta: 'Qual tag define uma célula de cabeçalho em uma tabela?', opcoes: [ { l: 'a', t: '&lt;header-cell&gt;' }, { l: 'b', t: '&lt;td&gt;' }, { l: 'c', t: '&lt;th&gt;' }, { l: 'd', t: '&lt;thead&gt;' } ], correta: 'c', explicacao: '&lt;th&gt; (table header) é a célula de cabeçalho. &lt;td&gt; é célula de dado e &lt;thead&gt; agrupa os cabeçalhos.' },
+  { id: 'q3', pergunta: 'Qual tag agrupa as linhas de dados (o "corpo" da tabela)?', opcoes: [ { l: 'a', t: '&lt;main&gt;' }, { l: 'b', t: '&lt;tbody&gt;' }, { l: 'c', t: '&lt;content&gt;' }, { l: 'd', t: '&lt;data&gt;' } ], correta: 'b', explicacao: '&lt;tbody&gt; agrupa o corpo da tabela (os dados). &lt;thead&gt; agrupa os cabeçalhos e &lt;tfoot&gt; o rodapé.' },
+  { id: 'q4', pergunta: 'Qual atributo faz uma célula ocupar duas colunas?', opcoes: [ { l: 'a', t: 'rowspan="2"' }, { l: 'b', t: 'colspan="2"' }, { l: 'c', t: 'merge="2"' }, { l: 'd', t: 'span="2"' } ], correta: 'b', explicacao: 'colspan="2" faz uma célula ocupar duas colunas. rowspan="2" faz uma célula ocupar duas linhas. São atributos, não tags.' },
+  { id: 'q5', pergunta: 'Qual é a função do &lt;caption&gt; em uma tabela?', opcoes: [ { l: 'a', t: 'Definir uma cor para a tabela' }, { l: 'b', t: 'Identificar o assunto da tabela e ajudar o usuário a compreender seu propósito' }, { l: 'c', t: 'Criar uma legenda exclusiva para imagens' }, { l: 'd', t: 'Agrupar os cabeçalhos' } ], correta: 'b', explicacao: 'O &lt;caption&gt; identifica o assunto da tabela. É altamente recomendável, especialmente quando o contexto não deixa o propósito evidente.' },
+  { id: 'q6', pergunta: 'O que o atributo scope="col" declara em uma célula &lt;th&gt;?', opcoes: [ { l: 'a', t: 'Que a coluna tem mais de uma célula' }, { l: 'b', t: 'Que este cabeçalho se aplica à coluna correspondente' }, { l: 'c', t: 'Que a célula está no topo da tabela' }, { l: 'd', t: 'Que a célula pertence ao tfoot' } ], correta: 'b', explicacao: 'scope="col" associa o &lt;th&gt; à coluna correspondente. scope="row" associa o &lt;th&gt; à linha correspondente.' },
+  { id: 'q7', pergunta: 'Quando uma tabela deve ser substituída por outra estrutura HTML?', opcoes: [ { l: 'a', t: 'Sempre que tiver menos de 3 linhas' }, { l: 'b', t: 'Quando é usada para montar layout visual, sem comparação real de dados' }, { l: 'c', t: 'Quando tiver imagens dentro das células' }, { l: 'd', t: 'Quando o usuário acessar pelo celular' } ], correta: 'b', explicacao: 'Use tabela para dados com relação entre linhas e colunas. Layout de página é papel de Grid ou Flexbox.' },
+  { id: 'q8', pergunta: 'Sobre o atributo scope="row", a afirmação correta é:', opcoes: [ { l: 'a', t: 'Indica que o cabeçalho se aplica à linha correspondente' }, { l: 'b', t: 'Indica que o cabeçalho se aplica à coluna acima dele' }, { l: 'c', t: 'Indica que a célula é a última da linha' }, { l: 'd', t: 'Indica que a célula pertence ao tfoot' } ], correta: 'a', explicacao: 'scope="row" marca cabeçalhos de linha: cada linha começa com um &lt;th scope="row"&gt; que titula as células correspondentes.' },
+  { id: 'q9', pergunta: 'O que a entidade &amp;mdash; produz quando renderizada?', opcoes: [ { l: 'a', t: 'Um espaço simples' }, { l: 'b', t: 'Um travessão longo (—)' }, { l: 'c', t: 'Um travessão curto (–)' }, { l: 'd', t: 'Uma quebra de linha' } ], correta: 'b', explicacao: '&amp;mdash; produz o travessão longo (—). &amp;ndash; produz o travessão curto (–), usado em intervalos como "2024–2026".' },
+  { id: 'q10', pergunta: 'O que a entidade &amp;nbsp; representa?', opcoes: [ { l: 'a', t: 'Uma quebra de linha' }, { l: 'b', t: 'Um tab' }, { l: 'c', t: 'Um espaço que não quebra linha' }, { l: 'd', t: 'Um travessão' } ], correta: 'c', explicacao: '&amp;nbsp; é o non-breaking space. Útil para manter "R$ 1.000" numa linha só, sem quebrar entre o "R$" e o número.' },
+  { id: 'q11', pergunta: 'Sobre o atributo aria-hidden="true", é correto afirmar:', opcoes: [ { l: 'a', t: 'Esconde o elemento visualmente da tela' }, { l: 'b', t: 'Esconde o elemento apenas do leitor de tela, mantendo-o visível' }, { l: 'c', t: 'Remove o elemento do DOM' }, { l: 'd', t: 'Impede cliques no elemento' } ], correta: 'b', explicacao: 'aria-hidden="true" retira o elemento da árvore de acessibilidade. O elemento continua visível. Use apenas em decoração (ícones, emojis), nunca em conteúdo informativo nem em elementos interativos.' },
+  { id: 'q12', pergunta: 'Na árvore de acessibilidade do navegador, qual papel normalmente corresponde a um &lt;th scope="col"&gt;?', opcoes: [ { l: 'a', t: 'cell' }, { l: 'b', t: 'columnheader' }, { l: 'c', t: 'rowheader' }, { l: 'd', t: 'caption' } ], correta: 'b', explicacao: 'O navegador expõe &lt;th scope="col"&gt; como columnheader na árvore de acessibilidade. &lt;th scope="row"&gt; recebe rowheader. O anúncio audível exato varia conforme leitor de tela, navegador, idioma e forma de navegação.' },
+  { id: 'q13', pergunta: 'Para uma tabela com 10 colunas em celular, qual é a recomendação geral?', opcoes: [ { l: 'a', t: 'Sempre empilhar tudo em cards' }, { l: 'b', t: 'Rolagem horizontal controlada para preservar a comparação entre colunas' }, { l: 'c', t: 'Ocultar todas as colunas menos a primeira' }, { l: 'd', t: 'Trocar a tabela por uma imagem' } ], correta: 'b', explicacao: 'Não existe estratégia universalmente melhor: depende do conteúdo e do uso. Para tabelas com muitas colunas comparáveis, a rolagem horizontal costuma ser a mais segura, porque preserva a estrutura nativa da tabela.' },
+  { id: 'q14', pergunta: 'Em qual situação o uso de tabela é correto?', opcoes: [ { l: 'a', t: 'Para alinhar três caixas lado a lado na página' }, { l: 'b', t: 'Para mostrar o boletim de notas dos alunos' }, { l: 'c', t: 'Para montar o rodapé da página' }, { l: 'd', t: 'Para estruturar o menu de navegação' } ], correta: 'b', explicacao: 'Boletins são dados tabulares: alunos (linhas) × disciplinas (colunas), com cabeçalhos claros. Alinhar caixas, rodapé e menu é papel de CSS Grid/Flexbox.' },
+  { id: 'q15', pergunta: 'Sobre o atributo data-label em uma tabela responsiva:', opcoes: [ { l: 'a', t: 'Aplica estilo automático a toda célula que o possuir' }, { l: 'b', t: 'Define o cabeçalho semântico da coluna, substituindo o &lt;th&gt;' }, { l: 'c', t: 'É um atributo personalizado que pode ser lido pelo CSS, por exemplo com content: attr(data-label), para exibir um rótulo visual no modo de cards' }, { l: 'd', t: 'Torna a célula clicável automaticamente' } ], correta: 'c', explicacao: 'data-label guarda o nome da coluna. O CSS pode exibi-lo via content: attr(data-label). O atributo não altera a semântica da tabela nem substitui &lt;th&gt;.' }
+];
+
+var respostasAluno = {};
+var questoesFinalizadas = {};
+var modoAtual = 'estudo';
+
+function inicializarQuestoes() {
+  var container = document.getElementById('containerQuestoes');
+  if (!container) return;
+  container.innerHTML = '';
+  BANCO_AVALIACAO.forEach(function (q, idx) {
+    var div = document.createElement('div');
+    div.className = 'question'; div.id = q.id;
+    var header = document.createElement('div');
+    header.className = 'question-header';
+    header.innerHTML = '<span class="question-number">' + (idx + 1) + '</span><div>' + q.pergunta + '</div>';
+    div.appendChild(header);
+    var options = document.createElement('div');
+    options.className = 'options';
+    q.opcoes.forEach(function (op) {
+      var opt = document.createElement('div');
+      opt.className = 'option'; opt.dataset.letra = op.l;
+      var radio = document.createElement('input');
+      radio.type = 'radio'; radio.name = q.id; radio.value = op.l; radio.tabIndex = -1;
+      var label = document.createElement('label');
+      label.innerHTML = '<strong>' + op.l + ')</strong> ' + op.t;
+      opt.appendChild(radio); opt.appendChild(label);
+      opt.addEventListener('click', function (ev) { ev.preventDefault(); marcarOpcao(q.id, op.l, opt); });
+      options.appendChild(opt);
+    });
+    div.appendChild(options);
+    var feed = document.createElement('div');
+    feed.className = 'feedback-imediato'; feed.id = 'feed-' + q.id;
+    div.appendChild(feed);
+    container.appendChild(div);
+  });
+  atualizarModoVisual();
+}
+
+function marcarOpcao(qId, letra, el) {
+  if (questoesFinalizadas[qId]) return;
+  var questao = BANCO_AVALIACAO.find(function (q) { return q.id === qId; });
+  if (!questao) return;
+  var pai = document.getElementById(qId);
+  if (!pai) return;
+  var eraBranco = !respostasAluno[qId];
+  respostasAluno[qId] = letra;
+
+  pai.querySelectorAll('.option').forEach(function (o) {
+    o.classList.remove('correct', 'wrong');
+    var rad = o.querySelector('input');
+    if (rad) rad.checked = false;
+  });
+  el.querySelector('input').checked = true;
+
+  if (modoAtual === 'estudo') {
+    questoesFinalizadas[qId] = true;
+    pai.querySelectorAll('.option').forEach(function (o) {
+      o.classList.add('disabled');
+    });
+    var feed = document.getElementById('feed-' + qId);
+    if (feed) {
+      feed.classList.add('mostrar');
+      if (letra === questao.correta) {
+        feed.classList.add('ok');
+        feed.innerHTML = '✅ <strong>Correto!</strong> ' + questao.explicacao;
+        pai.classList.add('correta-q'); el.classList.add('correct');
+      } else {
+        feed.classList.add('no');
+        feed.innerHTML = '❌ <strong>Ainda não.</strong> ' + questao.explicacao;
+        pai.classList.add('errada-q'); el.classList.add('wrong');
+      }
+      var corretaEl = pai.querySelector('.option[data-letra="' + questao.correta + '"]');
+      if (corretaEl) corretaEl.classList.add('correct');
+    }
+  }
+
+  if (eraBranco) atualizarProgressoQuiz();
+}
+
+function atualizarProgressoQuiz() {
+  var total = BANCO_AVALIACAO.length;
+  var respondidas = Object.keys(respostasAluno).length;
+  var pct = Math.round((respondidas / total) * 100);
+  var txt = document.getElementById('txtProgresso');
+  var fill = document.getElementById('fillProgresso');
+  if (txt) txt.textContent = respondidas + ' de ' + total;
+  if (fill) fill.style.width = pct + '%';
+  var btnCorrigir = document.getElementById('btnCorrigir');
+  if (btnCorrigir) btnCorrigir.disabled = respondidas < total;
+}
+
+function corrigirQuiz() {
+  var acertos = 0;
+  var total = BANCO_AVALIACAO.length;
+  var feedbackHtml = '';
+  var linhasResumo = [];
+  var temas = { estrutura: [0, 0], semantica: [0, 0], acessibilidade: [0, 0], responsividade: [0, 0] };
+  var mapaTema = { q1: 'estrutura', q2: 'estrutura', q3: 'estrutura', q4: 'estrutura', q5: 'semantica', q6: 'semantica', q7: 'semantica', q8: 'semantica', q9: 'estrutura', q10: 'estrutura', q11: 'acessibilidade', q12: 'acessibilidade', q13: 'responsividade', q14: 'semantica', q15: 'responsividade' };
+  var nome = (document.getElementById('alunoNome').value || '').trim() || 'Estudante Não Identificado';
+  var turma = (document.getElementById('alunoTurma').value || '').trim() || 'Turma Geral';
+  var dataHora = new Date().toLocaleString('pt-BR');
+
+  BANCO_AVALIACAO.forEach(function (q, idx) {
+    var num = idx + 1;
+    var resp = respostasAluno[q.id];
+    var tema = mapaTema[q.id] || 'estrutura';
+    temas[tema][1]++;
+
+    var qEl = document.getElementById(q.id);
+    if (qEl) {
+      qEl.querySelectorAll('.option').forEach(function (o) { o.classList.add('disabled'); });
+      var feed = document.getElementById('feed-' + q.id);
+      if (feed) {
+        feed.classList.add('mostrar');
+        feed.innerHTML = (resp === q.correta ? '✅ <strong>Correto!</strong> ' : '❌ <strong>Incorreta.</strong> ') + q.explicacao;
+        feed.classList.add(resp === q.correta ? 'ok' : 'no');
+      }
+      var corretaEl = qEl.querySelector('.option[data-letra="' + q.correta + '"]');
+      if (corretaEl) corretaEl.classList.add('correct');
+      if (resp && resp !== q.correta) {
+        var escolhida = qEl.querySelector('.option[data-letra="' + resp + '"]');
+        if (escolhida) escolhida.classList.add('wrong');
+      }
+    }
+
+    if (resp === q.correta) {
+      acertos++; temas[tema][0]++;
+      feedbackHtml += '<div style="padding:10px 0;border-bottom:1px solid #e2e8f0;text-align:left;font-size:.9rem;color:#15803d;">✅ <strong>Q' + num + ':</strong> Correta!<div style="color:#64748b;font-style:italic;margin-left:18px;margin-top:2px;">' + q.explicacao + '</div></div>';
+      linhasResumo.push('Q' + num + ': [OK] Alternativa (' + resp + ')');
+    } else {
+      feedbackHtml += '<div style="padding:10px 0;border-bottom:1px solid #e2e8f0;text-align:left;font-size:.9rem;color:#b91c1c;">❌ <strong>Q' + num + ':</strong> Incorreta (Marcou: ' + (resp || 'Em branco') + ' | Gabarito: ' + q.correta + ').<div style="color:#64748b;font-style:italic;margin-left:18px;margin-top:2px;">' + q.explicacao + '</div></div>';
+      linhasResumo.push('Q' + num + ': [ERRO] Marcou (' + (resp || '-') + ') (Gabarito: ' + q.correta + ')');
+    }
+  });
+
+  var percentual = Math.round((acertos / total) * 100);
+  var diag = 'Recomenda-se revisar os conceitos estruturais, semânticos e de acessibilidade das tabelas.';
+  if (percentual >= 85) diag = '🏆 Excelente! Domínio pleno.';
+  else if (percentual >= 65) diag = '👏 Bom rendimento!';
+
+  document.getElementById('pontuacaoNota').textContent = acertos + ' / ' + total;
+  document.getElementById('msgDiagnostico').textContent = 'Aproveitamento: ' + percentual + '% (' + diag + ')';
+  document.getElementById('listaFeedback').innerHTML = feedbackHtml;
+
+  var linhasTema = [
+    'Estrutura e tags: ' + temas.estrutura[0] + '/' + temas.estrutura[1],
+    'Semântica e scope: ' + temas.semantica[0] + '/' + temas.semantica[1],
+    'Acessibilidade e ARIA: ' + temas.acessibilidade[0] + '/' + temas.acessibilidade[1],
+    'Responsividade: ' + temas.responsividade[0] + '/' + temas.responsividade[1]
+  ];
+
+  var textoRelatorio =
+    '====================================================\n' +
+    'RELATÓRIO OFICIAL: TEMA 04 - TABELAS EM HTML\n' +
+    'Estudante: ' + nome + '\n' +
+    'Turma: ' + turma + '\n' +
+    'Data/Hora: ' + dataHora + '\n' +
+    'Nota: ' + acertos + ' de ' + total + ' (' + percentual + '%) - ' + diag + '\n' +
+    '----------------------------------------------------\n' +
+    'DESEMPENHO POR TEMA:\n' + linhasTema.join('\n') + '\n' +
+    '----------------------------------------------------\n' +
+    'DETALHAMENTO:\n' + linhasResumo.join('\n') + '\n' +
+    '====================================================';
+
+  document.getElementById('txtCopiaRelatorio').value = textoRelatorio;
+  var res = document.getElementById('caixaResultado');
+  res.style.display = 'block';
+  document.getElementById('btnCopiarRel').disabled = false;
+  document.getElementById('btnImprimir').disabled = false;
+  res.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function limparRespostas() {
+  if (!confirm('Deseja limpar todas as respostas?')) return;
+  Object.keys(respostasAluno).forEach(function (k) { delete respostasAluno[k]; });
+  Object.keys(questoesFinalizadas).forEach(function (k) { delete questoesFinalizadas[k]; });
+  document.querySelectorAll('.question').forEach(function (q) {
+    q.classList.remove('correta-q', 'errada-q');
+    q.querySelectorAll('.option').forEach(function (opt) {
+      opt.classList.remove('selecionada', 'correct', 'wrong', 'disabled');
+      var rad = opt.querySelector('input');
+      if (rad) rad.checked = false;
+    });
+    var feed = q.querySelector('.feedback-imediato');
+    if (feed) { feed.classList.remove('mostrar', 'ok', 'no'); feed.innerHTML = ''; }
+  });
+  var res = document.getElementById('caixaResultado');
+  if (res) res.style.display = 'none';
+  var txtRel = document.getElementById('txtCopiaRelatorio');
+  if (txtRel) txtRel.value = '';
+  document.getElementById('btnCopiarRel').disabled = true;
+  document.getElementById('btnImprimir').disabled = true;
+  atualizarProgressoQuiz();
+}
+
+function atualizarModoVisual() {
+  var aviso = document.getElementById('avisoModoProva');
+  if (!aviso) return;
+  aviso.style.display = modoAtual === 'prova' ? 'block' : 'none';
+}
+
+function trocarModo(modo) {
+  if (modoAtual === modo) return;
+  if (Object.keys(respostasAluno).length > 0) {
+    if (!confirm('Trocar de modo apaga as respostas já dadas. Deseja continuar?')) return;
+  }
+  modoAtual = modo;
+  limparRespostasSemConfirmar();
+  document.querySelectorAll('.modo-tab').forEach(function (b) {
+    var ativo = b.dataset.modo === modo;
+    b.classList.toggle('active', ativo);
+    b.setAttribute('aria-selected', ativo ? 'true' : 'false');
+  });
+  atualizarModoVisual();
+}
+
+function limparRespostasSemConfirmar() {
+  Object.keys(respostasAluno).forEach(function (k) { delete respostasAluno[k]; });
+  Object.keys(questoesFinalizadas).forEach(function (k) { delete questoesFinalizadas[k]; });
+  document.querySelectorAll('.question').forEach(function (q) {
+    q.classList.remove('correta-q', 'errada-q');
+    q.querySelectorAll('.option').forEach(function (opt) {
+      opt.classList.remove('selecionada', 'correct', 'wrong', 'disabled');
+      var rad = opt.querySelector('input');
+      if (rad) rad.checked = false;
+    });
+    var feed = q.querySelector('.feedback-imediato');
+    if (feed) { feed.classList.remove('mostrar', 'ok', 'no'); feed.innerHTML = ''; }
+  });
+  var res = document.getElementById('caixaResultado');
+  if (res) res.style.display = 'none';
+  var txtRel = document.getElementById('txtCopiaRelatorio');
+  if (txtRel) txtRel.value = '';
+  document.getElementById('btnCopiarRel').disabled = true;
+  document.getElementById('btnImprimir').disabled = true;
+  atualizarProgressoQuiz();
+}
+
+function copiarRelatorio(botao) {
+  var t = document.getElementById('txtCopiaRelatorio');
+  if (!t || !t.value) return;
+  copiarTexto(t.value, botao);
+}
+
+function imprimirRelatorioPDF() {
+  var btnImprimir = document.getElementById('btnImprimir');
+  if (btnImprimir && btnImprimir.disabled) { mostrarToast('⚠️ Finalize primeiro.'); return; }
+  document.getElementById('printNome').textContent = (document.getElementById('alunoNome').value || '').trim() || 'Estudante Não Identificado';
+  document.getElementById('printTurma').textContent = (document.getElementById('alunoTurma').value || '').trim() || 'Turma Geral';
+  document.getElementById('printData').textContent = new Date().toLocaleString('pt-BR');
+  document.getElementById('printScore').textContent = document.getElementById('pontuacaoNota').textContent;
+  var printCont = document.getElementById('printQuestoesContainer');
+  printCont.innerHTML = '';
+  BANCO_AVALIACAO.forEach(function (q, idx) {
+    var resp = respostasAluno[q.id] || 'Em branco';
+    var div = document.createElement('div');
+    div.className = 'print-q';
+    div.innerHTML = '<h4>Q' + (idx + 1) + ': ' + q.pergunta + '</h4>' +
+      '<div class="resp"><strong>Sua Resposta:</strong> (' + resp + ') &bull; <strong>Gabarito:</strong> (' + q.correta + ') &bull; <em>' + q.explicacao + '</em></div>';
+    printCont.appendChild(div);
+  });
+  requestAnimationFrame(function () { requestAnimationFrame(function () { window.print(); }); });
+}
+
+window.addEventListener('DOMContentLoaded', function () {
+  ['lab1', 'lab2', 'lab3', 'lab4', 'lab5', 'responsive-demo'].forEach(function (labId) {
+    var lab = CODIGOS_LABS[labId];
+    if (!lab) return;
+    var paneHtml = document.getElementById(labId + '-pane-html');
+    var paneCss = document.getElementById(labId + '-pane-css');
+    var paneTudo = document.getElementById(labId + '-pane-tudo');
+    if (paneHtml) paneHtml.querySelector('pre').textContent = lab.html;
+    if (paneCss) paneCss.querySelector('pre').textContent = lab.css;
+    if (paneTudo) paneTudo.querySelector('pre').textContent = montarArquivoUnico(lab);
+  });
+
+  document.querySelectorAll('.tab-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () { trocarAba(btn.dataset.aba, btn); });
+  });
+
+  document.querySelectorAll('.code-aba-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () { trocarAbaLab(btn.dataset.lab, btn.dataset.pane, btn); });
+  });
+
+  document.querySelectorAll('.copy-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () { copiarCodigoLab(btn.dataset.copiar, btn); });
+  });
+
+  document.querySelectorAll('.run-oc-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var original = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = '⏳ Enviando…';
+      try { executarOneCompilerLab(btn.dataset.onecompiler); }
+      finally {
+        setTimeout(function () { btn.disabled = false; btn.textContent = original; }, 1200);
+      }
+    });
+  });
+
+  document.querySelectorAll('.run-inline-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () { abrirPreviewInline(btn.dataset.previewInline); });
+  });
+
+  document.querySelectorAll('.download-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () { baixarLab(btn.dataset.download); });
+  });
+
+  document.querySelectorAll('#mapaTabela [data-no]').forEach(function (el) {
+    el.addEventListener('click', function () { destacarMapa(el.dataset.no); });
+  });
+
+  document.querySelectorAll('.btn-revelar').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var alvo = document.getElementById(btn.dataset.alvo);
+      if (!alvo) return;
+      var visivel = alvo.classList.toggle('mostrar');
+      btn.textContent = visivel ? '🙈 Ocultar resposta' : '👀 Revelar resposta';
+    });
+  });
+
+  document.querySelectorAll('.modo-tab').forEach(function (btn) {
+    btn.addEventListener('click', function () { trocarModo(btn.dataset.modo); });
+  });
+
+  inicializarQuestoes();
+
+  var btnCorrigir = document.getElementById('btnCorrigir');
+  if (btnCorrigir) btnCorrigir.addEventListener('click', corrigirQuiz);
+  var btnLimpar = document.getElementById('btnLimpar');
+  if (btnLimpar) btnLimpar.addEventListener('click', limparRespostas);
+  var btnCopiar = document.getElementById('btnCopiarRel');
+  if (btnCopiar) btnCopiar.addEventListener('click', function () { copiarRelatorio(btnCopiar); });
+  var btnImprimir = document.getElementById('btnImprimir');
+  if (btnImprimir) btnImprimir.addEventListener('click', imprimirRelatorioPDF);
+  var btnTopo = document.getElementById('btnTopo');
+  if (btnTopo) btnTopo.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+
+  atualizarProgressoQuiz();
+});
+</script>
+
+</body></html>

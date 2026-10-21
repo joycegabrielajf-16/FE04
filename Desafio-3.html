@@ -1,0 +1,244 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cronograma de Projetos</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      color: #1e293b;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 8px 25px rgba(15, 23, 42, 0.08);
+    }
+
+    .topo {
+      margin-bottom: 25px;
+    }
+
+    .topo h1 {
+      font-size: 28px;
+      color: #1e3a8a;
+      margin-bottom: 8px;
+    }
+
+    .topo p {
+      color: #64748b;
+      line-height: 1.6;
+    }
+
+    .tabela-wrapper {
+      overflow-x: auto;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    caption {
+      padding: 16px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #334155;
+      text-align: left;
+    }
+
+    thead {
+      background: #1e3a8a;
+      color: white;
+    }
+
+    th, td {
+      padding: 16px;
+      border-bottom: 1px solid #e2e8f0;
+      white-space: nowrap;
+    }
+
+    thead th {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    tbody th {
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    tbody tr:nth-child(even) {
+      background: #f8fafc;
+    }
+
+    tbody tr:hover {
+      background: #eff6ff;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .concluido {
+      color: #166534;
+      background: #dcfce7;
+    }
+
+    .andamento {
+      color: #92400e;
+      background: #fef3c7;
+    }
+
+    .atrasado {
+      color: #991b1b;
+      background: #fee2e2;
+    }
+
+    tfoot {
+      background: #eff6ff;
+      font-weight: bold;
+      color: #1e3a8a;
+    }
+
+    tfoot td {
+      border-bottom: none;
+      padding: 18px 16px;
+    }
+
+    tfoot td:last-child {
+      text-align: center;
+      font-size: 20px;
+      color: #dc2626;
+    }
+
+    .rodape {
+      margin-top: 20px;
+      color: #64748b;
+      font-size: 13px;
+      text-align: right;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 15px 8px;
+      }
+
+      .container {
+        padding: 18px 12px;
+      }
+
+      .topo h1 {
+        font-size: 23px;
+      }
+
+      th, td {
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <header class="topo">
+      <h1>📋 Cronograma de Projetos</h1>
+      <p>
+        Feira de Projetos do Semestre — acompanhamento
+        de prazos, equipes e andamento das entregas.
+      </p>
+    </header>
+
+    <div class="tabela-wrapper">
+      <table>
+        <caption>Projetos e status das atividades</caption>
+
+        <thead>
+          <tr>
+            <th scope="col">Projeto</th>
+            <th scope="col">Responsável</th>
+            <th scope="col">Equipe</th>
+            <th scope="col">Prazo</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+
+        <tfoot>
+          <tr>
+            <td colspan="4">Total de projetos atrasados</td>
+            <td>2</td>
+          </tr>
+        </tfoot>
+
+        <tbody>
+          <tr>
+            <th scope="row">Site da Feira</th>
+            <td>Ana</td>
+            <td>Equipe Alpha</td>
+            <td>10/11/2026</td>
+            <td>
+              <span class="status concluido">Concluído</span>
+            </td>
+          </tr>
+
+          <tr>
+            <th scope="row">Maquete Sustentável</th>
+            <td>Pedro</td>
+            <td>Equipe Verde</td>
+            <td>12/11/2026</td>
+            <td>
+              <span class="status andamento">Em andamento</span>
+            </td>
+          </tr>
+
+          <tr>
+            <th scope="row">Robótica</th>
+            <td>Maria</td>
+            <td>Equipe Tech</td>
+            <td>08/10/2026</td>
+            <td>
+              <span class="status atrasado">Atrasado</span>
+            </td>
+          </tr>
+
+          <tr>
+            <th scope="row">Energia Solar</th>
+            <td>João</td>
+            <td>Equipe Solar</td>
+            <td>09/10/2026</td>
+            <td>
+              <span class="status atrasado">Atrasado</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="rodape">
+      Feira de Projetos • Semestre 2026
+    </p>
+  </main>
+</body>
+</html>

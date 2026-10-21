@@ -1,0 +1,1500 @@
+<!DOCTYPE html>
+<!-- saved from url=(0068)https://almeida-cma.github.io/fe04/t4_acessibilidade_tabelas_v2.html -->
+<html lang="pt-BR"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📊 TEMA 04 • Semântica de Tabelas — Árvore de Acessibilidade + Lighthouse</title>
+<style>
+  :root{
+    --bg-body:#06101c; --surface-dark:#0f1b2d; --surface-hover:#1b2a42;
+    --card-white:#ffffff; --primary:#0369a1; --primary-hover:#075985;
+    --primary-light:#38bdf8; --accent:#0d9488; --accent-light:#2dd4bf;
+    --text-dark:#0f172a; --text-muted:#64748b;
+    --border-light:#e2e8f0; --border-dark:#334155; --radius-main:20px;
+    --transicao:all .25s ease;
+    --col-header:#10b981; --col-row:#3b82f6; --col-cell:#94a3b8;
+    --col-caption:#f59e0b; --col-table:#8b5cf6;
+    --lh-green:#0cce6b; --lh-yellow:#ffa400; --lh-red:#ff4e42;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    background:radial-gradient(circle at 10% 15%,#062a3a 0%,#06101c 65%);
+    color:var(--text-dark);min-height:100vh;padding:24px 14px 90px;line-height:1.6;}
+  .container{max-width:1150px;margin:0 auto;}
+
+  .header{background:linear-gradient(135deg,#0c4a6e 0%,#0369a1 50%,#0d9488 100%);
+    border-radius:var(--radius-main);padding:38px 24px;margin-bottom:24px;text-align:center;
+    color:#fff;box-shadow:0 12px 35px rgba(3,105,161,.4);}
+  .header h1{font-size:2.1rem;margin-bottom:8px;letter-spacing:-.5px;
+    display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;}
+  .header h1 span{color:#a7f3d0;}
+  .header p{opacity:.95;font-size:1.05rem;max-width:900px;margin:0 auto;}
+  .badge-group{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:18px;}
+  .badge{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);
+    padding:5px 14px;border-radius:30px;font-size:.75rem;font-weight:700;color:#fff;}
+
+  .tabs-nav{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:22px;}
+  .tab-btn{background:var(--surface-dark);color:#94a3b8;border:1px solid var(--border-dark);
+    padding:12px 18px;border-radius:30px;font-size:.88rem;font-weight:700;cursor:pointer;
+    white-space:nowrap;transition:var(--transicao);font-family:inherit;}
+  .tab-btn:hover{color:#fff;background:var(--surface-hover);}
+  .tab-btn.active{background:linear-gradient(135deg,#075985,#0d9488);color:#fff;
+    border-color:#2dd4bf;box-shadow:0 0 16px rgba(13,148,136,.45);}
+  .tab-content{display:none;animation:fadeIn .3s ease-out;}
+  .tab-content.active{display:block;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+  .card{background:var(--card-white);border-radius:var(--radius-main);padding:28px;
+    margin-bottom:24px;box-shadow:0 10px 30px rgba(0,0,0,.15);}
+  .card h2{color:#075985;margin-bottom:14px;border-left:5px solid var(--primary);
+    padding-left:12px;font-size:1.45rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .card h3{color:#0f172a;margin:22px 0 10px 0;font-size:1.15rem;border-bottom:2px dashed #cbd5e1;padding-bottom:6px;}
+  .card h4{color:#1e293b;margin:18px 0 8px 0;font-size:1rem;font-weight:700;}
+  .card p{color:#334155;margin-bottom:12px;font-size:.96rem;}
+  .card ul,.card ol{color:#334155;line-height:1.8;margin:8px 0 14px 25px;font-size:.95rem;}
+
+  .highlight-box{padding:16px 20px;border-radius:12px;margin:14px 0;font-size:.94rem;line-height:1.7;}
+  .highlight-box.blue{background:#e0f2fe;border-left:5px solid #0284c7;color:#0c4a6e;}
+  .highlight-box.amber{background:#fef3c7;border-left:5px solid #d97706;color:#78350f;}
+  .highlight-box.rose{background:#ffe4e6;border-left:5px solid #e11d48;color:#881337;}
+  .highlight-box.green{background:#dcfce7;border-left:5px solid #16a34a;color:#14532d;}
+  .highlight-box.purple{background:#ede9fe;border-left:5px solid #7c3aed;color:#4c1d95;}
+  .highlight-box code{background:rgba(255,255,255,.85);border:1px solid rgba(0,0,0,.15);
+    color:#0f172a;padding:2px 6px;border-radius:4px;font-weight:800;font-family:'Courier New',monospace;font-size:.88em;}
+
+  code{background:#f1f5f9;color:#0c4a6e;padding:2px 6px;border-radius:4px;
+    font-family:'Courier New',monospace;font-weight:700;font-size:.88em;border:1px solid var(--border-light);}
+
+  /* ============ COMPARAÇÃO LADO A LADO ============ */
+  .comparacao-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:18px 0;}
+  .comparacao-grid.tres{grid-template-columns:1fr 1fr 1fr;}
+  .bloco-comparacao{background:#f8fafc;border:2px solid var(--border-light);border-radius:14px;
+    overflow:hidden;display:flex;flex-direction:column;}
+  .bloco-comparacao.semantica{border-color:#86efac;}
+  .bloco-comparacao.sem-semantica{border-color:#fca5a5;}
+  .bloco-header{padding:14px 18px;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:10px;}
+  .bloco-comparacao.semantica .bloco-header{background:linear-gradient(135deg,#15803d,#16a34a);}
+  .bloco-comparacao.sem-semantica .bloco-header{background:linear-gradient(135deg,#b91c1c,#dc2626);}
+  .bloco-header h3{color:#fff;margin:0;border:0;font-size:1rem;padding:0;font-weight:800;}
+  .bloco-nivel{background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.4);
+    padding:3px 10px;border-radius:20px;font-size:.7rem;font-weight:800;text-transform:uppercase;}
+  .bloco-comparacao .bloco-body{padding:16px 18px;flex:1;display:flex;flex-direction:column;gap:12px;}
+
+  .preview-render{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:14px;
+    font-family:Arial,sans-serif;font-size:.86rem;}
+  .preview-render h1{color:#0f172a;font-size:1.1rem;font-weight:bold;margin-bottom:14px;}
+  .preview-render table{width:100%;max-width:100%;border-collapse:collapse;}
+  .preview-render caption{font-weight:bold;margin-bottom:8px;text-align:left;color:#0f172a;}
+  .preview-render th,.preview-render td{border:1px solid #777;padding:8px;text-align:left;font-size:.84rem;}
+  .preview-render thead{background:#e5e7eb;}
+
+  /* ============ CÓDIGO ============ */
+  .code-wrapper{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--border-dark);background:#0a1420;}
+  .code-header{display:flex;justify-content:space-between;align-items:center;
+    background:#0f1b2d;padding:8px 14px;border-bottom:1px solid var(--border-dark);flex-wrap:wrap;gap:6px;}
+  .code-title{color:#7dd3fc;font-size:.78rem;font-weight:700;font-family:monospace;}
+  .code-actions{display:flex;gap:6px;flex-wrap:wrap;}
+  .code-actions button{border:none;padding:5px 12px;border-radius:6px;cursor:pointer;
+    font-size:.72rem;font-weight:700;transition:var(--transicao);
+    display:inline-flex;align-items:center;gap:4px;font-family:inherit;}
+  .copy-btn{background:#10b981;color:#042f2e;}
+  .copy-btn:hover{background:#059669;color:#fff;}
+  .run-inline-btn{background:#0284c7;color:#fff;}
+  .run-inline-btn:hover{background:#0369a1;}
+  .lh-btn{background:#0cce6b;color:#042f2e;}
+  .lh-btn:hover{background:#0eaa5c;color:#fff;}
+  .code-pane{padding:14px 16px;color:#e2e8f0;font-family:'Courier New',monospace;
+    font-size:.76rem;line-height:1.6;overflow-x:auto;white-space:pre;max-height:360px;}
+  .preview-inline{margin:12px 0 0;border:1px solid var(--border-dark);border-radius:10px;overflow:hidden;background:#0a1420;}
+  .preview-inline .preview-header{display:flex;justify-content:space-between;align-items:center;
+    padding:6px 12px;background:#0f1b2d;border-bottom:1px solid #1e293b;color:#cbd5e1;
+    font-size:.72rem;font-weight:700;font-family:monospace;gap:8px;}
+  .preview-inline .preview-close{background:transparent;border:1px solid #334155;color:#f87171;
+    padding:2px 8px;border-radius:5px;cursor:pointer;font-size:.68rem;font-weight:700;font-family:inherit;}
+  .preview-inline iframe{width:100%;height:360px;border:none;background:#fff;display:block;}
+
+  /* ============ ÁRVORE DE ACESSIBILIDADE ============ */
+  .arvore-wrap{background:#0a1420;border:2px solid var(--border-dark);border-radius:14px;
+    padding:18px;margin:12px 0;font-family:'Courier New',monospace;font-size:.74rem;
+    line-height:1.65;overflow-x:auto;color:#e2e8f0;}
+  .arvore-linha{padding:2px 0;white-space:pre;}
+  .arvore-tipo{display:inline-block;padding:1px 6px;border-radius:4px;
+    font-weight:800;font-size:.72rem;margin-right:6px;}
+  .tipo-root{background:#475569;color:#f1f5f9;}
+  .tipo-heading{background:#7c3aed;color:#fff;}
+  .tipo-table{background:#8b5cf6;color:#fff;}
+  .tipo-caption{background:#d97706;color:#fff;}
+  .tipo-rowgroup{background:#64748b;color:#fff;}
+  .tipo-row{background:#475569;color:#f1f5f9;}
+  .tipo-columnheader{background:#10b981;color:#042f2e;}
+  .tipo-rowheader{background:#3b82f6;color:#fff;}
+  .tipo-cell{background:#94a3b8;color:#0f172a;}
+  .tipo-static{background:#334155;color:#cbd5e1;}
+  .arvore-badge-diferenca{display:inline-block;padding:1px 8px;border-radius:6px;
+    font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-left:6px;}
+  .badge-bom{background:#dcfce7;color:#14532d;}
+  .badge-ruim{background:#fee2e2;color:#991b1b;}
+
+  /* ============ COMPARAÇÃO SEMÂNTICA ============ */
+  .tabela-comparacao{width:100%;border-collapse:collapse;margin:16px 0;font-size:.9rem;}
+  .tabela-comparacao th{background:linear-gradient(135deg,#0c4a6e,#0d9488);color:#fff;
+    padding:12px 14px;text-align:left;font-weight:600;}
+  .tabela-comparacao td{padding:12px 14px;border-bottom:1px solid var(--border-light);
+    color:#334155;vertical-align:top;}
+  .tabela-comparacao tr:hover td{background:#f8fafc;}
+  .tabela-comparacao tr.headline td{background:#fef3c7;font-weight:700;color:#78350f;}
+
+  /* ============ PASSOS CHROME ============ */
+  .passos-container{display:flex;flex-direction:column;gap:14px;margin:16px 0;}
+  .passo-item{background:#f8fafc;border-left:4px solid #0284c7;border-radius:10px;
+    padding:14px 18px;display:flex;gap:14px;align-items:flex-start;}
+  .passo-numero{background:linear-gradient(135deg,#0284c7,#0369a1);color:#fff;
+    width:32px;height:32px;border-radius:50%;display:flex;align-items:center;
+    justify-content:center;font-weight:900;font-size:1rem;flex-shrink:0;}
+  .passo-conteudo{flex:1;}
+  .passo-conteudo strong{display:block;color:#075985;font-size:.95rem;margin-bottom:4px;}
+  .passo-conteudo p{color:#334155;font-size:.9rem;margin-bottom:6px;}
+  .passo-conteudo .atalho{display:inline-block;background:#1e293b;color:#7dd3fc;
+    padding:2px 8px;border-radius:4px;font-family:'Courier New',monospace;
+    font-size:.82em;font-weight:700;border:1px solid #475569;margin:0 2px;}
+  .passo-conteudo code{font-size:.84em;}
+
+  .chrome-fake{background:#202124;color:#e8eaed;border-radius:8px;padding:12px;
+    font-family:'Courier New',monospace;font-size:.76rem;margin-top:10px;
+    overflow-x:auto;white-space:pre;line-height:1.6;border:1px solid #3c4043;}
+  .chrome-fake .chrome-aba{color:#8ab4f8;font-weight:700;}
+  .chrome-fake .chrome-linha{color:#fdd663;}
+
+  /* ============ LIGHTHOUSE (LH) ============ */
+  .lh-explicacao{background:linear-gradient(135deg,#0f1b2d 0%,#1e293b 100%);
+    color:#e2e8f0;border-radius:16px;padding:22px 24px;margin:16px 0;
+    border-left:6px solid var(--lh-green);}
+  .lh-explicacao h4{color:#7dd3fc;margin-bottom:10px;font-size:1.1rem;
+    display:flex;align-items:center;gap:8px;}
+  .lh-explicacao p{color:#cbd5e1;font-size:.94rem;margin-bottom:10px;}
+  .lh-explicacao code{background:#0a1420;color:#7dd3fc;border:1px solid #334155;}
+
+  .lh-score-card{display:flex;gap:16px;flex-wrap:wrap;align-items:center;
+    padding:20px;border-radius:14px;margin:14px 0;border:2px solid;}
+  .lh-score-card.com{border-color:#86efac;background:#f0fdf4;}
+  .lh-score-card.sem{border-color:#fca5a5;background:#fef2f2;}
+  .lh-score-gauge{width:88px;height:88px;border-radius:50%;display:flex;
+    align-items:center;justify-content:center;font-size:1.5rem;font-weight:900;
+    flex-shrink:0;position:relative;}
+  .lh-score-gauge.com{background:conic-gradient(var(--lh-green) 0deg 360deg,#e5e7eb 360deg);}
+  .lh-score-gauge.sem{background:conic-gradient(var(--lh-red) 0deg 120deg,#e5e7eb 120deg);}
+  .lh-score-gauge::before{content:"";position:absolute;inset:8px;
+    border-radius:50%;background:#fff;}
+  .lh-score-gauge span{position:relative;z-index:1;color:#0f172a;}
+  .lh-score-gauge.com span{color:#15803d;}
+  .lh-score-gauge.sem span{color:#b91c1c;}
+  .lh-score-body{flex:1;min-width:220px;}
+  .lh-score-body h5{color:#0f172a;font-size:1rem;margin-bottom:6px;}
+  .lh-score-body p{color:#334155;font-size:.88rem;margin:0;}
+
+  .lh-audit-list{background:#0a1420;border-radius:12px;padding:16px 18px;margin:12px 0;
+    color:#e2e8f0;font-family:'Courier New',monospace;font-size:.82rem;line-height:1.7;}
+  .lh-audit-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid #1e293b;align-items:flex-start;}
+  .lh-audit-item:last-child{border-bottom:0;}
+  .lh-audit-icon{width:22px;height:22px;border-radius:50%;display:flex;
+    align-items:center;justify-content:center;font-weight:900;font-size:.75rem;flex-shrink:0;}
+  .lh-audit-icon.pass{background:#0cce6b;color:#042f2e;}
+  .lh-audit-icon.fail{background:#ff4e42;color:#fff;}
+  .lh-audit-icon.warn{background:#ffa400;color:#1e293b;}
+  .lh-audit-text{color:#cbd5e1;}
+  .lh-audit-text strong{color:#f1f5f9;}
+
+  /* ============ QUIZ ============ */
+  .quiz-header{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;
+    background:#0f1b2d;color:#fff;padding:14px 20px;border-radius:12px;margin-bottom:20px;}
+  .quiz-header .progresso-texto{font-size:.9rem;}
+  .barra-fundo{flex:1;min-width:140px;height:10px;background:#334155;border-radius:5px;overflow:hidden;}
+  .barra-preenchimento{height:100%;width:0%;background:linear-gradient(90deg,#38bdf8,#0d9488);transition:width .3s;}
+
+  .question{background:#f8fafc;border-radius:12px;padding:18px 20px;margin-bottom:16px;
+    border-left:4px solid var(--primary);border-top:1px solid var(--border-light);
+    border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);}
+  .question-header{font-weight:700;color:#0f172a;margin-bottom:12px;display:flex;
+    align-items:flex-start;gap:10px;font-size:.96rem;line-height:1.5;}
+  .question-header code{font-size:.92em;background:#e0f2fe;border-color:#7dd3fc;color:#0c4a6e;padding:1px 6px;}
+  .question-number{background:var(--primary);color:#fff;width:26px;height:26px;border-radius:50%;
+    text-align:center;line-height:26px;font-size:12px;font-weight:bold;flex-shrink:0;margin-top:2px;}
+  .options{display:flex;flex-direction:column;gap:8px;}
+  .option{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fff;
+    border-radius:8px;border:2px solid var(--border-light);cursor:pointer;
+    transition:var(--transicao);font-size:.9rem;color:#334155;}
+  .option:hover:not(.disabled){border-color:var(--primary);background:#e0f2fe;transform:translateX(3px);}
+  .option.selecionada{border-color:#0284c7;background:#e0f2fe;}
+  .option input{accent-color:var(--primary);}
+
+  .results{background:#fff;border:2px solid #0d9488;border-radius:12px;padding:18px 22px;
+    margin-top:20px;display:none;}
+  .results.mostrar{display:block;}
+  .results h4{color:#115e59;margin-bottom:10px;}
+  .results .gabarito-item{padding:8px 0;border-bottom:1px solid #e2e8f0;font-size:.88rem;color:#334155;}
+  .results .gabarito-item strong{color:#0f766e;}
+
+  .btn-grupo{display:flex;gap:10px;justify-content:center;margin-top:22px;flex-wrap:wrap;}
+  .btn{background:linear-gradient(135deg,var(--primary),#0d9488);color:#fff;border:none;
+    padding:12px 26px;border-radius:30px;cursor:pointer;font-size:.95rem;font-weight:700;
+    transition:var(--transicao);font-family:inherit;}
+  .btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 6px 18px rgba(3,105,161,.35);}
+  .btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none;}
+  .btn-secondary{background:#64748b;}
+
+  .toast-notificacao{position:fixed;bottom:24px;right:24px;background:#0d9488;color:#fff;
+    padding:12px 20px;border-radius:10px;font-weight:bold;font-size:.85rem;
+    box-shadow:0 10px 25px rgba(0,0,0,.3);display:none;z-index:9999;
+    animation:slideUp .3s ease;max-width:340px;line-height:1.5;}
+  @keyframes slideUp{from{transform:translateY(20px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+  .btn-top{position:fixed;bottom:20px;right:20px;background:var(--primary);color:#fff;
+    border:none;padding:10px 18px;border-radius:50px;cursor:pointer;font-size:12px;
+    font-weight:700;box-shadow:0 4px 15px rgba(0,0,0,.25);z-index:100;}
+
+  @media (max-width:820px){
+    .comparacao-grid,.comparacao-grid.tres{grid-template-columns:1fr;}
+  }
+  @media (max-width:768px){
+    .header h1{font-size:1.6rem;}
+    .card{padding:18px 14px;}
+    .tab-btn{padding:10px 14px;font-size:.8rem;}
+    .preview-inline iframe{height:300px;}
+    .lh-score-card{flex-direction:column;align-items:flex-start;}
+  }
+</style>
+</head>
+<body>
+
+<div class="container" id="inicio">
+  <header class="header">
+    <h1>📊 TEMA <span>04</span> • Semântica de Tabelas</h1>
+    <p>Do <code style="background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.35);color:#fff;">th</code> ao Lighthouse: como a árvore de acessibilidade e a auditoria do Chrome explicam a mesma diferença</p>
+    <div class="badge-group">
+      <span class="badge">🔍 Comparação visual</span>
+      <span class="badge">🌳 Árvore de acessibilidade</span>
+      <span class="badge">💻 Passo a passo no Chrome</span>
+      <span class="badge">🧪 Lighthouse</span>
+      <span class="badge">📝 Questionário</span>
+    </div>
+  </header>
+
+  <nav class="tabs-nav">
+    <button type="button" class="tab-btn" data-aba="aba-comparacao">🔍 1. Comparação</button>
+    <button type="button" class="tab-btn" data-aba="aba-arvore">🌳 2. Árvore de acessibilidade</button>
+    <button type="button" class="tab-btn" data-aba="aba-chrome">💻 3. Passo a passo no Chrome</button>
+    <button type="button" class="tab-btn" data-aba="aba-lh">🧪 4. Lighthouse (LH)</button>
+    <button type="button" class="tab-btn active" data-aba="aba-quiz">📝 5. Questionário</button>
+  </nav>
+
+  <!-- ============ ABA COMPARAÇÃO ============ -->
+  <div id="aba-comparacao" class="tab-content">
+    <section class="card">
+      <h2>🔍 O que muda quando usamos <code>th</code> em vez de <code>td</code></h2>
+      <p>À primeira vista, os dois exemplos parecem idênticos no navegador. Mesmo CSS, mesmo texto, mesmas cores. A diferença real está na <strong>árvore de acessibilidade</strong> — o modelo que leitores de tela, buscadores e leitores assistivos percorrem para entender a tabela.</p>
+
+      <div class="comparacao-grid">
+        <!-- COM SEMÂNTICA -->
+        <div class="bloco-comparacao semantica">
+          <div class="bloco-header">
+            <h3>✅ Com semântica</h3>
+            <span class="bloco-nivel">Acessível</span>
+          </div>
+          <div class="bloco-body">
+            <div class="preview-render">
+              <h1>Resultados da turma</h1>
+              <table>
+                <caption>Notas dos estudantes</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Aluno</th>
+                    <th scope="col">HTML</th>
+                    <th scope="col">CSS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">Ana</th>
+                    <td>9,0</td>
+                    <td>8,5</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">João</th>
+                    <td>7,5</td>
+                    <td>9,0</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="code-wrapper">
+              <div class="code-header">
+                <span class="code-title">teste-tabela.html</span>
+                <div class="code-actions">
+                  <button type="button" class="copy-btn" data-copiar="semantica">📋 Copiar</button>
+                  <button type="button" class="run-inline-btn" data-preview="semantica">🧪 Preview</button>
+                </div>
+              </div>
+              <div class="code-pane"><pre id="codigo-semantica">&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-BR"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;Teste de tabela acessível&lt;/title&gt;
+  &lt;style&gt;
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    caption {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    th, td {
+      border: 1px solid #777;
+      padding: 10px;
+      text-align: left;
+    }
+
+    thead {
+      background: #e5e7eb;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;h1&gt;Resultados da turma&lt;/h1&gt;
+
+  &lt;table&gt;
+    &lt;caption&gt;Notas dos estudantes&lt;/caption&gt;
+
+    &lt;thead&gt;
+      &lt;tr&gt;
+        &lt;th scope="col"&gt;Aluno&lt;/th&gt;
+        &lt;th scope="col"&gt;HTML&lt;/th&gt;
+        &lt;th scope="col"&gt;CSS&lt;/th&gt;
+      &lt;/tr&gt;
+    &lt;/thead&gt;
+
+    &lt;tbody&gt;
+      &lt;tr&gt;
+        &lt;th scope="row"&gt;Ana&lt;/th&gt;
+        &lt;td&gt;9,0&lt;/td&gt;
+        &lt;td&gt;8,5&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;th scope="row"&gt;João&lt;/th&gt;
+        &lt;td&gt;7,5&lt;/td&gt;
+        &lt;td&gt;9,0&lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</pre></div>
+            </div>
+            <div id="preview-semantica"></div>
+          </div>
+        </div>
+
+        <!-- SEM SEMÂNTICA -->
+        <div class="bloco-comparacao sem-semantica">
+          <div class="bloco-header">
+            <h3>❌ Sem semântica</h3>
+            <span class="bloco-nivel">Só visual</span>
+          </div>
+          <div class="bloco-body">
+            <div class="preview-render">
+              <h1>Resultados da turma</h1>
+              <table>
+                <caption>Notas dos estudantes</caption>
+                <thead>
+                  <tr>
+                    <td>Aluno</td>
+                    <td>HTML</td>
+                    <td>CSS</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Ana</td>
+                    <td>9,0</td>
+                    <td>8,5</td>
+                  </tr>
+                  <tr>
+                    <td>João</td>
+                    <td>7,5</td>
+                    <td>9,0</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="code-wrapper">
+              <div class="code-header">
+                <span class="code-title">teste-tabela-sem.html</span>
+                <div class="code-actions">
+                  <button type="button" class="copy-btn" data-copiar="sem-semantica">📋 Copiar</button>
+                  <button type="button" class="run-inline-btn" data-preview="sem-semantica">🧪 Preview</button>
+                </div>
+              </div>
+              <div class="code-pane"><pre id="codigo-sem-semantica">&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-BR"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;Teste de tabela sem cabeçalhos semânticos&lt;/title&gt;
+
+  &lt;style&gt;
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    caption {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    th, td {
+      border: 1px solid #777;
+      padding: 10px;
+      text-align: left;
+    }
+
+    thead {
+      background: #e5e7eb;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;h1&gt;Resultados da turma&lt;/h1&gt;
+
+  &lt;table&gt;
+    &lt;caption&gt;Notas dos estudantes&lt;/caption&gt;
+
+    &lt;thead&gt;
+      &lt;tr&gt;
+        &lt;td&gt;Aluno&lt;/td&gt;
+        &lt;td&gt;HTML&lt;/td&gt;
+        &lt;td&gt;CSS&lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/thead&gt;
+
+    &lt;tbody&gt;
+      &lt;tr&gt;
+        &lt;td&gt;Ana&lt;/td&gt;
+        &lt;td&gt;9,0&lt;/td&gt;
+        &lt;td&gt;8,5&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;td&gt;João&lt;/td&gt;
+        &lt;td&gt;7,5&lt;/td&gt;
+        &lt;td&gt;9,0&lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</pre></div>
+            </div>
+            <div id="preview-sem-semantica"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="highlight-box amber">
+        <strong>⚠️ O visual engana:</strong> os dois códigos renderizam <em>exatamente igual</em> na tela. A cor cinza do cabeçalho vem do CSS aplicado em <code>thead</code>, não da tag ser <code>&lt;th&gt;</code>. Se o CSS fosse removido, a versão "sem semântica" ainda ficaria com o cabeçalho na mesma cor — mas o leitor de tela continuaria perdido.
+      </div>
+
+      <h3>📊 O que muda, item por item</h3>
+      <table class="tabela-comparacao">
+        <thead>
+          <tr><th>Aspecto</th><th>Com semântica</th><th>Sem semântica</th></tr>
+        </thead>
+        <tbody>
+          <tr class="headline">
+            <td>Papel na árvore</td>
+            <td><code>columnheader</code> e <code>rowheader</code></td>
+            <td>Tudo vira <code>cell</code></td>
+          </tr>
+          <tr>
+            <td>Associação cabeçalho → dado</td>
+            <td>Leitor de tela sabe que "9,0" pertence à coluna HTML e à linha Ana</td>
+            <td>Nenhuma associação — a célula é apenas "9,0"</td>
+          </tr>
+          <tr>
+            <td>Navegação por cabeçalho</td>
+            <td>Usuário pode pular entre cabeçalhos (atalho do NVDA/VoiceOver)</td>
+            <td>Precisa ler célula por célula para reconstruir o contexto</td>
+          </tr>
+          <tr>
+            <td>Anúncio do leitor de tela</td>
+            <td>"HTML, coluna. Ana, linha. 9,0."</td>
+            <td>"9,0." (sem referência)</td>
+          </tr>
+          <tr>
+            <td>SEO e extração de dados</td>
+            <td>Robôs de busca entendem a estrutura semântica da tabela</td>
+            <td>Robôs só veem texto solto dentro de uma grade</td>
+          </tr>
+          <tr>
+            <td>Nota do Lighthouse (Acessibilidade)</td>
+            <td>Alta — passa nas auditorias de cabeçalho</td>
+            <td>Baixa — alerta sobre tabela sem cabeçalhos</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+
+  <!-- ============ ABA ÁRVORE ============ -->
+  <div id="aba-arvore" class="tab-content">
+    <section class="card">
+      <h2>🌳 A árvore de acessibilidade — onde a diferença aparece</h2>
+      <p>Esta é a árvore que o Chrome monta e entrega ao leitor de tela. Ela não é o DOM: é uma camada de significado por cima do HTML. Repare nas cores:</p>
+
+      <div class="highlight-box blue">
+        <strong>Legenda:</strong>
+        <span class="arvore-tipo tipo-columnheader" style="margin-left:6px;">columnheader</span>
+        <span class="arvore-tipo tipo-rowheader">rowheader</span>
+        <span class="arvore-tipo tipo-cell">cell</span>
+        <span class="arvore-tipo tipo-table">table</span>
+        <span class="arvore-tipo tipo-caption">caption</span>
+      </div>
+
+      <h3>✅ Com semântica — LH com <code>th scope</code></h3>
+      <div class="arvore-wrap" id="arvore-semantica">
+        <div class="arvore-linha"><span class="arvore-tipo tipo-root">RootWebArea</span> "Teste de tabela acessível" focusable: true</div>
+        <div class="arvore-linha">  <span class="arvore-tipo tipo-heading">heading</span> "Resultados da turma"</div>
+        <div class="arvore-linha">    <span class="arvore-tipo tipo-static">StaticText</span> "Resultados da turma"</div>
+        <div class="arvore-linha">  <span class="arvore-tipo tipo-table">table</span> "Notas dos estudantes"</div>
+        <div class="arvore-linha">    <span class="arvore-tipo tipo-caption">caption</span> ""</div>
+        <div class="arvore-linha">      <span class="arvore-tipo tipo-static">StaticText</span> "Notas dos estudantes"</div>
+        <div class="arvore-linha">    <span class="arvore-tipo tipo-rowgroup">rowgroup</span> ""</div>
+        <div class="arvore-linha">      <span class="arvore-tipo tipo-row">row</span> ""</div>
+        <div class="arvore-linha">        <span class="arvore-tipo tipo-columnheader">columnheader</span> "Aluno" <span class="arvore-badge-diferenca badge-bom">cabeçalho</span></div>
+        <div class="arvore-linha">        <span class="arvore-tipo tipo-columnheader">columnheader</span> "HTML" <span class="arvore-badge-diferenca badge-bom">cabeçalho</span></div>
+        <div class="arvore-linha">        <span class="arvore-tipo tipo-columnheader">columnheader</span> "CSS" <span class="arvore-badge-diferenca badge-bom">cabeçalho</span></div>
+        <div class="arvore-linha">    <span class="arvore-tipo tipo-row">row</span> ""</div>
+        <div class="arvore-linha">      <span class="arvore-tipo tipo-rowheader">rowheader</span> "Ana" <span class="arvore-badge-diferenca badge-bom">cabeçalho</span></div>
+        <div class="arvore-linha">      <span class="arvore-tipo tipo-cell">cell</span> "9,0"</div>
+        <div class="arvore-linha">      <span class="arvore-tipo tipo-cell">cell</span> "8,5"</div>
+        <div class="arvore-linha">    <span class="arvore-tipo tipo-row">row</span> ""</div>
+        <div class="arvore-linha">      <span class="arvore-tipo tipo-rowheader">rowheader</span> "João" <span class="arvore-badge-diferenca badge-bom">cabeçalho</span></div>
+        <div class="arvore-linha">      <span class="arvore-tipo tipo-cell">cell</span> "7,5"</div>
+        <div class="arvore-linha">      <span class="arvore-tipo tipo-cell">cell</span> "9,0"</div>
+      </div>
+
+      <h3>❌ Sem semântica — LH com <code>td</code> em tudo</h3>
+      <div class="arvore-wrap" id="arvore-sem-semantica">
+        <div class="arvore-linha"><span class="arvore-tipo tipo-root">RootWebArea</span> "Teste de tabela sem cabeçalhos semânticos" focusable: true</div>
+        <div class="arvore-linha">  <span class="arvore-tipo tipo-heading">heading</span> "Resultados da turma"</div>
+        <div class="arvore-linha">    <span class="arvore-tipo tipo-static">StaticText</span> "Resultados da turma"</div>
+        <div class="arvore-linha">  <span class="arvore-tipo tipo-table">table</span> "Notas dos estudantes"</div>
+        <div class="arvore-linha">    <span class="arvore-tipo tipo-caption">caption</span> ""</div>
+        <div class="arvore-linha">      <span class="arvore-tipo tipo-static">StaticText</span> "Notas dos estudantes"</div>
+        <div class="arvore-linha">    <span class="arvore-tipo tipo-rowgroup">rowgroup</span> ""</div>
+        <div class="arvore-linha">      <span class="arvore-tipo tipo-row">row</span> ""</div>
+        <div class="arvore-linha">        <span class="arvore-tipo tipo-cell">cell</span> "Aluno" <span class="arvore-badge-diferenca badge-ruim">vira dado comum</span></div>
+        <div class="arvore-linha">        <span class="arvore-tipo tipo-cell">cell</span> "HTML" <span class="arvore-badge-diferenca badge-ruim">vira dado comum</span></div>
+        <div class="arvore-linha">        <span class="arvore-tipo tipo-cell">cell</span> "CSS" <span class="arvore-badge-diferenca badge-ruim">vira dado comum</span></div>
+        <div class="arvore-linha">    <span class="arvore-tipo tipo-row">row</span> ""</div>
+        <div class="arvore-linha">      <span class="arvore-tipo tipo-cell">cell</span> "Ana" <span class="arvore-badge-diferenca badge-ruim">vira dado comum</span></div>
+        <div class="arvore-linha">      <span class="arvore-tipo tipo-cell">cell</span> "9,0"</div>
+        <div class="arvore-linha">      <span class="arvore-tipo tipo-cell">cell</span> "8,5"</div>
+        <div class="arvore-linha">    <span class="arvore-tipo tipo-row">row</span> ""</div>
+        <div class="arvore-linha">      <span class="arvore-tipo tipo-cell">cell</span> "João" <span class="arvore-badge-diferenca badge-ruim">vira dado comum</span></div>
+        <div class="arvore-linha">      <span class="arvore-tipo tipo-cell">cell</span> "7,5"</div>
+        <div class="arvore-linha">      <span class="arvore-tipo tipo-cell">cell</span> "9,0"</div>
+      </div>
+
+      <div class="highlight-box rose">
+        <strong>🚨 O impacto real:</strong> quando o leitor de tela chega em "9,0" na versão sem semântica, ele anuncia apenas "9,0". Na versão com semântica, ele anuncia <em>"HTML, coluna. Ana, linha. 9,0."</em> — ou algo equivalente, dependendo do leitor, navegador e forma de navegação. Para quem não vê a tabela, isso é a diferença entre <strong>ter</strong> a informação e <strong>não ter</strong>.
+      </div>
+    </section>
+  </div>
+
+  <!-- ============ ABA CHROME ============ -->
+  <div id="aba-chrome" class="tab-content">
+    <section class="card">
+      <h2>💻 Passo a passo para abrir a árvore de acessibilidade no Chrome</h2>
+      <p>A árvore de acessibilidade é uma camada que o Chrome monta por cima do DOM, e que pode ser inspecionada no DevTools. Aqui está o caminho completo, do zero até ver a árvore:</p>
+
+      <h3>📁 1. Preparar os arquivos</h3>
+      <div class="passos-container">
+        <div class="passo-item">
+          <div class="passo-numero">1</div>
+          <div class="passo-conteudo">
+            <strong>Crie os dois arquivos</strong>
+            <p>Abra o VSCode (ou um editor de texto). Crie um arquivo <code>teste-tabela.html</code> e copie o código "Com semântica" da aba 1. Depois, crie <code>teste-tabela-sem.html</code> e copie o código "Sem semântica". Salve os dois na mesma pasta.</p>
+          </div>
+        </div>
+        <div class="passo-item">
+          <div class="passo-numero">2</div>
+          <div class="passo-conteudo">
+            <strong>Abra o arquivo no Chrome</strong>
+            <p>Arraste o arquivo <code>teste-tabela.html</code> para uma aba do Chrome, ou dê duplo clique nele no explorador de arquivos. A URL vai aparecer como <code>file:///C:/...</code></p>
+          </div>
+        </div>
+      </div>
+
+      <h3>🔧 2. Abrir o DevTools</h3>
+      <div class="passos-container">
+        <div class="passo-item">
+          <div class="passo-numero">3</div>
+          <div class="passo-conteudo">
+            <strong>Abra as ferramentas de desenvolvedor</strong>
+            <p>Pressione <span class="atalho">F12</span> ou <span class="atalho">Ctrl</span> + <span class="atalho">Shift</span> + <span class="atalho">I</span>. O painel abre na parte inferior ou à direita da janela.</p>
+          </div>
+        </div>
+        <div class="passo-item">
+          <div class="passo-numero">4</div>
+          <div class="passo-conteudo">
+            <strong>Navegue até o painel Elements</strong>
+            <p>No topo do DevTools, clique na aba <strong>Elements</strong> (ou <strong>Elementos</strong>, em português). Você vai ver a árvore do DOM: o HTML renderizado.</p>
+          </div>
+        </div>
+      </div>
+
+      <h3>🌳 3. Inspecionar a árvore de acessibilidade</h3>
+      <div class="passos-container">
+        <div class="passo-item">
+          <div class="passo-numero">5</div>
+          <div class="passo-conteudo">
+            <strong>Clique com o botão direito sobre a tabela</strong>
+            <p>Na árvore do DOM (painel Elements), localize o elemento <code>&lt;table&gt;</code>. Clique com o botão direito sobre ele.</p>
+          </div>
+        </div>
+        <div class="passo-item">
+          <div class="passo-numero">6</div>
+          <div class="passo-conteudo">
+            <strong>Escolha "Inspect Accessibility Properties"</strong>
+            <p>No menu de contexto, procure a opção <strong>Inspect Accessibility Properties</strong> (Inspecionar propriedades de acessibilidade). Nem todos os Chrome mostram essa opção no menu principal — em algumas versões ela fica num submenu.</p>
+            <p><strong>Alternativa garantida:</strong> vá até a aba <strong>Accessibility</strong> no painel inferior do DevTools (pode estar escondida, clique em <span class="atalho">&gt;&gt;</span> para revelar). Depois, clique em <strong>Accessibility Tree</strong> e marque a opção "Enable full-page accessibility tree" (Habilitar árvore de acessibilidade de página completa).</p>
+          </div>
+        </div>
+        <div class="passo-item">
+          <div class="passo-numero">7</div>
+          <div class="passo-conteudo">
+            <strong>Localize o bloco "Accessibility Tree"</strong>
+            <p>Com a tabela selecionada, o painel <strong>Accessibility</strong> à direita mostra a subárvore de acessibilidade daquele elemento. Se você quiser ver a árvore completa da página, marque "Enable full-page accessibility tree" e recarregue com <span class="atalho">F5</span>.</p>
+          </div>
+        </div>
+      </div>
+
+      <h3>🔍 4. Comparar os dois arquivos</h3>
+      <div class="passos-container">
+        <div class="passo-item">
+          <div class="passo-numero">8</div>
+          <div class="passo-conteudo">
+            <strong>Faça o mesmo no arquivo sem semântica</strong>
+            <p>Abra <code>teste-tabela-sem.html</code> no Chrome. Repita o passo 5, 6 e 7 sobre a tabela. Compare a árvore: onde antes aparecia <code>columnheader</code>, agora aparecerá <code>cell</code>. Onde antes aparecia <code>rowheader</code>, também aparecerá <code>cell</code>.</p>
+          </div>
+        </div>
+        <div class="passo-item">
+          <div class="passo-numero">9</div>
+          <div class="passo-conteudo">
+            <strong>Confira o "Computed Properties"</strong>
+            <p>No painel Accessibility, ao lado de "Accessibility Tree" há um bloco <strong>Computed Properties</strong> (Propriedades Computadas). Ele mostra o <code>Name</code> e o <code>Role</code> do elemento. Na versão com semântica, cada <code>&lt;th&gt;</code> tem <code>Role: columnheader</code> ou <code>Role: rowheader</code>. Na versão sem semântica, tudo é <code>Role: cell</code>.</p>
+          </div>
+        </div>
+      </div>
+
+      <h3>📋 5. Árvore mockup — como ela aparece no DevTools</h3>
+      <p>O painel Accessibility mostra algo assim quando você inspeciona um <code>&lt;th scope="col"&gt;</code>:</p>
+      <div class="chrome-fake"><span class="chrome-aba">Accessibility</span>
+  <span class="chrome-linha">🌳 Accessibility Tree</span>
+    ...
+    ├── columnheader "HTML" readonly: false required: false
+    │     └── StaticText "HTML"
+    │           └── InlineTextBox "HTML"
+    ...
+  <span class="chrome-linha">📊 Computed Properties</span>
+    Name: HTML
+    Role: columnheader
+    ...
+
+<span style="color:#9aa0a6;">─────────────────────────────────────</span>
+
+<span class="chrome-aba">Accessibility</span> (sem semântica)
+  <span class="chrome-linha">🌳 Accessibility Tree</span>
+    ...
+    ├── cell "HTML"
+    │     └── StaticText "HTML"
+    │           └── InlineTextBox "HTML"
+    ...
+  <span class="chrome-linha">📊 Computed Properties</span>
+    Name: HTML
+    Role: cell
+    ...</div>
+
+      <div class="highlight-box blue">
+        <strong>💡 Dica de verificação rápida:</strong> se você vê <code>columnheader</code> e <code>rowheader</code> no painel Accessibility, sua tabela está semanticamente correta. Se vê tudo como <code>cell</code>, falta <code>&lt;th&gt;</code> e/ou <code>scope</code>.
+      </div>
+
+      <div class="highlight-box amber">
+        <strong>⚠️ Cuidado ao ler a árvore:</strong> a estrutura exata da árvore pode variar entre versões do Chrome, versões do sistema operacional, e entre "full-page accessibility tree" ligada ou desligada. O que <strong>não</strong> muda é a diferença entre <code>columnheader</code>/<code>rowheader</code> (com semântica) e <code>cell</code> (sem semântica).
+      </div>
+    </section>
+  </div>
+
+  <!-- ============ ABA LIGHTHOUSE ============ -->
+  <div id="aba-lh" class="tab-content">
+    <section class="card">
+      <h2>🧪 Lighthouse (LH) — a auditoria automatizada da semântica</h2>
+
+      <div class="lh-explicacao">
+        <h4>🧭 O que significa "LH"?</h4>
+        <p><strong>LH</strong> é a abreviação de <strong>Lighthouse</strong>, uma ferramenta de auditoria automatizada que faz parte do próprio Google Chrome. Ela analisa uma página em cinco categorias — <em>Performance, Accessibility, Best Practices, SEO e PWA</em> — e devolve uma nota de 0 a 100 em cada uma.</p>
+        <p>Quando você lê em relatórios técnicos <em>"Com semântica — LH"</em>, significa que a página em questão foi auditada pelo Lighthouse no estado em que está. O mesmo vale para <em>"Sem semântica — LH"</em>. Não é o nome de um framework, de uma tag, nem de uma técnica — é <strong>a marcação de que aquela página passou pela auditoria Lighthouse</strong>.</p>
+      </div>
+
+      <h3>🔍 O que o Lighthouse verifica em relação à semântica de tabelas</h3>
+      <p>Dentro da categoria <strong>Accessibility</strong>, o Lighthouse tem auditorias específicas para tabelas. As principais são:</p>
+
+      <div class="lh-audit-list">
+        <div class="lh-audit-item">
+          <div class="lh-audit-icon pass">✓</div>
+          <div class="lh-audit-text"><strong>Tables have different content in each row</strong> — verifica se as linhas da tabela contêm conteúdo distinto. Não aprova duplicatas.</div>
+        </div>
+        <div class="lh-audit-item">
+          <div class="lh-audit-icon fail">✗</div>
+          <div class="lh-audit-text"><strong>Table cells that contain row headers</strong> — verifica se as células que deveriam ser cabeçalhos de linha usam <code>&lt;th scope="row"&gt;</code> em vez de <code>&lt;td&gt;</code>. Na versão sem semântica, esta auditoria reprova.</div>
+        </div>
+        <div class="lh-audit-item">
+          <div class="lh-audit-icon warn">!</div>
+          <div class="lh-audit-text"><strong>ARIA attributes match element role</strong> — se você usa <code>&lt;div role="button"&gt;</code> para simular um botão, o Lighthouse verifica se o ARIA está consistente. Só usar tags nativas (<code>&lt;button&gt;</code>) dispensa o atributo <code>role</code>.</div>
+        </div>
+        <div class="lh-audit-item">
+          <div class="lh-audit-icon pass">✓</div>
+          <div class="lh-audit-text"><strong>Interactive elements indicate their purpose</strong> — a versão com semântica (<code>&lt;th scope="col"&gt;</code>) passa; a versão sem (<code>&lt;td&gt;</code>) não é pega por esta auditoria específica, mas é pega pela de cabeçalhos de tabela.</div>
+        </div>
+      </div>
+
+      <h3>⚖️ Diferença de nota — LH em dois cenários</h3>
+      <p>Abaixo, um cenário comparativo de como a nota do Lighthouse cai quando a semântica é ignorada. As notas são ilustrativas do padrão que a ferramenta segue ao auditar tabelas:</p>
+
+      <div class="lh-score-card com">
+        <div class="lh-score-gauge com"><span>100</span></div>
+        <div class="lh-score-body">
+          <h5>✅ Com semântica — LH</h5>
+          <p>O código usa <code>&lt;th scope="col"&gt;</code>, <code>&lt;th scope="row"&gt;</code>, <code>&lt;caption&gt;</code> e agrupamentos <code>&lt;thead&gt;</code>/<code>&lt;tbody&gt;</code>. O Lighthouse reconhece a estrutura e passa em todas as auditorias de tabela. A nota na categoria <strong>Accessibility</strong> atinge o máximo.</p>
+        </div>
+      </div>
+
+      <div class="lh-score-card sem">
+        <div class="lh-score-gauge sem"><span>?</span></div>
+        <div class="lh-score-body">
+          <h5>❌ Sem semântica — LH</h5>
+          <p>O código usa <code>&lt;td&gt;</code> em todas as células, inclusive nas que deveriam ser cabeçalho. O Lighthouse não tem como saber que "Aluno" titula a coluna ou que "Ana" titula a linha. A nota cai e a ferramenta exibe alertas.</p>
+        </div>
+      </div>
+
+      <div class="highlight-box amber">
+        <strong>⚠️ As notas acima são o padrão de comportamento, não medidas fixas:</strong> o Lighthouse pontua cada página em função do conjunto total de auditorias. Numa página com uma tabela sem cabeçalhos, a queda é pequena; com dez tabelas, é significativa. O valor ilustrado (100 vs. reduzido) serve para mostrar o <strong>princípio</strong> — não a métrica exata de uma página específica. Rodar o LH na sua própria página é o único jeito de ver a nota real daquele código.
+      </div>
+
+      <h3>💻 Rode você mesmo — os dois arquivos no Lighthouse</h3>
+      <p>Veja o passo a passo para gerar o relatório real das duas versões:</p>
+
+      <div class="passos-container">
+        <div class="passo-item">
+          <div class="passo-numero">1</div>
+          <div class="passo-conteudo">
+            <strong>Abra o arquivo no Chrome</strong>
+            <p>Arraste <code>teste-tabela.html</code> para a barra de endereços. A URL vai ficar como <code>file:///...</code>.</p>
+          </div>
+        </div>
+        <div class="passo-item">
+          <div class="passo-numero">2</div>
+          <div class="passo-conteudo">
+            <strong>Abra o DevTools e clique em Lighthouse</strong>
+            <p>Pressione <span class="atalho">F12</span>, depois clique na aba <strong>Lighthouse</strong>. Se não estiver visível, clique em <span class="atalho">&gt;&gt;</span> para revelar as abas ocultas.</p>
+          </div>
+        </div>
+        <div class="passo-item">
+          <div class="passo-numero">3</div>
+          <div class="passo-conteudo">
+            <strong>Marque "Accessibility" e rode a auditoria</strong>
+            <p>Desmarque as outras categorias (Performance, PWA, SEO) e deixe só <strong>Accessibility</strong> marcado. Desmarque "Enable throttling" se estiver rodando local. Clique em <strong>Analyze page load</strong>.</p>
+          </div>
+        </div>
+        <div class="passo-item">
+          <div class="passo-numero">4</div>
+          <div class="passo-conteudo">
+            <strong>Leia o relatório</strong>
+            <p>Vai abrir a nota da categoria Accessibility. Expanda e leia as auditorias — na versão sem semântica você verá alertas sobre as células de cabeçalho que não foram reconhecidas.</p>
+          </div>
+        </div>
+        <div class="passo-item">
+          <div class="passo-numero">5</div>
+          <div class="passo-conteudo">
+            <strong>Repita no outro arquivo</strong>
+            <p>Feche a auditoria, abra <code>teste-tabela-sem.html</code> e faça o mesmo caminho. Compare as duas notas lado a lado. O relatório inteiro é exportável em JSON pelo botão de menu (⋮) na parte superior do relatório.</p>
+          </div>
+        </div>
+      </div>
+
+      <h3>🧪 Auditoria ilustrada — três exemplos de código</h3>
+      <p>O quadro abaixo resume como o Lighthouse costuma reagir a diferentes construções de código. Ele serve como critério de qualificação — cada linha é o que a ferramenta efetivamente reporta:</p>
+
+      <table class="tabela-comparacao">
+        <thead>
+          <tr><th>Cenário</th><th>Código</th><th>Reação do LH</th></tr>
+        </thead>
+        <tbody>
+          <tr class="headline">
+            <td>Interativo sem semântica</td>
+            <td><code>&lt;div class="meu-botao" onclick="salvar()"&gt;Salvar&lt;/div&gt;</code></td>
+            <td><strong>Falha:</strong> o elemento tem <code>onclick</code> mas não tem <code>role</code> nem <code>tabindex</code>, não é focável via <kbd>Tab</kbd> e não é anunciado como botão. Audit: <em>"Elements with click handlers must have a role"</em>.</td>
+          </tr>
+          <tr>
+            <td>Interativo com semântica nativa</td>
+            <td><code>&lt;button type="button"&gt;Salvar&lt;/button&gt;</code></td>
+            <td><strong>Passa:</strong> o elemento nativo já explica seu papel à acessibilidade. O <strong>role</strong> é inferido automaticamente pelo navegador.</td>
+          </tr>
+          <tr>
+            <td>Interativo com ARIA manual</td>
+            <td><code>&lt;div role="button" tabindex="0" onclick="salvar()"&gt;Salvar&lt;/div&gt;</code></td>
+            <td><strong>Passa:</strong> mesmo sendo <code>&lt;div&gt;</code>, os atributos <code>role</code> e <code>tabindex</code> compensam a ausência de tag nativa. O LH reconhece o comportamento como botão.</td>
+          </tr>
+          <tr class="headline">
+            <td>Tabela com <code>&lt;td&gt;</code> no cabeçalho</td>
+            <td><code>&lt;tr&gt;&lt;td&gt;Aluno&lt;/td&gt;...&lt;/tr&gt;</code></td>
+            <td><strong>Falha parcial:</strong> o LH reporta que a tabela contém cabeçalhos ausentes. Não é falha total de acessibilidade, mas aparece como aviso no relatório.</td>
+          </tr>
+          <tr>
+            <td>Tabela com <code>&lt;th scope="col"&gt;</code></td>
+            <td><code>&lt;tr&gt;&lt;th scope="col"&gt;Aluno&lt;/th&gt;...&lt;/tr&gt;</code></td>
+            <td><strong>Passa:</strong> o LH reconhece que a tabela tem cabeçalhos de coluna corretamente associados.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="highlight-box green">
+        <strong>✅ Regra de ouro no código:</strong> quanto mais você usa a tag nativa correta para o trabalho (botão vira <code>&lt;button&gt;</code>, cabeçalho de tabela vira <code>&lt;th&gt;</code>, navegação vira <code>&lt;nav&gt;</code>), menos você precisa de <code>role</code> e <code>tabindex</code> manuais, e mais alto o Lighthouse leva a nota. ARIA é remédio quando a tag nativa não serve — nunca substituto da tag nativa.
+      </div>
+
+      <div class="highlight-box blue">
+        <strong>💡 Por que importa em relatório profissional:</strong> quando um dev sênior escreve no pull request <em>"antes: 68 LH / depois: 98 LH"</em>, ele está dizendo que a auditoria automatizada apontou problemas de acessibilidade antes da mudança e que a versão corrigida passou nas mesmas auditorias. É uma forma objetiva de mostrar o impacto real de uma refatoração semântica.
+      </div>
+
+      <h3>🔗 Lighthouse x árvore de acessibilidade</h3>
+      <p>O Lighthouse faz uma varredura automatizada que olha a mesma camada que você inspeciona manualmente no painel Accessibility. A diferença está no nível de detalhe:</p>
+      <table class="tabela-comparacao">
+        <thead>
+          <tr><th>Ferramenta</th><th>O que mostra</th><th>É automatizada?</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Painel Accessibility do DevTools</td><td>A árvore completa e o <code>role</code> de cada nó</td><td>Não — é inspeção manual</td></tr>
+          <tr><td>Lighthouse (LH)</td><td>Nota 0-100 e lista de auditorias que passaram ou falharam</td><td>Sim — roda com um clique</td></tr>
+          <tr><td>Leitor de tela (NVDA, VoiceOver)</td><td>A experiência real do usuário com a árvore</td><td>Não — é experiência humana</td></tr>
+        </tbody>
+      </table>
+
+      <div class="highlight-box purple">
+        <strong>🎯 Como usar as três juntas:</strong> o Lighthouse diz <em>"existem problemas"</em>. A árvore de acessibilidade diz <em>"quais nós estão com role errado"</em>. O leitor de tela diz <em>"o usuário consegue usar o site"</em>. Nenhuma substitui a outra — juntas fecham o diagnóstico.
+      </div>
+    </section>
+  </div>
+
+  <!-- ============ ABA QUIZ ============ -->
+  <div id="aba-quiz" class="tab-content active">
+    <section class="card">
+      <h2>📝 Questionário — semântica de tabelas, árvore e Lighthouse</h2>
+      <p>Responda com calma. Ao final, o gabarito aparece de uma vez com a explicação de cada questão.</p>
+
+      <div class="quiz-header">
+        <span class="progresso-texto">Progresso: <strong id="txtProgresso">15 de 15</strong></span>
+        <div class="barra-fundo"><div class="barra-preenchimento" id="fillProgresso" style="width: 100%;"></div></div>
+      </div>
+
+      <div id="containerQuestoes"><div class="question" id="q1"><div class="question-header"><span class="question-number">1</span><div>Os dois arquivos (teste-tabela.html e teste-tabela-sem.html) renderizam <em>exatamente igual</em> na tela. Por quê?</div></div><div class="options"><div class="option" data-letra="a"><input type="radio" name="q1" value="a"><label><strong>a)</strong> Porque o CSS aplica a mesma cor a todas as células, inclusive as que usam td.</label></div><div class="option selecionada" data-letra="b"><input type="radio" name="q1" value="b"><label><strong>b)</strong> Porque o CSS estiliza th e td com as mesmas regras, e o thead com a mesma cor cinza — a aparência não depende da semântica da tag.</label></div><div class="option" data-letra="c"><input type="radio" name="q1" value="c"><label><strong>c)</strong> Porque o navegador ignora o th quando há CSS.</label></div><div class="option" data-letra="d"><input type="radio" name="q1" value="d"><label><strong>d)</strong> Porque th e td são sinônimos.</label></div></div></div><div class="question" id="q2"><div class="question-header"><span class="question-number">2</span><div>Na árvore de acessibilidade, qual o papel (role) que o Chrome atribui a um <code>&lt;th scope="col"&gt;</code>?</div></div><div class="options"><div class="option" data-letra="a"><input type="radio" name="q2" value="a"><label><strong>a)</strong> cell</label></div><div class="option selecionada" data-letra="b"><input type="radio" name="q2" value="b"><label><strong>b)</strong> columnheader</label></div><div class="option" data-letra="c"><input type="radio" name="q2" value="c"><label><strong>c)</strong> rowheader</label></div><div class="option" data-letra="d"><input type="radio" name="q2" value="d"><label><strong>d)</strong> caption</label></div></div></div><div class="question" id="q3"><div class="question-header"><span class="question-number">3</span><div>Na versão sem semântica (tudo td), o que a árvore de acessibilidade mostra no lugar de columnheader e rowheader?</div></div><div class="options"><div class="option" data-letra="a"><input type="radio" name="q3" value="a"><label><strong>a)</strong> Nada — as células desaparecem da árvore.</label></div><div class="option" data-letra="b"><input type="radio" name="q3" value="b"><label><strong>b)</strong> Automaticamente o Chrome converte td em th.</label></div><div class="option selecionada" data-letra="c"><input type="radio" name="q3" value="c"><label><strong>c)</strong> Tudo aparece como cell, sem distinção entre cabeçalho e dado.</label></div><div class="option" data-letra="d"><input type="radio" name="q3" value="d"><label><strong>d)</strong> Aparece o papel text.</label></div></div></div><div class="question" id="q4"><div class="question-header"><span class="question-number">4</span><div>Por que o uso de <code>&lt;th scope="row"&gt;</code> em "Ana" e "João" é importante?</div></div><div class="options"><div class="option" data-letra="a"><input type="radio" name="q4" value="a"><label><strong>a)</strong> Porque deixa o nome em negrito.</label></div><div class="option selecionada" data-letra="b"><input type="radio" name="q4" value="b"><label><strong>b)</strong> Porque associa a célula com o nome aos dados daquela linha, permitindo que o leitor de tela anuncie "Ana, linha, 9,0".</label></div><div class="option" data-letra="c"><input type="radio" name="q4" value="c"><label><strong>c)</strong> Porque permite que o usuário clique no nome.</label></div><div class="option" data-letra="d"><input type="radio" name="q4" value="d"><label><strong>d)</strong> Porque é obrigatório, senão a tabela não renderiza.</label></div></div></div><div class="question" id="q5"><div class="question-header"><span class="question-number">5</span><div>Qual a consequência prática para um usuário cego ao navegar na versão sem semântica?</div></div><div class="options"><div class="option" data-letra="a"><input type="radio" name="q5" value="a"><label><strong>a)</strong> O leitor de tela anuncia a associação entre cabeçalho e célula normalmente, porque o Chrome "adivinha".</label></div><div class="option selecionada" data-letra="b"><input type="radio" name="q5" value="b"><label><strong>b)</strong> O leitor de tela anuncia cada célula isoladamente ("9,0"), sem dizer se é nota de HTML ou CSS, de Ana ou de João.</label></div><div class="option" data-letra="c"><input type="radio" name="q5" value="c"><label><strong>c)</strong> O leitor de tela se recusa a abrir a página.</label></div><div class="option" data-letra="d"><input type="radio" name="q5" value="d"><label><strong>d)</strong> O leitor de tela lê tudo como imagem.</label></div></div></div><div class="question" id="q6"><div class="question-header"><span class="question-number">6</span><div>Em qual painel do DevTools do Chrome você abre a árvore de acessibilidade?</div></div><div class="options"><div class="option" data-letra="a"><input type="radio" name="q6" value="a"><label><strong>a)</strong> Console</label></div><div class="option" data-letra="b"><input type="radio" name="q6" value="b"><label><strong>b)</strong> Network</label></div><div class="option selecionada" data-letra="c"><input type="radio" name="q6" value="c"><label><strong>c)</strong> Accessibility (pode estar oculto em "&gt;&gt;")</label></div><div class="option" data-letra="d"><input type="radio" name="q6" value="d"><label><strong>d)</strong> Sources</label></div></div></div><div class="question" id="q7"><div class="question-header"><span class="question-number">7</span><div>No painel Computed Properties do Chrome, o que você vê ao inspecionar um <code>&lt;th scope="col"&gt;HTML&lt;/th&gt;</code>?</div></div><div class="options"><div class="option" data-letra="a"><input type="radio" name="q7" value="a"><label><strong>a)</strong> Role: cell e Name: HTML</label></div><div class="option selecionada" data-letra="b"><input type="radio" name="q7" value="b"><label><strong>b)</strong> Role: columnheader e Name: HTML</label></div><div class="option" data-letra="c"><input type="radio" name="q7" value="c"><label><strong>c)</strong> Role: table e Name: HTML</label></div><div class="option" data-letra="d"><input type="radio" name="q7" value="d"><label><strong>d)</strong> Apenas o texto "HTML", sem role.</label></div></div></div><div class="question" id="q8"><div class="question-header"><span class="question-number">8</span><div>Verdadeiro ou falso: uma tabela com th scope="col" mas sem scope="row" ainda assim permite ao leitor de tela associar um dado à sua linha.</div></div><div class="options"><div class="option" data-letra="a"><input type="radio" name="q8" value="a"><label><strong>a)</strong> Verdadeiro — o Chrome deduz automaticamente.</label></div><div class="option selecionada" data-letra="b"><input type="radio" name="q8" value="b"><label><strong>b)</strong> Falso — sem th scope="row" na primeira célula de cada linha, as linhas não têm cabeçalho próprio na árvore, e o leitor de tela não sabe a que linha o dado pertence.</label></div><div class="option" data-letra="c"><input type="radio" name="q8" value="c"><label><strong>c)</strong> Verdadeiro, mas só no Firefox.</label></div><div class="option" data-letra="d"><input type="radio" name="q8" value="d"><label><strong>d)</strong> Falso — mas o problema é só visual.</label></div></div></div><div class="question" id="q9"><div class="question-header"><span class="question-number">9</span><div>O que significa a sigla "LH" em relatórios, tutoriais ou anotações como "Com semântica — LH"?</div></div><div class="options"><div class="option selecionada" data-letra="a"><input type="radio" name="q9" value="a"><label><strong>a)</strong> É a marcação de que a página passou pela auditoria do Lighthouse, ferramenta de auditoria do Chrome.</label></div><div class="option" data-letra="b"><input type="radio" name="q9" value="b"><label><strong>b)</strong> É uma sigla de HTML usada para tabelas com layout horizontal.</label></div><div class="option" data-letra="c"><input type="radio" name="q9" value="c"><label><strong>c)</strong> É o nome de um atributo CSS que controla o line-height.</label></div><div class="option" data-letra="d"><input type="radio" name="q9" value="d"><label><strong>d)</strong> É a abreviatura de "Layout Horizontal".</label></div></div></div><div class="question" id="q10"><div class="question-header"><span class="question-number">10</span><div>Em qual das cinco categorias do Lighthouse você encontra as auditorias específicas sobre tabela (cabeçalhos, dados e estrutura)?</div></div><div class="options"><div class="option" data-letra="a"><input type="radio" name="q10" value="a"><label><strong>a)</strong> Performance</label></div><div class="option selecionada" data-letra="b"><input type="radio" name="q10" value="b"><label><strong>b)</strong> Accessibility</label></div><div class="option" data-letra="c"><input type="radio" name="q10" value="c"><label><strong>c)</strong> SEO</label></div><div class="option" data-letra="d"><input type="radio" name="q10" value="d"><label><strong>d)</strong> Progressive Web App (PWA)</label></div></div></div><div class="question" id="q11"><div class="question-header"><span class="question-number">11</span><div>Se o Lighthouse aponta que um elemento interativo (como um botão feito à mão com div + onclick) precisa de role, qual é a alternativa SEM role que resolve o problema?</div></div><div class="options"><div class="option" data-letra="a"><input type="radio" name="q11" value="a"><label><strong>a)</strong> Adicionar CSS que dê aparência de botão.</label></div><div class="option selecionada" data-letra="b"><input type="radio" name="q11" value="b"><label><strong>b)</strong> Trocar o <code>&lt;div onclick="..."&gt;</code> por <code>&lt;button type="button"&gt;</code> — a tag nativa já fornece o papel acessível, dispensa role manual e passa a aceitar foco de teclado.</label></div><div class="option" data-letra="c"><input type="radio" name="q11" value="c"><label><strong>c)</strong> Colocar o texto dentro de um <code>&lt;p&gt;</code>.</label></div><div class="option" data-letra="d"><input type="radio" name="q11" value="d"><label><strong>d)</strong> Envolver a div em um <code>&lt;main&gt;</code>.</label></div></div></div><div class="question" id="q12"><div class="question-header"><span class="question-number">12</span><div>Uma página usa <code>&lt;div role="button" tabindex="0" onclick="enviar()"&gt;Salvar&lt;/div&gt;</code>. Como o Lighthouse costuma tratar?</div></div><div class="options"><div class="option" data-letra="a"><input type="radio" name="q12" value="a"><label><strong>a)</strong> Reprova, porque não é a tag <code>&lt;button&gt;</code>.</label></div><div class="option selecionada" data-letra="b"><input type="radio" name="q12" value="b"><label><strong>b)</strong> Aprova o elemento como interativo, porque role="button" e tabindex="0" cobrem o papel e o foco. Não é a solução ideal, mas passa nas auditorias do Lighthouse.</label></div><div class="option" data-letra="c"><input type="radio" name="q12" value="c"><label><strong>c)</strong> Ignora o elemento completamente.</label></div><div class="option" data-letra="d"><input type="radio" name="q12" value="d"><label><strong>d)</strong> Reprova porque <code>&lt;div&gt;</code> não aceita onclick.</label></div></div></div><div class="question" id="q13"><div class="question-header"><span class="question-number">13</span><div>Qual das frases a seguir resume corretamente a relação entre Lighthouse, árvore de acessibilidade e leitor de tela?</div></div><div class="options"><div class="option" data-letra="a"><input type="radio" name="q13" value="a"><label><strong>a)</strong> São três sinônimos da mesma coisa: qualquer um dos três substitui os outros.</label></div><div class="option selecionada" data-letra="b"><input type="radio" name="q13" value="b"><label><strong>b)</strong> Lighthouse diz que existem problemas; a árvore de acessibilidade mostra quais nós estão com role errado; o leitor de tela testa a experiência real do usuário. Nenhum substitui o outro.</label></div><div class="option" data-letra="c"><input type="radio" name="q13" value="c"><label><strong>c)</strong> A árvore substitui o Lighthouse porque é mais detalhada.</label></div><div class="option" data-letra="d"><input type="radio" name="q13" value="d"><label><strong>d)</strong> O Lighthouse é mais importante que os outros dois porque dá nota numérica.</label></div></div></div><div class="question" id="q14"><div class="question-header"><span class="question-number">14</span><div>Se você não quer que o Lighthouse reclame de um link externo com <code>target="_blank"</code> sem <code>rel</code>, qual é a correção?</div></div><div class="options"><div class="option" data-letra="a"><input type="radio" name="q14" value="a"><label><strong>a)</strong> Remover target="_blank".</label></div><div class="option selecionada" data-letra="b"><input type="radio" name="q14" value="b"><label><strong>b)</strong> Adicionar <code>rel="noopener noreferrer"</code> — resolve a auditoria de segurança e a boa prática de acessibilidade.</label></div><div class="option" data-letra="c"><input type="radio" name="q14" value="c"><label><strong>c)</strong> Trocar o <code>&lt;a&gt;</code> por <code>&lt;button&gt;</code>.</label></div><div class="option" data-letra="d"><input type="radio" name="q14" value="d"><label><strong>d)</strong> Adicionar tipo="text".</label></div></div></div><div class="question" id="q15"><div class="question-header"><span class="question-number">15</span><div>"Com semântica — LH: 100. Sem semântica — LH: 78." O que essa diferença de nota documenta em um relatório técnico?</div></div><div class="options"><div class="option" data-letra="a"><input type="radio" name="q15" value="a"><label><strong>a)</strong> Que o código da primeira versão é menor em número de linhas.</label></div><div class="option selecionada" data-letra="b"><input type="radio" name="q15" value="b"><label><strong>b)</strong> Que, passando as duas versões pelo Lighthouse na categoria Accessibility, a versão com tags semânticas (th + scope + caption) passou em mais auditorias, enquanto a versão sem (td em tudo) falhou em pontos específicos de cabeçalho de tabela.</label></div><div class="option" data-letra="c"><input type="radio" name="q15" value="c"><label><strong>c)</strong> Que o CSS da primeira versão é mais rápido.</label></div><div class="option" data-letra="d"><input type="radio" name="q15" value="d"><label><strong>d)</strong> Que o Chrome renderiza a primeira versão mais rápido.</label></div></div></div></div>
+
+      <div class="btn-grupo">
+        <button type="button" class="btn" id="btnFinalizar">✅ Finalizar</button>
+        <button type="button" class="btn btn-secondary" id="btnLimpar">🔄 Limpar</button>
+      </div>
+
+      <div class="results mostrar" id="resultados">
+        <h4>📊 Gabarito de referência</h4>
+        <div id="listaGabarito"><div class="gabarito-item"><div style="color:#15803d;font-weight:800;">✅ Q1 — Você marcou (b), gabarito (b)</div><div style="color:#64748b;font-size:.84rem;margin-top:4px;">O CSS estiliza th e td igualmente. O destaque cinza vem do thead receber background: #e5e7eb. A diferença real está só na árvore de acessibilidade.</div></div><div class="gabarito-item"><div style="color:#15803d;font-weight:800;">✅ Q2 — Você marcou (b), gabarito (b)</div><div style="color:#64748b;font-size:.84rem;margin-top:4px;">scope="col" indica que o cabeçalho titula a coluna. O Chrome expõe isso como columnheader. scope="row" gera rowheader.</div></div><div class="gabarito-item"><div style="color:#15803d;font-weight:800;">✅ Q3 — Você marcou (c), gabarito (c)</div><div style="color:#64748b;font-size:.84rem;margin-top:4px;">td recebe o papel cell por padrão. Sem th e scope, o navegador não tem como saber que "Aluno" titula a coluna ou que "Ana" titula a linha.</div></div><div class="gabarito-item"><div style="color:#15803d;font-weight:800;">✅ Q4 — Você marcou (b), gabarito (b)</div><div style="color:#64748b;font-size:.84rem;margin-top:4px;">scope="row" associa o conteúdo do th aos dados da mesma linha. Sem isso, "Ana" é só mais uma célula solta.</div></div><div class="gabarito-item"><div style="color:#15803d;font-weight:800;">✅ Q5 — Você marcou (b), gabarito (b)</div><div style="color:#64748b;font-size:.84rem;margin-top:4px;">Sem columnheader e rowheader, o leitor de tela não tem como reconstruir a associação. O usuário ouve números soltos, sem contexto.</div></div><div class="gabarito-item"><div style="color:#15803d;font-weight:800;">✅ Q6 — Você marcou (c), gabarito (c)</div><div style="color:#64748b;font-size:.84rem;margin-top:4px;">A aba Accessibility mostra a árvore, as propriedades computadas (Role, Name) e o ARIA. Em versões novas do Chrome, ela vem escondida e precisa ser habilitada pelo menu "&gt;&gt;".</div></div><div class="gabarito-item"><div style="color:#15803d;font-weight:800;">✅ Q7 — Você marcou (b), gabarito (b)</div><div style="color:#64748b;font-size:.84rem;margin-top:4px;">Com th scope="col", o Chrome atribui Role: columnheader. O Name vem do texto dentro da célula.</div></div><div class="gabarito-item"><div style="color:#15803d;font-weight:800;">✅ Q8 — Você marcou (b), gabarito (b)</div><div style="color:#64748b;font-size:.84rem;margin-top:4px;">scope="col" resolve a coluna. scope="row" resolve a linha. Você precisa dos dois em tabelas de dupla entrada (linhas e colunas com cabeçalhos).</div></div><div class="gabarito-item"><div style="color:#15803d;font-weight:800;">✅ Q9 — Você marcou (a), gabarito (a)</div><div style="color:#64748b;font-size:.84rem;margin-top:4px;">LH = Lighthouse. É a ferramenta de auditoria automatizada que vem com o Chrome e dá nota 0 a 100 em cinco categorias (Performance, Accessibility, Best Practices, SEO e PWA).</div></div><div class="gabarito-item"><div style="color:#15803d;font-weight:800;">✅ Q10 — Você marcou (b), gabarito (b)</div><div style="color:#64748b;font-size:.84rem;margin-top:4px;">As auditorias de cabeçalhos de tabela, ARIA, nome acessível e navegação por teclado estão concentradas na categoria Accessibility.</div></div><div class="gabarito-item"><div style="color:#15803d;font-weight:800;">✅ Q11 — Você marcou (b), gabarito (b)</div><div style="color:#64748b;font-size:.84rem;margin-top:4px;">A tag nativa &lt;button&gt; é a solução preferida. Ela fornece o role implicitamente, é focável por teclado por padrão e recebe Enter/Espaço. role="button" só quando não houver tag nativa possível.</div></div><div class="gabarito-item"><div style="color:#15803d;font-weight:800;">✅ Q12 — Você marcou (b), gabarito (b)</div><div style="color:#64748b;font-size:.84rem;margin-top:4px;">O Lighthouse não exige tag nativa — aceita role + tabindex como compensação. A auditoria "Elements with click handlers must have a role" passa. A boa prática ainda prefere &lt;button&gt;.</div></div><div class="gabarito-item"><div style="color:#15803d;font-weight:800;">✅ Q13 — Você marcou (b), gabarito (b)</div><div style="color:#64748b;font-size:.84rem;margin-top:4px;">Cada ferramenta cobre uma parte: detectar problemas (LH), localizar nós (árvore), testar experiência (leitor de tela). O bom diagnóstico combina os três.</div></div><div class="gabarito-item"><div style="color:#15803d;font-weight:800;">✅ Q14 — Você marcou (b), gabarito (b)</div><div style="color:#64748b;font-size:.84rem;margin-top:4px;">rel="noopener noreferrer" evita tabnabbing e é o padrão que o Lighthouse espera encontrar em links que abrem em nova aba.</div></div><div class="gabarito-item"><div style="color:#15803d;font-weight:800;">✅ Q15 — Você marcou (b), gabarito (b)</div><div style="color:#64748b;font-size:.84rem;margin-top:4px;">A nota do LH é a soma de auditorias passadas e falhadas dentro da categoria. Uma diferença desse tipo documenta que a versão semântica foi melhor avaliada pelo audit automatizado — não é sobre linhas ou performance.</div></div></div>
+      </div>
+    </section>
+  </div>
+
+  <footer style="text-align:center;color:#94a3b8;font-size:.78rem;padding:22px 0;">
+    📊 Disciplina: Programação Front-End • Tema 04: Tabelas em HTML • 2026
+  </footer>
+</div>
+
+<div class="toast-notificacao" id="toastNotificacao">✅ Feito!</div>
+<button type="button" class="btn-top" id="btnTopo">⬆️ Topo</button>
+
+<script>
+/* ============================================================
+   ESCAPE
+   ============================================================ */
+function esc(t) {
+  return String(t == null ? '' : t)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+/* ============================================================
+   CÓDIGO 1 — COM SEMÂNTICA
+   ============================================================ */
+var CODIGO_SEMANTICA = '<!DOCTYPE html>\n' +
+'<html lang="pt-BR">\n' +
+'<head>\n' +
+'  <meta charset="UTF-8">\n' +
+'  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
+'  <title>Teste de tabela acessível</title>\n' +
+'  <style>\n' +
+'    body {\n' +
+'      font-family: Arial, sans-serif;\n' +
+'      padding: 20px;\n' +
+'    }\n' +
+'\n' +
+'    table {\n' +
+'      border-collapse: collapse;\n' +
+'      width: 100%;\n' +
+'      max-width: 500px;\n' +
+'    }\n' +
+'\n' +
+'    caption {\n' +
+'      font-weight: bold;\n' +
+'      margin-bottom: 10px;\n' +
+'    }\n' +
+'\n' +
+'    th, td {\n' +
+'      border: 1px solid #777;\n' +
+'      padding: 10px;\n' +
+'      text-align: left;\n' +
+'    }\n' +
+'\n' +
+'    thead {\n' +
+'      background: #e5e7eb;\n' +
+'    }\n' +
+'  </style>\n' +
+'</head>\n' +
+'<body>\n' +
+'\n' +
+'  <h1>Resultados da turma</h1>\n' +
+'\n' +
+'  <table>\n' +
+'    <caption>Notas dos estudantes</caption>\n' +
+'\n' +
+'    <thead>\n' +
+'      <tr>\n' +
+'        <th scope="col">Aluno</th>\n' +
+'        <th scope="col">HTML</th>\n' +
+'        <th scope="col">CSS</th>\n' +
+'      </tr>\n' +
+'    </thead>\n' +
+'\n' +
+'    <tbody>\n' +
+'      <tr>\n' +
+'        <th scope="row">Ana</th>\n' +
+'        <td>9,0</td>\n' +
+'        <td>8,5</td>\n' +
+'      </tr>\n' +
+'      <tr>\n' +
+'        <th scope="row">João</th>\n' +
+'        <td>7,5</td>\n' +
+'        <td>9,0</td>\n' +
+'      </tr>\n' +
+'    </tbody>\n' +
+'  </table>\n' +
+'\n' +
+'</body>\n' +
+'</html>';
+
+/* ============================================================
+   CÓDIGO 2 — SEM SEMÂNTICA
+   ============================================================ */
+var CODIGO_SEM_SEMANTICA = '<!DOCTYPE html>\n' +
+'<html lang="pt-BR">\n' +
+'<head>\n' +
+'  <meta charset="UTF-8">\n' +
+'  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
+'  <title>Teste de tabela sem cabeçalhos semânticos</title>\n' +
+'\n' +
+'  <style>\n' +
+'    body {\n' +
+'      font-family: Arial, sans-serif;\n' +
+'      padding: 20px;\n' +
+'    }\n' +
+'\n' +
+'    table {\n' +
+'      border-collapse: collapse;\n' +
+'      width: 100%;\n' +
+'      max-width: 500px;\n' +
+'    }\n' +
+'\n' +
+'    caption {\n' +
+'      font-weight: bold;\n' +
+'      margin-bottom: 10px;\n' +
+'    }\n' +
+'\n' +
+'    th, td {\n' +
+'      border: 1px solid #777;\n' +
+'      padding: 10px;\n' +
+'      text-align: left;\n' +
+'    }\n' +
+'\n' +
+'    thead {\n' +
+'      background: #e5e7eb;\n' +
+'    }\n' +
+'  </style>\n' +
+'</head>\n' +
+'<body>\n' +
+'\n' +
+'  <h1>Resultados da turma</h1>\n' +
+'\n' +
+'  <table>\n' +
+'    <caption>Notas dos estudantes</caption>\n' +
+'\n' +
+'    <thead>\n' +
+'      <tr>\n' +
+'        <td>Aluno</td>\n' +
+'        <td>HTML</td>\n' +
+'        <td>CSS</td>\n' +
+'      </tr>\n' +
+'    </thead>\n' +
+'\n' +
+'    <tbody>\n' +
+'      <tr>\n' +
+'        <td>Ana</td>\n' +
+'        <td>9,0</td>\n' +
+'        <td>8,5</td>\n' +
+'      </tr>\n' +
+'      <tr>\n' +
+'        <td>João</td>\n' +
+'        <td>7,5</td>\n' +
+'        <td>9,0</td>\n' +
+'      </tr>\n' +
+'    </tbody>\n' +
+'  </table>\n' +
+'\n' +
+'</body>\n' +
+'</html>';
+
+/* ============================================================
+   BANCO DE QUESTÕES — 15 questões
+   ============================================================ */
+var QUESTOES = [
+  {
+    pergunta: 'Os dois arquivos (teste-tabela.html e teste-tabela-sem.html) renderizam <em>exatamente igual</em> na tela. Por quê?',
+    opcoes: [
+      { l: 'a', t: 'Porque o CSS aplica a mesma cor a todas as células, inclusive as que usam td.' },
+      { l: 'b', t: 'Porque o CSS estiliza th e td com as mesmas regras, e o thead com a mesma cor cinza — a aparência não depende da semântica da tag.' },
+      { l: 'c', t: 'Porque o navegador ignora o th quando há CSS.' },
+      { l: 'd', t: 'Porque th e td são sinônimos.' }
+    ],
+    correta: 'b',
+    explicacao: 'O CSS estiliza th e td igualmente. O destaque cinza vem do thead receber background: #e5e7eb. A diferença real está só na árvore de acessibilidade.'
+  },
+  {
+    pergunta: 'Na árvore de acessibilidade, qual o papel (role) que o Chrome atribui a um <code>&lt;th scope="col"&gt;</code>?',
+    opcoes: [
+      { l: 'a', t: 'cell' },
+      { l: 'b', t: 'columnheader' },
+      { l: 'c', t: 'rowheader' },
+      { l: 'd', t: 'caption' }
+    ],
+    correta: 'b',
+    explicacao: 'scope="col" indica que o cabeçalho titula a coluna. O Chrome expõe isso como columnheader. scope="row" gera rowheader.'
+  },
+  {
+    pergunta: 'Na versão sem semântica (tudo td), o que a árvore de acessibilidade mostra no lugar de columnheader e rowheader?',
+    opcoes: [
+      { l: 'a', t: 'Nada — as células desaparecem da árvore.' },
+      { l: 'b', t: 'Automaticamente o Chrome converte td em th.' },
+      { l: 'c', t: 'Tudo aparece como cell, sem distinção entre cabeçalho e dado.' },
+      { l: 'd', t: 'Aparece o papel text.' }
+    ],
+    correta: 'c',
+    explicacao: 'td recebe o papel cell por padrão. Sem th e scope, o navegador não tem como saber que "Aluno" titula a coluna ou que "Ana" titula a linha.'
+  },
+  {
+    pergunta: 'Por que o uso de <code>&lt;th scope="row"&gt;</code> em "Ana" e "João" é importante?',
+    opcoes: [
+      { l: 'a', t: 'Porque deixa o nome em negrito.' },
+      { l: 'b', t: 'Porque associa a célula com o nome aos dados daquela linha, permitindo que o leitor de tela anuncie "Ana, linha, 9,0".' },
+      { l: 'c', t: 'Porque permite que o usuário clique no nome.' },
+      { l: 'd', t: 'Porque é obrigatório, senão a tabela não renderiza.' }
+    ],
+    correta: 'b',
+    explicacao: 'scope="row" associa o conteúdo do th aos dados da mesma linha. Sem isso, "Ana" é só mais uma célula solta.'
+  },
+  {
+    pergunta: 'Qual a consequência prática para um usuário cego ao navegar na versão sem semântica?',
+    opcoes: [
+      { l: 'a', t: 'O leitor de tela anuncia a associação entre cabeçalho e célula normalmente, porque o Chrome "adivinha".' },
+      { l: 'b', t: 'O leitor de tela anuncia cada célula isoladamente ("9,0"), sem dizer se é nota de HTML ou CSS, de Ana ou de João.' },
+      { l: 'c', t: 'O leitor de tela se recusa a abrir a página.' },
+      { l: 'd', t: 'O leitor de tela lê tudo como imagem.' }
+    ],
+    correta: 'b',
+    explicacao: 'Sem columnheader e rowheader, o leitor de tela não tem como reconstruir a associação. O usuário ouve números soltos, sem contexto.'
+  },
+  {
+    pergunta: 'Em qual painel do DevTools do Chrome você abre a árvore de acessibilidade?',
+    opcoes: [
+      { l: 'a', t: 'Console' },
+      { l: 'b', t: 'Network' },
+      { l: 'c', t: 'Accessibility (pode estar oculto em ">>")' },
+      { l: 'd', t: 'Sources' }
+    ],
+    correta: 'c',
+    explicacao: 'A aba Accessibility mostra a árvore, as propriedades computadas (Role, Name) e o ARIA. Em versões novas do Chrome, ela vem escondida e precisa ser habilitada pelo menu ">>".'
+  },
+  {
+    pergunta: 'No painel Computed Properties do Chrome, o que você vê ao inspecionar um <code>&lt;th scope="col"&gt;HTML&lt;/th&gt;</code>?',
+    opcoes: [
+      { l: 'a', t: 'Role: cell e Name: HTML' },
+      { l: 'b', t: 'Role: columnheader e Name: HTML' },
+      { l: 'c', t: 'Role: table e Name: HTML' },
+      { l: 'd', t: 'Apenas o texto "HTML", sem role.' }
+    ],
+    correta: 'b',
+    explicacao: 'Com th scope="col", o Chrome atribui Role: columnheader. O Name vem do texto dentro da célula.'
+  },
+  {
+    pergunta: 'Verdadeiro ou falso: uma tabela com th scope="col" mas sem scope="row" ainda assim permite ao leitor de tela associar um dado à sua linha.',
+    opcoes: [
+      { l: 'a', t: 'Verdadeiro — o Chrome deduz automaticamente.' },
+      { l: 'b', t: 'Falso — sem th scope="row" na primeira célula de cada linha, as linhas não têm cabeçalho próprio na árvore, e o leitor de tela não sabe a que linha o dado pertence.' },
+      { l: 'c', t: 'Verdadeiro, mas só no Firefox.' },
+      { l: 'd', t: 'Falso — mas o problema é só visual.' }
+    ],
+    correta: 'b',
+    explicacao: 'scope="col" resolve a coluna. scope="row" resolve a linha. Você precisa dos dois em tabelas de dupla entrada (linhas e colunas com cabeçalhos).'
+  },
+  {
+    pergunta: 'O que significa a sigla "LH" em relatórios, tutoriais ou anotações como "Com semântica — LH"?',
+    opcoes: [
+      { l: 'a', t: 'É a marcação de que a página passou pela auditoria do Lighthouse, ferramenta de auditoria do Chrome.' },
+      { l: 'b', t: 'É uma sigla de HTML usada para tabelas com layout horizontal.' },
+      { l: 'c', t: 'É o nome de um atributo CSS que controla o line-height.' },
+      { l: 'd', t: 'É a abreviatura de "Layout Horizontal".' }
+    ],
+    correta: 'a',
+    explicacao: 'LH = Lighthouse. É a ferramenta de auditoria automatizada que vem com o Chrome e dá nota 0 a 100 em cinco categorias (Performance, Accessibility, Best Practices, SEO e PWA).'
+  },
+  {
+    pergunta: 'Em qual das cinco categorias do Lighthouse você encontra as auditorias específicas sobre tabela (cabeçalhos, dados e estrutura)?',
+    opcoes: [
+      { l: 'a', t: 'Performance' },
+      { l: 'b', t: 'Accessibility' },
+      { l: 'c', t: 'SEO' },
+      { l: 'd', t: 'Progressive Web App (PWA)' }
+    ],
+    correta: 'b',
+    explicacao: 'As auditorias de cabeçalhos de tabela, ARIA, nome acessível e navegação por teclado estão concentradas na categoria Accessibility.'
+  },
+  {
+    pergunta: 'Se o Lighthouse aponta que um elemento interativo (como um botão feito à mão com div + onclick) precisa de role, qual é a alternativa SEM role que resolve o problema?',
+    opcoes: [
+      { l: 'a', t: 'Adicionar CSS que dê aparência de botão.' },
+      { l: 'b', t: 'Trocar o <code>&lt;div onclick="..."&gt;</code> por <code>&lt;button type="button"&gt;</code> — a tag nativa já fornece o papel acessível, dispensa role manual e passa a aceitar foco de teclado.' },
+      { l: 'c', t: 'Colocar o texto dentro de um <code>&lt;p&gt;</code>.' },
+      { l: 'd', t: 'Envolver a div em um <code>&lt;main&gt;</code>.' }
+    ],
+    correta: 'b',
+    explicacao: 'A tag nativa <button> é a solução preferida. Ela fornece o role implicitamente, é focável por teclado por padrão e recebe Enter/Espaço. role="button" só quando não houver tag nativa possível.'
+  },
+  {
+    pergunta: 'Uma página usa <code>&lt;div role="button" tabindex="0" onclick="enviar()"&gt;Salvar&lt;/div&gt;</code>. Como o Lighthouse costuma tratar?',
+    opcoes: [
+      { l: 'a', t: 'Reprova, porque não é a tag <code>&lt;button&gt;</code>.' },
+      { l: 'b', t: 'Aprova o elemento como interativo, porque role="button" e tabindex="0" cobrem o papel e o foco. Não é a solução ideal, mas passa nas auditorias do Lighthouse.' },
+      { l: 'c', t: 'Ignora o elemento completamente.' },
+      { l: 'd', t: 'Reprova porque <code>&lt;div&gt;</code> não aceita onclick.' }
+    ],
+    correta: 'b',
+    explicacao: 'O Lighthouse não exige tag nativa — aceita role + tabindex como compensação. A auditoria "Elements with click handlers must have a role" passa. A boa prática ainda prefere <button>.'
+  },
+  {
+    pergunta: 'Qual das frases a seguir resume corretamente a relação entre Lighthouse, árvore de acessibilidade e leitor de tela?',
+    opcoes: [
+      { l: 'a', t: 'São três sinônimos da mesma coisa: qualquer um dos três substitui os outros.' },
+      { l: 'b', t: 'Lighthouse diz que existem problemas; a árvore de acessibilidade mostra quais nós estão com role errado; o leitor de tela testa a experiência real do usuário. Nenhum substitui o outro.' },
+      { l: 'c', t: 'A árvore substitui o Lighthouse porque é mais detalhada.' },
+      { l: 'd', t: 'O Lighthouse é mais importante que os outros dois porque dá nota numérica.' }
+    ],
+    correta: 'b',
+    explicacao: 'Cada ferramenta cobre uma parte: detectar problemas (LH), localizar nós (árvore), testar experiência (leitor de tela). O bom diagnóstico combina os três.'
+  },
+  {
+    pergunta: 'Se você não quer que o Lighthouse reclame de um link externo com <code>target="_blank"</code> sem <code>rel</code>, qual é a correção?',
+    opcoes: [
+      { l: 'a', t: 'Remover target="_blank".' },
+      { l: 'b', t: 'Adicionar <code>rel="noopener noreferrer"</code> — resolve a auditoria de segurança e a boa prática de acessibilidade.' },
+      { l: 'c', t: 'Trocar o <code>&lt;a&gt;</code> por <code>&lt;button&gt;</code>.' },
+      { l: 'd', t: 'Adicionar tipo="text".' }
+    ],
+    correta: 'b',
+    explicacao: 'rel="noopener noreferrer" evita tabnabbing e é o padrão que o Lighthouse espera encontrar em links que abrem em nova aba.'
+  },
+  {
+    pergunta: '"Com semântica — LH: 100. Sem semântica — LH: 78." O que essa diferença de nota documenta em um relatório técnico?',
+    opcoes: [
+      { l: 'a', t: 'Que o código da primeira versão é menor em número de linhas.' },
+      { l: 'b', t: 'Que, passando as duas versões pelo Lighthouse na categoria Accessibility, a versão com tags semânticas (th + scope + caption) passou em mais auditorias, enquanto a versão sem (td em tudo) falhou em pontos específicos de cabeçalho de tabela.' },
+      { l: 'c', t: 'Que o CSS da primeira versão é mais rápido.' },
+      { l: 'd', t: 'Que o Chrome renderiza a primeira versão mais rápido.' }
+    ],
+    correta: 'b',
+    explicacao: 'A nota do LH é a soma de auditorias passadas e falhadas dentro da categoria. Uma diferença desse tipo documenta que a versão semântica foi melhor avaliada pelo audit automatizado — não é sobre linhas ou performance.'
+  }
+];
+
+/* ============================================================
+   ESTADO E MONTAGEM
+   ============================================================ */
+var respostas = {};
+
+function trocarAba(idAba, botao) {
+  document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active'); });
+  document.querySelectorAll('.tab-content').forEach(function (c) { c.classList.remove('active'); });
+  botao.classList.add('active');
+  var alvo = document.getElementById(idAba);
+  if (alvo) alvo.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function montarQuestoes() {
+  var container = document.getElementById('containerQuestoes');
+  if (!container) return;
+  container.innerHTML = '';
+  QUESTOES.forEach(function (q, idx) {
+    var div = document.createElement('div');
+    div.className = 'question';
+    div.id = 'q' + (idx + 1);
+    var header = document.createElement('div');
+    header.className = 'question-header';
+    header.innerHTML = '<span class="question-number">' + (idx + 1) + '</span><div>' + q.pergunta + '</div>';
+    div.appendChild(header);
+    var options = document.createElement('div');
+    options.className = 'options';
+    q.opcoes.forEach(function (op) {
+      var opt = document.createElement('div');
+      opt.className = 'option';
+      opt.dataset.letra = op.l;
+      var radio = document.createElement('input');
+      radio.type = 'radio';
+      radio.name = 'q' + (idx + 1);
+      radio.value = op.l;
+      var label = document.createElement('label');
+      label.innerHTML = '<strong>' + op.l + ')</strong> ' + op.t;
+      opt.appendChild(radio);
+      opt.appendChild(label);
+      opt.addEventListener('click', function (ev) {
+        ev.preventDefault();
+        marcarOpcao(idx + 1, op.l, opt);
+      });
+      options.appendChild(opt);
+    });
+    div.appendChild(options);
+    container.appendChild(div);
+  });
+}
+
+function marcarOpcao(numero, letra, opt) {
+  var div = document.getElementById('q' + numero);
+  if (!div) return;
+  div.querySelectorAll('.option').forEach(function (o) {
+    o.classList.remove('selecionada');
+    var rad = o.querySelector('input');
+    if (rad) rad.checked = false;
+  });
+  opt.classList.add('selecionada');
+  opt.querySelector('input').checked = true;
+  respostas[numero] = letra;
+  atualizarProgresso();
+}
+
+function atualizarProgresso() {
+  var total = QUESTOES.length;
+  var respondidas = Object.keys(respostas).length;
+  var txt = document.getElementById('txtProgresso');
+  var fill = document.getElementById('fillProgresso');
+  var btn = document.getElementById('btnFinalizar');
+  if (txt) txt.textContent = respondidas + ' de ' + total;
+  if (fill) fill.style.width = (respondidas / total * 100) + '%';
+  if (btn) btn.disabled = respondidas < total;
+}
+
+function finalizarQuestionario() {
+  var listaGabarito = document.getElementById('listaGabarito');
+  if (!listaGabarito) return;
+  var html = '';
+  QUESTOES.forEach(function (q, idx) {
+    var numero = idx + 1;
+    var respostaAluno = respostas[numero] || '—';
+    var acertou = respostaAluno === q.correta;
+    var cor = acertou ? '#15803d' : '#b91c1c';
+    var simb = acertou ? '✅' : '❌';
+    html += '<div class="gabarito-item">' +
+              '<div style="color:' + cor + ';font-weight:800;">' + simb + ' Q' + numero + ' — Você marcou (' + esc(respostaAluno) + '), gabarito (' + esc(q.correta) + ')</div>' +
+              '<div style="color:#64748b;font-size:.84rem;margin-top:4px;">' + esc(q.explicacao) + '</div>' +
+            '</div>';
+  });
+  listaGabarito.innerHTML = html;
+  document.getElementById('resultados').classList.add('mostrar');
+  document.getElementById('resultados').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function limparQuestionario() {
+  if (!confirm('Deseja limpar todas as respostas?')) return;
+  respostas = {};
+  document.querySelectorAll('.option').forEach(function (opt) {
+    opt.classList.remove('selecionada');
+    var rad = opt.querySelector('input');
+    if (rad) rad.checked = false;
+  });
+  document.getElementById('resultados').classList.remove('mostrar');
+  document.getElementById('listaGabarito').innerHTML = '';
+  atualizarProgresso();
+}
+
+/* ============================================================
+   UTILITÁRIOS
+   ============================================================ */
+function copiarTextoFallback(texto) {
+  var area = document.createElement('textarea');
+  area.value = texto;
+  area.setAttribute('readonly', '');
+  area.style.position = 'fixed';
+  area.style.top = '-1000px';
+  document.body.appendChild(area);
+  area.select();
+  var ok = false;
+  try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+  document.body.removeChild(area);
+  return ok;
+}
+
+function copiarTexto(texto, botao) {
+  if (!texto) return;
+  var finalizar = function (sucesso) {
+    if (sucesso) {
+      mostrarToast('✅ Copiado!');
+      if (botao) {
+        var orig = botao.textContent;
+        botao.textContent = '✅ Copiado!';
+        setTimeout(function () { botao.textContent = orig; }, 1800);
+      }
+    } else {
+      mostrarToast('⚠️ Selecione e copie manualmente.');
+    }
+  };
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(texto).then(function () { finalizar(true); }).catch(function () { finalizar(copiarTextoFallback(texto)); });
+  } else {
+    finalizar(copiarTextoFallback(texto));
+  }
+}
+
+function abrirPreview(html, chave) {
+  var alvo = document.getElementById('preview-' + chave);
+  if (!alvo) return;
+  var anterior = alvo.querySelector('.preview-inline');
+  if (anterior) anterior.remove();
+  var caixa = document.createElement('div');
+  caixa.className = 'preview-inline';
+  var header = document.createElement('div');
+  header.className = 'preview-header';
+  var nome = chave === 'semantica' ? 'teste-tabela.html' : 'teste-tabela-sem.html';
+  header.innerHTML = '<span>🧪 Preview — ' + nome + '</span>';
+  var botaoFechar = document.createElement('button');
+  botaoFechar.type = 'button';
+  botaoFechar.className = 'preview-close';
+  botaoFechar.textContent = '✕ Fechar';
+  header.appendChild(botaoFechar);
+  var iframe = document.createElement('iframe');
+  iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms');
+  iframe.setAttribute('title', 'Preview ' + chave);
+  iframe.srcdoc = html;
+  caixa.appendChild(header);
+  caixa.appendChild(iframe);
+  alvo.appendChild(caixa);
+  botaoFechar.addEventListener('click', function () { caixa.remove(); });
+  caixa.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+var toastTimer = null;
+function mostrarToast(msg) {
+  var t = document.getElementById('toastNotificacao');
+  if (!t) return;
+  t.textContent = msg;
+  t.style.display = 'block';
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () { t.style.display = 'none'; }, 3800);
+}
+
+/* ============================================================
+   INICIALIZAÇÃO
+   ============================================================ */
+window.addEventListener('DOMContentLoaded', function () {
+  var preSEM = document.getElementById('codigo-semantica');
+  if (preSEM) preSEM.textContent = CODIGO_SEMANTICA;
+
+  var preSEM2 = document.getElementById('codigo-sem-semantica');
+  if (preSEM2) preSEM2.textContent = CODIGO_SEM_SEMANTICA;
+
+  montarQuestoes();
+  atualizarProgresso();
+
+  document.querySelectorAll('.tab-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () { trocarAba(btn.dataset.aba, btn); });
+  });
+
+  document.querySelectorAll('.copy-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var chave = btn.dataset.copiar;
+      if (chave === 'semantica') copiarTexto(CODIGO_SEMANTICA, btn);
+      else if (chave === 'sem-semantica') copiarTexto(CODIGO_SEM_SEMANTICA, btn);
+    });
+  });
+
+  document.querySelectorAll('.run-inline-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var chave = btn.dataset.preview;
+      if (chave === 'semantica') abrirPreview(CODIGO_SEMANTICA, 'semantica');
+      else if (chave === 'sem-semantica') abrirPreview(CODIGO_SEM_SEMANTICA, 'sem-semantica');
+    });
+  });
+
+  var btnFinalizar = document.getElementById('btnFinalizar');
+  if (btnFinalizar) btnFinalizar.addEventListener('click', finalizarQuestionario);
+
+  var btnLimpar = document.getElementById('btnLimpar');
+  if (btnLimpar) btnLimpar.addEventListener('click', limparQuestionario);
+
+  var btnTopo = document.getElementById('btnTopo');
+  if (btnTopo) btnTopo.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+});
+</script>
+
+</body></html>
